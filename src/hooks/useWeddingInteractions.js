@@ -493,6 +493,7 @@ export function useWeddingInteractions() {
         const track = qs("#wordsTrack");
         const dotsWrap = qs("#wordsDots");
         const carousel = qs("#wordsCarousel");
+
         if (!track || !dotsWrap || !carousel) return;
 
         let slides = [];
@@ -503,9 +504,16 @@ export function useWeddingInteractions() {
         let isAnimating = false;
         let lastFingerprint = "";
 
-        const AUTO_DELAY = 3000;
-        const TRANSITION_MS = 900;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragCurrentX = 0;
+        let dragStartY = 0;
+        let activePointerId = null;
+
+        const AUTO_DELAY = 2000;
+        const TRANSITION_MS = 650;
         const POLL_INTERVAL_MS = 5000;
+        const SWIPE_MAX_WIDTH = 1024;
 
         const escapeHtml = (value) =>
           String(value == null ? "" : value).replace(/[&<>"']/g, (m) => {
@@ -519,6 +527,10 @@ export function useWeddingInteractions() {
             return map[m] || m;
           });
 
+        function isSwipeDevice() {
+          return window.matchMedia(`(max-width: ${SWIPE_MAX_WIDTH}px)`).matches;
+        }
+
         function makeFingerprint(items) {
           return JSON.stringify(items);
         }
@@ -531,7 +543,10 @@ export function useWeddingInteractions() {
             btn.className = "wordsDot";
             btn.type = "button";
             btn.setAttribute("aria-label", `Go to message ${i + 1}`);
-            btn.addEventListener("click", () => goTo(i + 1));
+            btn.addEventListener("click", () => {
+              goTo(i + 1);
+              restartAuto();
+            });
             dotsWrap.appendChild(btn);
           }
 
@@ -549,24 +564,25 @@ export function useWeddingInteractions() {
           });
         }
 
-        function applyTransform(useTransition = true) {
+        function applyTransform(useTransition = true, customOffset = null) {
           track.style.transition = useTransition
             ? `transform ${TRANSITION_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
             : "none";
 
-          track.style.transform = `translate3d(${-index * width}px, 0, 0)`;
+          const offset = customOffset == null ? -index * width : customOffset;
+          track.style.transform = `translate3d(${offset}px, 0, 0)`;
         }
 
         function setWidth() {
           if (!track.children.length) return;
+
           width = carousel.clientWidth;
           applyTransform(false);
-          track.offsetHeight;
-          applyTransform(true);
         }
 
         function goTo(targetIndex) {
           if (isAnimating || slides.length <= 1) return;
+
           isAnimating = true;
           index = targetIndex;
           setActiveDot();
@@ -577,10 +593,18 @@ export function useWeddingInteractions() {
           goTo(index + 1);
         }
 
+        function previous() {
+          goTo(index - 1);
+        }
+
         function start() {
           stop();
+
           if (slides.length <= 1) return;
-          timer = window.setInterval(next, AUTO_DELAY);
+
+          timer = window.setInterval(() => {
+            next();
+          }, AUTO_DELAY);
         }
 
         function stop() {
@@ -588,6 +612,11 @@ export function useWeddingInteractions() {
             window.clearInterval(timer);
             timer = null;
           }
+        }
+
+        function restartAuto() {
+          stop();
+          start();
         }
 
         function stopPolling() {
@@ -599,21 +628,24 @@ export function useWeddingInteractions() {
 
         function renderEmptyState(message) {
           stop();
+
           slides = [];
           index = 0;
           isAnimating = false;
+          isDragging = false;
 
           track.style.transition = "none";
-          track.style.transform = "translate3d(0,0,0)";
+          track.style.transform = "translate3d(0, 0, 0)";
           track.innerHTML = `
-            <div class="wordsSlide wordsSlide--empty" role="group" aria-label="No guest messages yet">
-              <div class="wordsSlide__inner">
-                <p class="wordsQuote wordsQuote--empty">${escapeHtml(
-                  message || "No wishes have been submitted yet.",
-                )}</p>
-              </div>
-            </div>
-          `;
+      <div class="wordsSlide wordsSlide--empty" role="group" aria-label="No guest messages yet">
+        <div class="wordsSlide__inner">
+          <p class="wordsQuote wordsQuote--empty">${escapeHtml(
+            message || "No wishes have been submitted yet.",
+          )}</p>
+        </div>
+      </div>
+    `;
+
           dotsWrap.innerHTML = "";
         }
 
@@ -630,13 +662,13 @@ export function useWeddingInteractions() {
             const name = escapeHtml(item.name);
 
             return `
-              <div class="wordsSlide" role="group" aria-label="Guest message">
-                <div class="wordsSlide__inner">
-                  <p class="wordsQuote">"${message}"</p>
-                  <p class="wordsBy">- ${name}</p>
-                </div>
-              </div>
-            `;
+        <div class="wordsSlide" role="group" aria-label="Guest message">
+          <div class="wordsSlide__inner">
+            <p class="wordsQuote">"${message}"</p>
+            <p class="wordsBy">- ${name}</p>
+          </div>
+        </div>
+      `;
           });
 
           const first = slideHtml[0];
@@ -646,11 +678,13 @@ export function useWeddingInteractions() {
 
           index = 1;
           isAnimating = false;
+          isDragging = false;
+
           buildDots(slides.length);
 
           window.requestAnimationFrame(() => {
             setWidth();
-            start();
+            restartAuto();
           });
         }
 
@@ -707,6 +741,7 @@ export function useWeddingInteractions() {
 
           const url = buildSheetJsonpUrl(callbackName);
           const payload = await loadScriptJsonp(url, callbackName, 15000);
+
           return normalizeItemsFromSheet(payload);
         }
 
@@ -722,6 +757,7 @@ export function useWeddingInteractions() {
                   window.setTimeout(resolve, 1200),
                 );
                 items = await fetchWordsOnce();
+
                 if (items.length) break;
               }
             }
@@ -746,11 +782,91 @@ export function useWeddingInteractions() {
 
         function startPolling() {
           stopPolling();
+
           pollTimer = window.setInterval(() => {
             if (!document.hidden) {
               refreshWords();
             }
           }, POLL_INTERVAL_MS);
+        }
+
+        function onPointerDown(event) {
+          if (!isSwipeDevice()) return;
+          if (slides.length <= 1) return;
+          if (isAnimating) return;
+          if (event.pointerType === "mouse") return;
+
+          isDragging = true;
+          dragStartX = event.clientX;
+          dragCurrentX = event.clientX;
+          dragStartY = event.clientY;
+          activePointerId = event.pointerId;
+
+          stop();
+
+          carousel.classList.add("wordsCard--dragging");
+          track.style.transition = "none";
+
+          if (carousel.setPointerCapture) {
+            carousel.setPointerCapture(activePointerId);
+          }
+        }
+
+        function onPointerMove(event) {
+          if (!isDragging) return;
+          if (event.pointerId !== activePointerId) return;
+
+          dragCurrentX = event.clientX;
+
+          const diffX = dragCurrentX - dragStartX;
+          const diffY = event.clientY - dragStartY;
+
+          if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 12) {
+            return;
+          }
+
+          if (Math.abs(diffX) > 8) {
+            event.preventDefault();
+          }
+
+          const limitedDiffX = Math.max(
+            Math.min(diffX, width * 0.75),
+            -width * 0.75,
+          );
+          applyTransform(false, -index * width + limitedDiffX);
+        }
+
+        function onPointerEnd(event) {
+          if (!isDragging) return;
+          if (event.pointerId !== activePointerId) return;
+
+          const diffX = dragCurrentX - dragStartX;
+          const threshold = Math.min(90, width * 0.18);
+
+          isDragging = false;
+          activePointerId = null;
+
+          carousel.classList.remove("wordsCard--dragging");
+
+          if (carousel.releasePointerCapture && event.pointerId != null) {
+            try {
+              carousel.releasePointerCapture(event.pointerId);
+            } catch {
+              // ignore release errors
+            }
+          }
+
+          if (Math.abs(diffX) >= threshold) {
+            if (diffX < 0) {
+              next();
+            } else {
+              previous();
+            }
+          } else {
+            applyTransform(true);
+          }
+
+          restartAuto();
         }
 
         track.addEventListener("transitionend", () => {
@@ -760,28 +876,49 @@ export function useWeddingInteractions() {
           if (index === realCount + 1) {
             index = 1;
             applyTransform(false);
-            track.offsetHeight;
-            applyTransform(true);
           } else if (index === 0) {
             index = realCount;
             applyTransform(false);
-            track.offsetHeight;
-            applyTransform(true);
           }
 
           setActiveDot();
           isAnimating = false;
         });
 
-        carousel.addEventListener("mouseenter", stop);
-        carousel.addEventListener("mouseleave", start);
-        carousel.addEventListener("touchstart", stop, { passive: true });
-        carousel.addEventListener("touchend", start, { passive: true });
+        carousel.addEventListener("pointerdown", onPointerDown);
+        carousel.addEventListener("pointermove", onPointerMove);
+        carousel.addEventListener("pointerup", onPointerEnd);
+        carousel.addEventListener("pointercancel", onPointerEnd);
+        carousel.addEventListener("lostpointercapture", () => {
+          if (!isDragging) return;
 
-        window.addEventListener("resize", setWidth);
+          isDragging = false;
+          activePointerId = null;
+          carousel.classList.remove("wordsCard--dragging");
+          applyTransform(true);
+          restartAuto();
+        });
+
+        window.addEventListener("resize", () => {
+          setWidth();
+
+          if (!isSwipeDevice() && isDragging) {
+            isDragging = false;
+            activePointerId = null;
+            carousel.classList.remove("wordsCard--dragging");
+            applyTransform(true);
+            restartAuto();
+          }
+        });
+
         window.addEventListener("focus", () => refreshWords());
+
         document.addEventListener("visibilitychange", () => {
-          if (!document.hidden) refreshWords();
+          if (!document.hidden) {
+            refreshWords();
+          } else {
+            stop();
+          }
         });
 
         window.__refreshWordsCarousel = refreshWords;
