@@ -11,11 +11,11 @@ function WeddingPage() {
             loop
             muted
             playsInline
-            poster="assets/img/couple-photo.svg"
-            preload="metadata"
+            preload="auto"
           >
             <source src="assets/video/bannervid.mp4" type="video/mp4" />
           </video>
+
           <div className="heroBanner__scrim"></div>
         </div>
         <div className="container hero__grid">

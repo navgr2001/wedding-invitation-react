@@ -4591,3 +4591,17 @@ body > *:not(.bg-icons) {
     font-size: clamp(1.85rem, 9vw, 2.45rem);
   }
 }
+
+/* Hero video placeholder fix - show only banner video */
+.heroBanner__video {
+  background: transparent !important;
+}
+
+.heroBanner__videoEl {
+  display: block;
+  background: transparent !important;
+}
+
+.heroBanner__videoEl[poster] {
+  object-fit: cover;
+}
