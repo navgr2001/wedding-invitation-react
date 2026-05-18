@@ -1,0 +1,1 @@
+Replace assets/img/envelope.png with your real envelope image (keep the same file name).

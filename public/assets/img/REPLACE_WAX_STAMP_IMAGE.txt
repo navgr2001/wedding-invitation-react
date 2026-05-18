@@ -1,0 +1,1 @@
+Replace assets/img/wax-stamp.png with your real wax stamp image (keep the same file name).
