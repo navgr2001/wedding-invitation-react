@@ -41,8 +41,8 @@ function Footer() {
 
               <div className="weddingFooter__details">
                 <p>10th December 2026</p>
-                <p>Water&apos;s Edge, Battaramulla</p>
-                <p>The Eagle</p>
+                <p>Ramrich Hotel, Eakala</p>
+                <p>Melody Ballroom</p>
               </div>
             </div>
 
@@ -73,7 +73,7 @@ function Footer() {
                   </span>
 
                   <span className="weddingFooter__contactText">
-                    Shalom - 077 179 8509
+                    Naveen - 076 452 5012
                   </span>
                 </a>
 
