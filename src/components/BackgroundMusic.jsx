@@ -93,7 +93,7 @@ function BackgroundMusic() {
   return (
     <audio
       id="bgMusic"
-      src="assets/audio/wedding-song.mp3"
+      src="assets/audio/AThousandYears.mp3"
       preload="auto"
       loop
     />

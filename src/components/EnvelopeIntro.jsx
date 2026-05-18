@@ -26,7 +26,7 @@ function EnvelopeIntro() {
           <div className="inviteContent">
             <div className="inviteKicker">SAVE THE DATE</div>
             <div className="inviteNames">
-              Dewmini <span className="inviteAmp">&amp;</span> Shalom
+              Dewmini <span className="inviteAmp">&amp;</span> Naveen
             </div>
             <div className="inviteMeta">
               10.12.2026 • HOTEL RAMRICH - JA ELA
