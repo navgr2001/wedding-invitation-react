@@ -52,7 +52,7 @@ function Footer() {
               <div className="weddingFooter__contact">
                 <a
                   className="weddingFooter__contactItem"
-                  href="tel:+94771798509"
+                  href="tel:+94764525012"
                 >
                   <span
                     className="weddingFooter__contactIcon"

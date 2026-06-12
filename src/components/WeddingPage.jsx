@@ -42,7 +42,7 @@ function WeddingPage() {
             </h1>
 
             <p className="meta reveal">
-              Monday, <span className="date">December 10, 2026</span>
+              Thursday, <span className="date">December 10, 2026</span>
             </p>
             <a
               aria-label="Swipe for more"
