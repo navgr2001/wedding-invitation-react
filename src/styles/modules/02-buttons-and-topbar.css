@@ -1,0 +1,138 @@
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  font-weight: 650;
+  transition:
+    transform 0.12s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+  user-select: none;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn--primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand-600));
+  color: #fff;
+  box-shadow: 0 12px 25px rgba(190, 81, 3, 0.24);
+}
+.btn--primary:hover {
+  box-shadow: 0 16px 32px rgba(190, 81, 3, 0.28);
+}
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(190, 81, 3, 0.2);
+}
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(190, 81, 3, 0.3);
+}
+.btn--lg {
+  padding: 14px 18px;
+  border-radius: 16px;
+}
+.btn--full {
+  width: 100%;
+}
+.btn__icon {
+  display: inline-flex;
+}
+
+/* Topbar */
+.topbar {
+  /* Transparent, centered menu, and scrolls away with the page */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+
+  background: transparent;
+  border-bottom: none;
+  backdrop-filter: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 16px;
+  font-family: var(--font-tenorsans);
+  font-weight: 400;
+  font-size: 15px;
+  color: rgb(224, 216, 203);
+  line-height: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand__mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(190, 81, 3, 0.1);
+  color: var(--brand-700);
+  border: 1px solid rgba(190, 81, 3, 0.18);
+}
+.brand__text {
+  font-family: "Tenor Sans", serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-size: 18px;
+}
+
+.nav {
+  width: min(980px, 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 20px;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+}
+
+.nav a {
+  font-weight: 650;
+  color: rgba(28, 27, 25, 0.78);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+}
+.nav a:hover {
+  background: rgba(190, 81, 3, 0.08);
+  border-color: rgba(190, 81, 3, 0.14);
+  color: var(--brand-700);
+}
+.navToggle {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  display: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(190, 81, 3, 0.18);
+  background: rgba(255, 255, 255, 0.6);
+}
+.navToggle span {
+  display: block;
+  height: 2px;
+  width: 18px;
+  background: var(--brand-700);
+  margin: 4px auto;
+  border-radius: 999px;
+}
+

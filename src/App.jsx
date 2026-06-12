@@ -1,29 +1,11 @@
-import { useWeddingInteractions } from "./hooks/useWeddingInteractions";
+import { useWeddingInvitationViewModel } from "./viewmodels/app/useWeddingInvitationViewModel";
+import WeddingInvitationView from "./views/WeddingInvitationView";
 import "./styles/style.css";
-import BackgroundIcons from "./components/BackgroundIcons";
-import EnvelopeIntro from "./components/EnvelopeIntro";
-import Topbar from "./components/Topbar";
-import WeddingPage from "./components/WeddingPage";
-import Footer from "./components/Footer";
-import GalleryLightbox from "./components/GalleryLightbox";
-import BackgroundMusic from "./components/BackgroundMusic";
-import FloatingControls from "./components/FloatingControls";
 
 function App() {
-  useWeddingInteractions();
+  const { content } = useWeddingInvitationViewModel();
 
-  return (
-    <>
-      <BackgroundIcons />
-      <EnvelopeIntro />
-      <Topbar />
-      <WeddingPage />
-      <Footer />
-      <GalleryLightbox />
-      <BackgroundMusic />
-      <FloatingControls />
-    </>
-  );
+  return <WeddingInvitationView content={content} />;
 }
 
 export default App;

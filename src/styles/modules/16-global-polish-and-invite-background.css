@@ -1,0 +1,469 @@
+/* =========================================
+   Wedding icon background overlay
+   ========================================= */
+:root {
+  /* One simple color for all icons */
+  --bg-icon-color: rgba(190, 81, 3, 0.05); /* change opacity if needed */
+}
+
+.bg-icons {
+  position: fixed;
+  inset: 0;
+
+  /* Keep it behind modal layers, but still visible */
+  z-index: -5;
+
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ✅ IMPORTANT: DO NOT set position/z-index on all body children
+   That breaks envelopeIntro/topbar/lightbox and can stop scrolling
+*/
+/* REMOVE THIS (if exists)
+body > *:not(.bg-icons) {
+  position: relative;
+  z-index: 1;
+}
+*/
+
+.bg-icon {
+  position: absolute;
+  width: var(--s);
+  height: var(--s);
+  opacity: var(--o);
+  transform: translate3d(0, 0, 0) rotate(var(--r));
+  will-change: transform;
+  filter: blur(0px);
+}
+
+.bg-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: var(--bg-icon-color);
+}
+
+@keyframes bgFloat {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--r));
+  }
+  50% {
+    transform: translate3d(var(--dx), var(--dy), 0)
+      rotate(calc(var(--r) + 10deg));
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--r));
+  }
+}
+
+.bg-icon.is-anim {
+  animation: bgFloat var(--t) ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-icon.is-anim {
+    animation: none;
+  }
+}
+
+/* =========================================
+   Invitation Cover (final fixed version)
+   - perfectly centered on all devices
+   - texture sits above background color
+   - card and its content always stay above all background layers
+   ========================================= */
+
+.inviteIntro {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 16px;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-color: #f7f4ee;
+  isolation: isolate;
+}
+
+/* background color base */
+.inviteIntro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #f7f4ee;
+}
+
+/* texture image on top of background color */
+.inviteIntro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: url("/assets/img/invite/card-texture.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.34;
+  pointer-events: none;
+}
+
+.inviteIntro__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(
+      1200px 700px at 20% -10%,
+      rgba(255, 255, 255, 0.35),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 600px at 90% 10%,
+      rgba(176, 118, 85, 0.14),
+      transparent 55%
+    );
+  pointer-events: none;
+}
+
+.inviteStage {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  min-height: calc(100vh - 32px);
+  min-height: calc(100dvh - 32px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* card always above all background layers */
+.inviteCard {
+  position: relative;
+  z-index: 4;
+  isolation: isolate;
+  width: min(92vw, 560px);
+  aspect-ratio: 1 / 1;
+  border-radius: clamp(18px, 2vw, 26px);
+  overflow: hidden;
+  background: #f7f4ee;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+}
+
+.invitePaper,
+.inviteFloral {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.invitePaper {
+  z-index: 0;
+  background-image: url("/assets/img/invite/card-texture.png");
+  background-position: center;
+  background-size: cover;
+  opacity: 0.95;
+  transform: scale(1.015);
+}
+
+.inviteFloralTop {
+  z-index: 1;
+  background-image: url("/assets/img/invite/inviteborder-top.png");
+  background-position: top center;
+  background-size: 100% auto;
+}
+
+.inviteFloralBottom {
+  z-index: 1;
+  background-image: url("/assets/img/invite/inviteborder-bottom1.png");
+  background-position: bottom center;
+  background-size: 100% auto;
+}
+
+.inviteContent {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center;
+  gap: clamp(10px, 1.5vw, 18px) !important;
+  padding: clamp(96px, 14%, 138px) clamp(20px, 7.5%, 58px)
+    clamp(58px, 12%, 92px) !important;
+  box-sizing: border-box;
+}
+
+.inviteKicker,
+.inviteNames,
+.inviteMeta,
+.inviteBtn {
+  opacity: 0;
+  transform: translateY(10px);
+  margin: 0 !important;
+}
+
+.inviteKicker {
+  font-family: "Tenor Sans", "Tenor Sans Fallback", sans-serif;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  line-height: 1.2 !important;
+  color: rgba(31, 41, 55, 0.74);
+}
+
+.inviteNames {
+  max-width: none;
+  white-space: nowrap;
+  display: inline-block;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", sans-serif;
+  font-size: clamp(18px, 5vw, 45px);
+  line-height: 1.06 !important;
+  color: rgba(17, 24, 39, 0.92);
+}
+
+.inviteAmp {
+  padding: 0 0.1em;
+}
+
+.inviteMeta {
+  max-width: 28ch;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", sans-serif;
+  font-size: clamp(11px, 0.95vw, 15px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.35 !important;
+  color: rgba(31, 41, 55, 0.64);
+}
+
+.inviteBtn {
+  margin-top: clamp(4px, 1vw, 12px) !important;
+  appearance: none;
+  border: 1px solid rgba(17, 24, 39, 0.28);
+  background: rgba(255, 255, 255, 0.82);
+  color: rgba(17, 24, 39, 0.86);
+  border-radius: 999px;
+  padding: clamp(12px, 1.2vw, 15px) clamp(22px, 2vw, 34px);
+  font-family: "Tenor Sans", "Tenor Sans Fallback", sans-serif;
+  font-size: clamp(11px, 0.95vw, 13px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.inviteBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.14);
+}
+
+.inviteBtn:active {
+  transform: translateY(0);
+}
+
+/* Entrance animations */
+.inviteFloralTop,
+.inviteFloralBottom {
+  opacity: 0;
+}
+
+.inviteIntro.isReady .inviteFloralTop {
+  animation: floralTopIn 900ms ease forwards;
+}
+
+.inviteIntro.isReady .inviteFloralBottom {
+  animation: floralBottomIn 900ms ease 120ms forwards;
+}
+
+.inviteIntro.isReady .inviteKicker {
+  animation: textIn 1200ms ease 220ms forwards;
+}
+
+.inviteIntro.isReady .inviteNames {
+  animation: textIn 1450ms ease 420ms forwards;
+}
+
+.inviteIntro.isReady .inviteMeta {
+  animation: textIn 1450ms ease 620ms forwards;
+}
+
+.inviteIntro.isReady .inviteBtn {
+  animation: textIn 1500ms ease 820ms forwards;
+}
+
+@keyframes floralTopIn {
+  from {
+    opacity: 0;
+    transform: translateY(-18px) scale(1.01);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1.01);
+  }
+}
+
+@keyframes floralBottomIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(1.01);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1.01);
+  }
+}
+
+@keyframes textIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.inviteIntro.isOpen {
+  animation: introFadeOut 650ms ease forwards;
+}
+
+@keyframes introFadeOut {
+  to {
+    opacity: 0;
+    transform: scale(1.01);
+  }
+}
+
+@media (max-width: 1024px) {
+  .inviteIntro {
+    padding: 14px;
+  }
+
+  .inviteStage {
+    min-height: calc(100vh - 28px);
+    min-height: calc(100dvh - 28px);
+  }
+
+  .inviteCard {
+    width: min(94vw, 540px);
+  }
+
+  .inviteContent {
+    padding: clamp(88px, 14.5%, 124px) clamp(18px, 7%, 34px)
+      clamp(50px, 11%, 72px) !important;
+  }
+
+  .inviteNames {
+    font-size: clamp(30px, 6vw, 52px);
+  }
+}
+
+@media (max-width: 768px) {
+  .inviteIntro {
+    padding: 12px;
+  }
+
+  .inviteStage {
+    min-height: calc(100vh - 24px);
+    min-height: calc(100dvh - 24px);
+  }
+
+  .inviteCard {
+    width: min(96vw, 500px);
+    border-radius: 18px;
+  }
+
+  .inviteContent {
+    padding: clamp(82px, 15%, 112px) 18px clamp(42px, 10%, 60px) !important;
+    gap: 10px !important;
+  }
+
+  .inviteKicker {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+  }
+
+  .inviteNames {
+    max-width: none;
+    white-space: nowrap;
+    font-size: clamp(22px, 6.4vw, 42px);
+  }
+
+  .inviteMeta {
+    max-width: 24ch;
+    font-size: 10px;
+    letter-spacing: 0.11em;
+  }
+
+  .inviteBtn {
+    padding: 11px 18px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  .inviteFloralTop,
+  .inviteFloralBottom {
+    background-size: 100% auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .inviteIntro {
+    padding: 10px;
+  }
+
+  .inviteStage {
+    min-height: calc(100vh - 20px);
+    min-height: calc(100dvh - 20px);
+  }
+
+  .inviteCard {
+    width: min(96vw, 100%);
+  }
+
+  .inviteContent {
+    padding: clamp(78px, 15.5%, 104px) 16px clamp(38px, 9.5%, 52px) !important;
+  }
+
+  .inviteNames {
+    max-width: none;
+    white-space: nowrap;
+    font-size: clamp(20px, 6.8vw, 34px);
+  }
+
+  .inviteMeta {
+    font-size: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inviteIntro.isReady .inviteFloralTop,
+  .inviteIntro.isReady .inviteFloralBottom,
+  .inviteIntro.isReady .inviteKicker,
+  .inviteIntro.isReady .inviteNames,
+  .inviteIntro.isReady .inviteMeta,
+  .inviteIntro.isReady .inviteBtn,
+  .inviteIntro.isOpen {
+    animation: none !important;
+  }
+
+  .inviteFloralTop,
+  .inviteFloralBottom,
+  .inviteKicker,
+  .inviteNames,
+  .inviteMeta,
+  .inviteBtn {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+

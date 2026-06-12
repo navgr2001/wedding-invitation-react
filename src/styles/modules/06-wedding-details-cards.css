@@ -1,0 +1,200 @@
+/* =========================
+   Wedding Details cards (match Image 1)
+   ========================= */
+
+.weddingDetailsSection {
+  padding-top: 96px;
+  padding-bottom: 110px;
+}
+
+.weddingDetailsSection .sectionHeader {
+  margin-bottom: 48px;
+}
+
+/* 2 cards in 1 row + outer paddings */
+.weddingDetailsSection .weddingCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  width: min(1100px, 92vw);
+  margin: 0 auto;
+  padding: 0 24px;
+  align-items: stretch;
+}
+
+/* card */
+.weddingDetailsSection .weddingCard {
+  display: flex;
+  flex-direction: column; /* stack content vertically */
+  height: 100%;
+  border-radius: 22px;
+  background: rgba(235, 233, 228, 0.92);
+  border: 1px solid rgba(190, 81, 3, 0.1);
+  box-shadow: 0 14px 30px rgba(31, 18, 8, 0.1);
+  padding: 26px 26px 22px;
+  transition:
+    box-shadow 0.28s ease,
+    transform 0.28s ease;
+}
+
+/* top-left circle icon */
+.weddingDetailsSection .weddingCard__icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 20px;
+
+  background: rgba(143, 60, 2, 0.4);
+  /* border: 1px solid rgba(235, 233, 228, 0.92); */
+  color: rgba(255, 255, 255, 0.95);
+
+  /* box-shadow: 0 10px 22px rgba(31, 18, 8, 0.14); */
+  /* margin-bottom: 18px; */
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.weddingDetailsSection .weddingCard__iconImg {
+  display: block;
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.weddingDetailsSection .weddingCard__iconImg--rings {
+  width: 54px;
+  height: 54px;
+}
+
+.weddingDetailsSection .weddingCard__title {
+  margin: 0 0 14px;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-weight: 400;
+  font-size: clamp(24px, 4vw, 30px);
+  color: rgba(31, 41, 55, 0.92);
+  line-height: 32px;
+}
+
+/* simple text lines (no bullets / no inline icons) */
+.weddingDetailsSection .weddingCard__lines {
+  margin: 0 0 14px;
+}
+
+.weddingDetailsSection .wLine {
+  margin: 0 0 10px;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-size: 16px;
+  color: rgba(75, 85, 99);
+  line-height: 16px;
+  font-weight: 400;
+}
+
+.weddingDetailsSection .wLine--strong {
+  font-weight: 600;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(75, 85, 99);
+}
+
+.weddingDetailsSection .wLine--light {
+  font-weight: 500;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(17, 24, 39);
+}
+
+.weddingDetailsSection .wLine--muted {
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: rgba(75, 85, 99);
+}
+
+/* italic note line like Image 1 */
+.weddingDetailsSection .weddingCard__note {
+  margin: 10px 0 16px;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(75, 85, 99);
+  font-weight: 400;
+}
+
+/* button: light default */
+.weddingDetailsSection .weddingCard__btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: auto;
+
+  padding: 12px 14px;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(28, 27, 25, 0.12);
+  color: rgba(15, 23, 42);
+  text-decoration: none;
+  font-weight: 500;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-size: 14px;
+  line-height: 20px;
+
+  transition:
+    background 0.22s ease,
+    color 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
+}
+
+.weddingDetailsSection .weddingCard__btn .btnPin {
+  display: inline-grid;
+  place-items: center;
+}
+
+/* hover: card glows + icon zooms */
+@media (hover: hover) {
+  .weddingDetailsSection .weddingCard:hover {
+    box-shadow:
+      0 22px 55px rgba(0, 0, 0, 0.18),
+      0 14px 30px rgba(31, 18, 8, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .weddingDetailsSection .weddingCard:hover .weddingCard__icon {
+    transform: scale(1.08);
+    box-shadow:
+      /* 0 16px 30px rgba(190, 81, 3, 0.22), */ 0 10px 22px
+      rgba(31, 18, 8, 0.14);
+  }
+
+  .weddingDetailsSection .weddingCard__btn:hover {
+    background: linear-gradient(135deg, var(--brand), var(--brand-600));
+    border-color: rgba(190, 81, 3, 0.35);
+    color: #fff;
+    box-shadow: 0 14px 30px rgba(190, 81, 3, 0.22);
+    transform: translateY(-1px);
+  }
+}
+
+/* responsive: stack on small screens */
+@media (max-width: 900px) {
+  .weddingDetailsSection {
+    padding-top: 78px;
+    padding-bottom: 86px;
+  }
+  .weddingDetailsSection .weddingCards {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+  }
+}
+

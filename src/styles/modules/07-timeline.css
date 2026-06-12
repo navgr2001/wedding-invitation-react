@@ -1,0 +1,191 @@
+/* =========================================
+   TIMELINE (Desktop nodes aligned to cards)
+   ========================================= */
+
+.timelineWrapV2 {
+  /* margin-top: 50px; */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.timelineTitleV2 {
+  text-align: center;
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-weight: 400;
+  font-size: clamp(40px, 3vw, 48px);
+  margin-bottom: 28px;
+  position: relative;
+  line-height: 48px;
+  color: rgb(31, 41, 55);
+}
+
+.timelineTitleV2::after {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 4px;
+  border-radius: 999px;
+  margin: 14px auto 0;
+  background: rgba(190, 81, 3, 0.25);
+}
+
+#details.section {
+  padding-top: 96px;
+  padding-bottom: 110px;
+}
+
+.timelineV2 {
+  --tl-track: rgba(143, 60, 2, 0.35);
+  --tl-progress: 0%;
+  --tl-line-w: 3px;
+
+  position: relative;
+  width: min(980px, 92vw);
+  margin: 0 auto;
+  z-index: -3;
+}
+
+.tlList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+.timeline-icon {
+  width: 50px;
+  height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.timeline-icon img {
+  width: 28px;
+  height: 28px;
+  display: block;
+  object-fit: contain;
+}
+/* center line */
+.tlList::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--tl-line-w);
+  border-radius: 999px;
+  background: var(--tl-track);
+}
+
+/* progress line (optional, if you update --tl-progress via JS) */
+.tlList::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--tl-line-w);
+  height: var(--tl-progress);
+  border-radius: 999px;
+  background: rgba(190, 81, 3, 0.95);
+}
+
+/* ✅ KEY FIX: each item is a 3-col row, node centered in same row */
+.tlItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 78px 1fr;
+  align-items: center; /* node aligns with card */
+  padding: 22px 0;
+}
+
+.tlCard {
+  width: min(360px, 88%);
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 12px;
+  border: 1px solid rgba(28, 27, 25, 0.08);
+  box-shadow: 0 10px 22px rgba(31, 18, 8, 0.1);
+  padding: 16px 18px;
+}
+
+.tlTime {
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(31, 41, 55, 0.86);
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  line-height: 32px;
+}
+
+.tlText {
+  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  color: rgba(55, 65, 81, 0.78);
+  text-align: center;
+  line-height: 28px;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+/* ✅ Node is NOT absolute; it's part of the row */
+.tlNode {
+  grid-column: 2;
+  justify-self: center;
+  align-self: center;
+
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+
+  background: rgba(143, 60, 2, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 22px rgba(31, 18, 8, 0.14);
+  z-index: 3;
+}
+
+/* Left/right placement */
+.tlItem--left > .tlCard {
+  grid-column: 1;
+  justify-self: end;
+}
+
+.tlItem--right > .tlCard {
+  grid-column: 3;
+  justify-self: start;
+}
+
+/* --- MOBILE: keep your current behavior --- */
+@media (max-width: 720px) {
+  .timelineV2 {
+    width: min(560px, 92vw);
+    z-index: -3;
+  }
+
+  .tlItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 22px 0;
+  }
+
+  .tlNode {
+    order: -1;
+    margin: 0 0 14px;
+    z-index: 3;
+  }
+
+  .tlCard {
+    width: min(420px, 92vw);
+    z-index: 3;
+  }
+}

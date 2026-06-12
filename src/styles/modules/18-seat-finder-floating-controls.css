@@ -1,0 +1,143 @@
+/* ====================================================== */
+/* seat finder */
+/* ====================================================== */
+.seatFinderSuggestions {
+  width: min(100%, 500px);
+  margin: 10px auto 0;
+  padding: 10px 0;
+  border: 1px solid rgba(190, 81, 3, 0.15);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 24px 46px rgba(17, 24, 39, 0.1);
+  overflow: hidden;
+  text-align: left;
+  animation: seatFinderFadeUp 180ms ease both;
+}
+
+.seatFinderSuggestion {
+  width: 100%;
+  display: block;
+  padding: 12px 24px;
+  border: 0;
+  background: transparent;
+  color: #1f2937;
+  font: inherit;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.seatFinderSuggestion:hover,
+.seatFinderSuggestion.isActive {
+  background: rgba(190, 81, 3, 0.08);
+  color: #9a3412;
+}
+
+.seatFinderSuggestion--empty {
+  cursor: default;
+  color: #9ca3af;
+}
+
+.seatFinderSuggestion--empty:hover {
+  background: transparent;
+  color: #9ca3af;
+}
+
+.seatFinderResult {
+  width: min(100%, 500px);
+  margin: 24px auto 0;
+  padding: clamp(24px, 4vw, 32px);
+  border: 1px solid rgba(190, 81, 3, 0.15);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 24px 46px rgba(17, 24, 39, 0.1);
+  text-align: center;
+  animation: seatFinderFadeUp 220ms ease both;
+}
+
+.seatFinderResult__welcome {
+  margin: 0 0 10px;
+  color: #be5103;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.seatFinderResult__title {
+  margin: 0;
+  color: #1f2937;
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 5vw, 2.35rem);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.seatFinderResult__text,
+.seatFinderResult__message {
+  margin: 14px 0 0;
+  color: #7b8492;
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  line-height: 1.65;
+}
+
+.seatFinderResult--error {
+  border-color: rgba(190, 81, 3, 0.2);
+}
+
+.seatFinderResult--error .seatFinderResult__message {
+  color: #9a3412;
+}
+
+@keyframes seatFinderFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .seatFinderSuggestions {
+    margin-top: 8px;
+    border-radius: 22px;
+  }
+
+  .seatFinderSuggestion {
+    padding: 12px 20px;
+    font-size: 0.96rem;
+  }
+
+  .seatFinderResult {
+    margin-top: 20px;
+    border-radius: 22px;
+  }
+
+  .seatFinderResult__welcome {
+    letter-spacing: 0.22em;
+  }
+}
+
+@media (max-width: 420px) {
+  .seatFinderSuggestions,
+  .seatFinderResult {
+    width: 100%;
+  }
+
+  .seatFinderSuggestion {
+    padding-inline: 18px;
+  }
+
+  .seatFinderResult {
+    padding: 22px 18px;
+  }
+}
+

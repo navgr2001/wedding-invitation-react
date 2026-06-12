@@ -1,0 +1,129 @@
+/* Countdown section final layout fix */
+#countdownSection {
+  overflow: hidden;
+}
+
+#countdownSection .container {
+  width: min(1180px, 92%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#countdownSection .sectionHeader {
+  width: min(920px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: clamp(30px, 4vw, 44px);
+  text-align: center;
+}
+
+#countdownSection .timelineTitleV2,
+#countdownSection .h2 {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  color: #1f2937;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  line-height: 1.12;
+}
+
+#countdownSection .countdownTagline {
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  #countdownSection {
+    padding-top: 64px;
+    padding-bottom: 58px;
+  }
+
+  #countdownSection .container {
+    width: min(100%, 92%);
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #countdownSection .sectionHeader {
+    margin-bottom: 26px;
+  }
+
+  #countdownSection .timelineTitleV2,
+  #countdownSection .h2 {
+    max-width: 360px;
+    font-size: clamp(2.05rem, 10vw, 3rem);
+    line-height: 1.14;
+    letter-spacing: 0.02em;
+  }
+
+  #countdownSection .countdownTagline {
+    max-width: 320px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 380px) {
+  #countdownSection .timelineTitleV2,
+  #countdownSection .h2 {
+    max-width: 320px;
+    font-size: clamp(1.85rem, 9vw, 2.45rem);
+  }
+}
+
+/* Hero video placeholder fix - show only banner video */
+.heroBanner__video {
+  background: transparent !important;
+}
+
+.heroBanner__videoEl {
+  display: block;
+  background: transparent !important;
+}
+
+.heroBanner__videoEl[poster] {
+  object-fit: cover;
+}
+
+/* Words of Love carousel swipe + auto movement fix */
+.wordsCard {
+  user-select: none;
+}
+
+.wordsTrack {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+@media (max-width: 1024px) {
+  .wordsCard {
+    touch-action: pan-y;
+  }
+
+  .wordsCard--dragging {
+    cursor: grabbing;
+  }
+
+  .wordsCard--dragging .wordsTrack {
+    cursor: grabbing;
+  }
+
+  .wordsSlide,
+  .wordsSlide * {
+    user-select: none;
+  }
+}
+
+@media (min-width: 1025px) {
+  .wordsCard {
+    touch-action: auto;
+  }
+}
+
+
+

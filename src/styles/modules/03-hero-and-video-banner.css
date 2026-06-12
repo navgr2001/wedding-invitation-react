@@ -1,0 +1,233 @@
+/* Hero */
+.hero {
+  padding-top: 36px;
+  overflow: hidden;
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 30px;
+  align-items: center;
+}
+.hero__photoCard {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid rgba(190, 81, 3, 0.18);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow);
+}
+.hero__photoCard img {
+  width: 100%;
+  height: auto;
+}
+.hero__badge {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(190, 81, 3, 0.18);
+  color: var(--brand-700);
+  font-weight: 750;
+}
+.hero__bg {
+  position: absolute;
+  inset: -60px -40px auto -40px;
+  height: 360px;
+  background:
+    radial-gradient(
+      420px 240px at 25% 20%,
+      rgba(190, 81, 3, 0.16),
+      transparent 60%
+    ),
+    radial-gradient(
+      360px 220px at 78% 40%,
+      rgba(190, 81, 3, 0.12),
+      transparent 60%
+    );
+  filter: blur(6px);
+  pointer-events: none;
+  z-index: -2;
+}
+.hero__sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.9;
+  background-image:
+    radial-gradient(
+      2px 2px at 10% 30%,
+      rgba(190, 81, 3, 0.35),
+      transparent 60%
+    ),
+    radial-gradient(2px 2px at 35% 15%, rgba(190, 81, 3, 0.3), transparent 60%),
+    radial-gradient(
+      1.6px 1.6px at 65% 35%,
+      rgba(190, 81, 3, 0.3),
+      transparent 60%
+    ),
+    radial-gradient(
+      2px 2px at 85% 25%,
+      rgba(190, 81, 3, 0.25),
+      transparent 60%
+    ),
+    radial-gradient(
+      1.6px 1.6px at 18% 70%,
+      rgba(190, 81, 3, 0.2),
+      transparent 60%
+    ),
+    radial-gradient(2px 2px at 78% 68%, rgba(190, 81, 3, 0.22), transparent 60%);
+  animation: floatSparkles 8s ease-in-out infinite;
+}
+@keyframes floatSparkles {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+/* Hero Banner (video cover + centered content) */
+/* Fullscreen Banner Hero */
+.heroBanner {
+  position: relative;
+  height: 100vh;
+  height: 100svh; /* mobile-safe viewport */
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 0; /* override .section padding */
+  overflow: hidden;
+  align-items: center;
+}
+
+/* remove inherited section spacing for hero */
+.heroBanner.section {
+  padding: 0;
+}
+
+/* keep content away from sticky header but still inside full height */
+.heroBanner .container {
+  padding-top: 86px; /* approx sticky header height */
+  padding-bottom: 34px;
+}
+
+.heroBanner__video {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+}
+.heroBanner__videoEl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  filter: brightness(1.05) contrast(1.05) saturate(1.02);
+}
+
+.heroBanner__scrim {
+  position: absolute;
+  inset: 0;
+  /* Light airy overlay like savethedate hero */
+  background:
+    radial-gradient(
+      1200px 600px at 50% 45%,
+      rgba(255, 255, 255, 0),
+      rgba(0, 0, 0, 0.22) 75%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(255, 255, 255, 0.02) 55%,
+      rgba(0, 0, 0, 0.63) 100%
+    );
+}
+
+.heroBanner .hero__grid {
+  grid-template-columns: 1fr;
+  align-items: center; /* vertical center */
+  justify-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: 22px;
+}
+.heroBanner .hero__left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.heroBanner .hero__actions {
+  justify-content: center;
+}
+.heroBanner .scrollHint {
+  justify-content: center;
+}
+.heroBanner .hero__right {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.heroBanner .hero__photoCard {
+  width: min(92vw, 560px);
+}
+
+.hero__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.scrollHint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 22px;
+  color: rgba(28, 27, 25, 0.62);
+  font-weight: 600;
+}
+.scrollHint__mouse {
+  width: 26px;
+  height: 42px;
+  border-radius: 999px;
+  border: 2px solid rgba(190, 81, 3, 0.25);
+  position: relative;
+}
+.scrollHint__mouse::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--brand);
+  border-radius: 99px;
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  transform: translateX(-50%);
+  animation: mouseDot 1.3s ease-in-out infinite;
+}
+@keyframes mouseDot {
+  0% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(-50%, 14px);
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+

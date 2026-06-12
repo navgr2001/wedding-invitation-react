@@ -1,0 +1,285 @@
+/* Countdown completed wedding animation */
+.countdownSection--completed {
+  position: relative;
+  overflow: hidden;
+}
+
+.countdownCompleteMessage {
+  width: min(680px, 92%);
+  margin: clamp(28px, 4vw, 44px) auto 0;
+  padding: clamp(26px, 4vw, 38px);
+  border: 1px solid rgba(190, 81, 3, 0.16);
+  border-radius: 28px;
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(255, 239, 225, 0.95),
+    rgba(255, 255, 255, 0.94) 58%,
+    rgba(255, 248, 242, 0.92)
+  );
+  box-shadow:
+    0 28px 70px rgba(17, 24, 39, 0.12),
+    0 12px 28px rgba(190, 81, 3, 0.08);
+  text-align: center;
+  animation: countdownLoveReveal 800ms ease both;
+}
+
+.countdownCompleteMessage__sparkles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 14px;
+  color: #be5103;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+}
+
+.countdownCompleteMessage__sparkles span {
+  display: inline-block;
+  animation: countdownSparkle 1.8s ease-in-out infinite;
+}
+
+.countdownCompleteMessage__sparkles span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.countdownCompleteMessage__sparkles span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.countdownCompleteMessage__eyebrow {
+  margin: 0 0 12px;
+  color: #be5103;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.countdownCompleteMessage__title {
+  margin: 0;
+  color: #1f2937;
+  font-family: var(--font-gilda, serif);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.countdownCompleteMessage__text {
+  width: min(520px, 100%);
+  margin: 16px auto 0;
+  color: #737b8c;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  line-height: 1.75;
+}
+
+.countdownWeddingHearts {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.countdownWeddingHearts span {
+  position: absolute;
+  bottom: -40px;
+  color: rgba(190, 81, 3, 0.58);
+  opacity: 0;
+  animation: weddingHeartFloat 6s ease-in forwards;
+}
+
+.countdownWeddingHearts span:nth-child(even) {
+  color: rgba(185, 154, 113, 0.62);
+}
+
+/* Individual heart positions - avoids invalid CSS modulo/calculation errors */
+.countdownWeddingHearts span:nth-child(1) {
+  left: 6%;
+  font-size: 18px;
+  animation-delay: 0s;
+  --heart-drift: -18px;
+}
+
+.countdownWeddingHearts span:nth-child(2) {
+  left: 12%;
+  font-size: 22px;
+  animation-delay: 0.12s;
+  --heart-drift: 22px;
+}
+
+.countdownWeddingHearts span:nth-child(3) {
+  left: 18%;
+  font-size: 24px;
+  animation-delay: 0.24s;
+  --heart-drift: -28px;
+}
+
+.countdownWeddingHearts span:nth-child(4) {
+  left: 25%;
+  font-size: 20px;
+  animation-delay: 0.36s;
+  --heart-drift: 26px;
+}
+
+.countdownWeddingHearts span:nth-child(5) {
+  left: 31%;
+  font-size: 28px;
+  animation-delay: 0.48s;
+  --heart-drift: -20px;
+}
+
+.countdownWeddingHearts span:nth-child(6) {
+  left: 38%;
+  font-size: 21px;
+  animation-delay: 0.6s;
+  --heart-drift: 30px;
+}
+
+.countdownWeddingHearts span:nth-child(7) {
+  left: 44%;
+  font-size: 25px;
+  animation-delay: 0.72s;
+  --heart-drift: -34px;
+}
+
+.countdownWeddingHearts span:nth-child(8) {
+  left: 50%;
+  font-size: 19px;
+  animation-delay: 0.84s;
+  --heart-drift: 24px;
+}
+
+.countdownWeddingHearts span:nth-child(9) {
+  left: 56%;
+  font-size: 27px;
+  animation-delay: 0.96s;
+  --heart-drift: -26px;
+}
+
+.countdownWeddingHearts span:nth-child(10) {
+  left: 62%;
+  font-size: 22px;
+  animation-delay: 1.08s;
+  --heart-drift: 30px;
+}
+
+.countdownWeddingHearts span:nth-child(11) {
+  left: 68%;
+  font-size: 24px;
+  animation-delay: 1.2s;
+  --heart-drift: -22px;
+}
+
+.countdownWeddingHearts span:nth-child(12) {
+  left: 74%;
+  font-size: 20px;
+  animation-delay: 1.32s;
+  --heart-drift: 28px;
+}
+
+.countdownWeddingHearts span:nth-child(13) {
+  left: 80%;
+  font-size: 29px;
+  animation-delay: 1.44s;
+  --heart-drift: -30px;
+}
+
+.countdownWeddingHearts span:nth-child(14) {
+  left: 86%;
+  font-size: 21px;
+  animation-delay: 1.56s;
+  --heart-drift: 24px;
+}
+
+.countdownWeddingHearts span:nth-child(15) {
+  left: 92%;
+  font-size: 25px;
+  animation-delay: 1.68s;
+  --heart-drift: -18px;
+}
+
+.countdownWeddingHearts span:nth-child(16) {
+  left: 34%;
+  font-size: 18px;
+  animation-delay: 1.8s;
+  --heart-drift: 22px;
+}
+
+.countdownWeddingHearts span:nth-child(17) {
+  left: 66%;
+  font-size: 26px;
+  animation-delay: 1.92s;
+  --heart-drift: -24px;
+}
+
+.countdownWeddingHearts span:nth-child(18) {
+  left: 48%;
+  font-size: 23px;
+  animation-delay: 2.04s;
+  --heart-drift: 28px;
+}
+
+@keyframes countdownLoveReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes countdownSparkle {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: translateY(-5px) scale(1.12);
+    opacity: 1;
+  }
+}
+
+@keyframes weddingHeartFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-520px) translateX(var(--heart-drift, 0px))
+      rotate(18deg) scale(1.2);
+  }
+}
+
+@media (max-width: 720px) {
+  .countdownCompleteMessage {
+    border-radius: 24px;
+  }
+
+  .countdownCompleteMessage__eyebrow {
+    letter-spacing: 0.22em;
+  }
+
+  .countdownWeddingHearts span {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .countdownCompleteMessage {
+    width: 100%;
+    padding: 24px 18px;
+    border-radius: 22px;
+  }
+}
+
