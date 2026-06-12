@@ -32,20 +32,20 @@ function HeroSection({ hero }) {
           <a
             aria-label="Swipe for more"
             className="scrollHint reveal scrollHint--link"
-            href="#countdownSection"
+            href="/countdown"
             id="btnSwipeMore"
           >
             <span aria-hidden="true" className="scrollHint__mouse"></span>
             <span className="scrollHint__txt">Swipe up for more</span>
           </a>
           <div className="hero__actions reveal">
-            <a className="btn btn--primary" href="#rsvp">
+            <a className="btn btn--primary" href="/rsvp">
               <span aria-hidden="true" className="btn__icon">
                 <SendIcon />
               </span>
               RSVP
             </a>
-            <a className="btn btn--ghost" href="#details">
+            <a className="btn btn--ghost" href="/details">
               <span aria-hidden="true" className="btn__icon">
                 <InfoIcon />
               </span>

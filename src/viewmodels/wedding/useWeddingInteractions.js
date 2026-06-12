@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { weddingContent } from "../../models/weddingContent";
+import { initCleanSectionNavigation } from "../../utils/cleanSectionNavigation";
 
 export function useWeddingInteractions() {
   useEffect(() => {
@@ -204,9 +205,17 @@ export function useWeddingInteractions() {
               900,
             );
 
-            const topbar = qs("#topbar");
-            if (topbar && typeof topbar.scrollIntoView === "function") {
-              topbar.scrollIntoView({ behavior: "smooth", block: "start" });
+            window.dispatchEvent(new CustomEvent("wedding:invite-opened"));
+
+            const shouldUseCleanSectionPath =
+              window.location.pathname !== "/" &&
+              window.location.pathname !== "";
+
+            if (!shouldUseCleanSectionPath) {
+              const topbar = qs("#topbar");
+              if (topbar && typeof topbar.scrollIntoView === "function") {
+                topbar.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
             }
           }, 820);
         };
@@ -1455,6 +1464,8 @@ export function useWeddingInteractions() {
           return Math.random() * (max - min) + min;
         }
       })();
+
+      initCleanSectionNavigation();
 
       const music = initBackgroundMusic();
       initEnvelopeIntro(music.tryStart);

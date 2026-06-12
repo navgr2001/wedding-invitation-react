@@ -15,13 +15,13 @@ function FinalCtaSection({ finalCta }) {
         </h2>
         <p className="finalCta__desc">{finalCta.description}</p>
         <div className="finalCta__actions">
-          <a className="finalCtaBtn finalCtaBtn--primary" href="#rsvp">
+          <a className="finalCtaBtn finalCtaBtn--primary" href="/rsvp">
             <span className="finalCtaBtn__icon" aria-hidden="true">
               <HeartIcon width={18} height={18} strokeWidth={1.8} />
             </span>
             <span>RSVP with Love</span>
           </a>
-          <a className="finalCtaBtn finalCtaBtn--ghost" href="#gallery">
+          <a className="finalCtaBtn finalCtaBtn--ghost" href="/gallery">
             <span className="finalCtaBtn__icon" aria-hidden="true">
               <CameraIcon />
             </span>

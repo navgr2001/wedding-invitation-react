@@ -13,9 +13,9 @@ function Topbar() {
         <span></span>
       </button>
       <nav aria-label="Primary" className="nav" id="nav">
-        <a href="#details">Details</a>
-        <a href="#rsvp">RSVP</a>
-        <a href="#gallery">Gallery</a>
+        <a href="/details">Details</a>
+        <a href="/rsvp">RSVP</a>
+        <a href="/gallery">Gallery</a>
       </nav>
     </header>
   );

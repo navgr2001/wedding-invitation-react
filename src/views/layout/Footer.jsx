@@ -28,9 +28,9 @@ function Footer({ footer }) {
               className="weddingFooter__links"
               aria-label="Footer quick links"
             >
-              <a href="#details">Details</a>
-              <a href="#rsvp">Rsvp</a>
-              <a href="#gallery">Gallery</a>
+              <a href="/details">Details</a>
+              <a href="/rsvp">Rsvp</a>
+              <a href="/gallery">Gallery</a>
             </nav>
           </div>
 
