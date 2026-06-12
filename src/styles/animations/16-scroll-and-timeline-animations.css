@@ -1,0 +1,76 @@
+/* Heading and timeline reveal animations. */
+
+/* =========================
+   Scroll-in animation for H2
+   ========================= */
+.h2-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 650ms ease,
+    transform 650ms ease;
+  will-change: opacity, transform;
+}
+
+.h2-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .h2-reveal,
+  .h2-reveal.is-visible {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* =========================================
+   Timeline card scroll-in animations (ALL DEVICES)
+   ========================================= */
+
+.tlCard {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 650ms ease,
+    transform 650ms ease;
+  will-change: opacity, transform;
+}
+
+/* Left items: enter from left + slight up */
+.tlItem--left .tlCard {
+  transform: translateX(-28px) translateY(18px);
+}
+
+/* Right items: enter from right + slight up */
+.tlItem--right .tlCard {
+  transform: translateX(28px) translateY(18px);
+}
+
+/* On small screens, cards are centered -> keep only vertical motion */
+@media (max-width: 720px) {
+  .tlItem--left .tlCard,
+  .tlItem--right .tlCard {
+    transform: translateY(18px);
+  }
+}
+
+/* Visible state */
+.tlCard.tlCard--visible {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tlCard,
+  .tlItem--left .tlCard,
+  .tlItem--right .tlCard {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

@@ -265,118 +265,6 @@ export function useWeddingInteractions() {
         });
       }
 
-      function initCountdown() {
-        const targetDate = new Date("2026-12-10T00:00:00+05:30");
-
-        const getUnitEl = (unit) => qs(`[data-unit="${unit}"]`);
-        const pad2 = (n) => String(Math.max(0, n)).padStart(2, "0");
-
-        let ticker = null;
-        let hasShownWeddingAnimation = false;
-
-        function showWeddingCountdownEndAnimation() {
-          if (hasShownWeddingAnimation) return;
-
-          hasShownWeddingAnimation = true;
-
-          const daysEl = getUnitEl("days");
-          const countdownSection =
-            daysEl?.closest("section") ||
-            qs(".countdownSection") ||
-            qs("#countdown") ||
-            document.body;
-
-          countdownSection.classList.add("countdownSection--completed");
-
-          const oldCompleteMessage = countdownSection.querySelector(
-            ".countdownCompleteMessage",
-          );
-
-          if (oldCompleteMessage) {
-            oldCompleteMessage.remove();
-          }
-
-          const completeMessage = document.createElement("div");
-          completeMessage.className = "countdownCompleteMessage";
-          completeMessage.innerHTML = `
-      <div class="countdownCompleteMessage__sparkles" aria-hidden="true">
-        <span>♡</span>
-        <span>✦</span>
-        <span>♡</span>
-      </div>
-
-      <p class="countdownCompleteMessage__eyebrow">The wait is over</p>
-
-      <h3 class="countdownCompleteMessage__title">
-        Today We Celebrate Love
-      </h3>
-
-      <p class="countdownCompleteMessage__text">
-        Our forever begins today. Thank you for being part of this beautiful celebration.
-      </p>
-    `;
-
-          const countdownGrid =
-            countdownSection.querySelector(".countdownGrid") ||
-            countdownSection.querySelector(".countdown") ||
-            countdownSection.querySelector("[data-unit='days']")?.parentElement
-              ?.parentElement;
-
-          if (countdownGrid) {
-            countdownGrid.insertAdjacentElement("afterend", completeMessage);
-          } else {
-            countdownSection.appendChild(completeMessage);
-          }
-
-          const floatingHearts = document.createElement("div");
-          floatingHearts.className = "countdownWeddingHearts";
-          floatingHearts.setAttribute("aria-hidden", "true");
-
-          floatingHearts.innerHTML = Array.from({ length: 18 })
-            .map((_, index) => `<span style="--i:${index};">♡</span>`)
-            .join("");
-
-          countdownSection.appendChild(floatingHearts);
-
-          window.setTimeout(() => {
-            floatingHearts.remove();
-          }, 6500);
-        }
-
-        const update = () => {
-          const now = new Date();
-          const diff = targetDate.getTime() - now.getTime();
-          const done = diff <= 0;
-          const total = Math.max(0, diff);
-
-          const seconds = Math.floor(total / 1000) % 60;
-          const minutes = Math.floor(total / (1000 * 60)) % 60;
-          const hours = Math.floor(total / (1000 * 60 * 60)) % 24;
-          const days = Math.floor(total / (1000 * 60 * 60 * 24));
-
-          const elDays = getUnitEl("days");
-          const elHours = getUnitEl("hours");
-          const elMinutes = getUnitEl("minutes");
-          const elSeconds = getUnitEl("seconds");
-
-          if (elDays) elDays.textContent = done ? "00" : String(days);
-          if (elHours) elHours.textContent = pad2(hours);
-          if (elMinutes) elMinutes.textContent = pad2(minutes);
-          if (elSeconds) elSeconds.textContent = pad2(seconds);
-
-          if (done) {
-            showWeddingCountdownEndAnimation();
-
-            if (ticker) {
-              window.clearInterval(ticker);
-            }
-          }
-        };
-
-        update();
-        ticker = window.setInterval(update, 1000);
-      }
-
       function initScrollReveal() {
         const revealEls = qsa(".reveal");
         if (!revealEls.length) return;
@@ -1572,7 +1460,6 @@ export function useWeddingInteractions() {
       const music = initBackgroundMusic();
       initEnvelopeIntro(music.tryStart);
       initNavMenu();
-      // initCountdown();
       initScrollReveal();
       initTimelineProgress();
       initRsvpSubmission();
