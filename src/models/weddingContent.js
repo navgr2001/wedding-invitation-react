@@ -20,7 +20,7 @@ export const weddingContent = {
 
   hero: {
     title: "Shalom & Dewmini",
-    eventDay: "Monday",
+    eventDay: "Thursday",
     eventDate: "December 10, 2026",
     video: "assets/video/bannervid.mp4",
     notificationIcon: "assets/img/icons/notification.png",
@@ -44,8 +44,7 @@ export const weddingContent = {
     description:
       "Two hearts, one love story. Meet the bride and groom who are about to begin their forever journey.",
     noteTitle: "A Note from the Couple",
-    note:
-      "“Our journey together begins with a promise, and it would mean so much for us to have you there to witness it. We invite you to celebrate love, togetherness, and new beginnings as we unite in marriage. Sharing this moment with you would be an honor and if you need any information or help, we’re just a call or message away.”",
+    note: "“Our journey together begins with a promise, and it would mean so much for us to have you there to witness it. We invite you to celebrate love, togetherness, and new beginnings as we unite in marriage. Sharing this moment with you would be an honor and if you need any information or help, we’re just a call or message away.”",
   },
 
   weddingDetails: {
@@ -189,7 +188,11 @@ export const weddingContent = {
     details: ["10th December 2026", "Ramrich Hotel, Eakala", "Melody Ballroom"],
     contacts: [
       { name: "Shalom", label: "Shalom - 076 452 5012", phone: "+94764525012" },
-      { name: "Dewmini", label: "Dewmini - 077 328 4579", phone: "+94773284579" },
+      {
+        name: "Dewmini",
+        label: "Dewmini - 077 328 4579",
+        phone: "+94773284579",
+      },
     ],
   },
 
