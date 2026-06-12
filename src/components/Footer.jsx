@@ -73,7 +73,7 @@ function Footer() {
                   </span>
 
                   <span className="weddingFooter__contactText">
-                    Naveen - 076 452 5012
+                    Shalom - 076 452 5012
                   </span>
                 </a>
 
@@ -110,7 +110,7 @@ function Footer() {
           <div className="weddingFooter__bottom">
             <p className="weddingFooter__love">Made with love</p>
             <p className="weddingFooter__copy">
-              © 2026 Naveen &amp; Dewmini&apos;s Wedding
+              © 2026 Shalom &amp; Dewmini&apos;s Wedding
             </p>
           </div>
         </div>

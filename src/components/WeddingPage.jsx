@@ -38,7 +38,7 @@ function WeddingPage() {
               </span>
             </div>
             <h1 className="display reveal heroBanner__title">
-              Naveen &amp; Dewmini
+              Shalom &amp; Dewmini
             </h1>
 
             <p className="meta reveal">
@@ -209,7 +209,7 @@ function WeddingPage() {
                 </div>
               </div>
               <div className="personCard__body">
-                <h3 className="h3">Naveen Grero</h3>
+                <h3 className="h3">Shalom Grero</h3>
                 <p className="tag">The Groom</p>
                 <p className="muted">Son of Mr and Mrs. Grero</p>
               </div>
