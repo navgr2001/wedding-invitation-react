@@ -1,4 +1,0 @@
-Replace these files with your originals if needed:
-- assets/img/envelope-left.png
-- assets/img/envelope-right.png
-Both should be transparent PNGs for best look.
