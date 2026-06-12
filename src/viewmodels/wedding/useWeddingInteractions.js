@@ -397,7 +397,7 @@ export function useWeddingInteractions() {
         let dragStartY = 0;
         let activePointerId = null;
 
-        const AUTO_DELAY = 2000;
+        const AUTO_DELAY = 2500;
         const TRANSITION_MS = 650;
         const POLL_INTERVAL_MS = 5000;
         const SWIPE_MAX_WIDTH = 1024;

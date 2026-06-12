@@ -371,7 +371,7 @@
     let isAnimating = false;
     let lastFingerprint = "";
 
-    const AUTO_DELAY = 3000;
+    const AUTO_DELAY = 2500;
     const TRANSITION_MS = 900;
     const POLL_INTERVAL_MS = 5000;
 
