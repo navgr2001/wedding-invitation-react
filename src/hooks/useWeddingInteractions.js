@@ -1300,6 +1300,95 @@ export function useWeddingInteractions() {
         });
       }
 
+      function initImageProtection() {
+        const protectedSelector = [
+          "img",
+          "svg",
+          "picture",
+          ".gallery__item",
+          ".lightbox",
+          ".lightbox__img",
+          ".finalCta",
+          ".couplePhoto",
+          ".photoFrame",
+          ".weddingCard__icon",
+          ".footerHeart",
+          ".floatingControl",
+        ].join(", ");
+
+        const isProtectedMedia = (target) => {
+          if (!(target instanceof Element)) return false;
+          return Boolean(target.closest(protectedSelector));
+        };
+
+        const protectMediaElement = (element) => {
+          element.setAttribute("draggable", "false");
+          element.setAttribute("data-protected-media", "true");
+
+          if (element instanceof HTMLImageElement) {
+            element.loading = element.loading || "lazy";
+            element.decoding = element.decoding || "async";
+          }
+        };
+
+        qsa("img, svg, picture").forEach(protectMediaElement);
+
+        const mediaObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (!(node instanceof Element)) return;
+
+              if (node.matches("img, svg, picture")) {
+                protectMediaElement(node);
+              }
+
+              node
+                .querySelectorAll?.("img, svg, picture")
+                .forEach(protectMediaElement);
+            });
+          });
+        });
+
+        mediaObserver.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+
+        const blockProtectedMediaAction = (event) => {
+          if (!isProtectedMedia(event.target)) return;
+          event.preventDefault();
+        };
+
+        document.addEventListener(
+          "contextmenu",
+          blockProtectedMediaAction,
+          true,
+        );
+        document.addEventListener("dragstart", blockProtectedMediaAction, true);
+        document.addEventListener("copy", blockProtectedMediaAction, true);
+        document.addEventListener("cut", blockProtectedMediaAction, true);
+
+        document.addEventListener(
+          "keydown",
+          (event) => {
+            const key = event.key.toLowerCase();
+            const isModifierPressed = event.ctrlKey || event.metaKey;
+
+            if (!isModifierPressed) return;
+
+            // Block common browser save / print shortcuts.
+            if (["s", "p"].includes(key)) {
+              event.preventDefault();
+            }
+          },
+          true,
+        );
+
+        window.addEventListener("beforeunload", () => {
+          mediaObserver.disconnect();
+        });
+      }
+
       function initGalleryLightbox() {
         const lightbox = qs("#lightbox");
         const lightboxImg = qs("#lightboxImg");
@@ -1489,6 +1578,7 @@ export function useWeddingInteractions() {
       initRsvpSubmission();
       initWordsCarousel();
       initSeatFinder();
+      initImageProtection();
       initGalleryLightbox();
     })();
   }, []);

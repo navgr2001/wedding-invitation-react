@@ -314,7 +314,7 @@ function WeddingPage() {
                 <p className="wLine wLine--strong">10th December, 2026</p>
                 <p className="wLine">18:30 PM onwards</p>
                 <p className="wLine wLine--light">Ramrich Hotel, Ja -Ela</p>
-                <p className="wLine wLine--muted">The Eagle</p>
+                <p className="wLine wLine--muted">Melody Ballroom</p>
               </div>
               <a
                 className="weddingCard__btn"
@@ -348,7 +348,7 @@ function WeddingPage() {
             <ul className="tlList" id="tlList">
               <li className="tlItem tlItem--left">
                 <div className="tlCard">
-                  <div className="tlTime">15.00 PM</div>
+                  <div className="tlTime">15.15 PM</div>
                   <div className="tlText">Groom enters the Church location</div>
                 </div>
                 <div className="tlNode" aria-hidden="true">
@@ -375,7 +375,7 @@ function WeddingPage() {
                   </span>
                 </div>
                 <div className="tlCard">
-                  <div className="tlTime">15.15 PM</div>
+                  <div className="tlTime">15.30 PM</div>
                   <div className="tlText">Bride enters the Church location</div>
                 </div>
               </li>
