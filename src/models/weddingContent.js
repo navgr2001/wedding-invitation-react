@@ -185,7 +185,7 @@ export const weddingContent = {
     logoText: "S & D",
     description:
       "Thank you for visiting our wedding website and being part of our love story. We can't wait to celebrate with you!",
-    details: ["10th December 2026", "Ramrich Hotel, Eakala", "Melody Ballroom"],
+    details: ["10th December 2026", "Ramrich Hotel, Ja Ela", "Melody Ballroom"],
     contacts: [
       { name: "Shalom", label: "Shalom - 076 452 5012", phone: "+94764525012" },
       {
