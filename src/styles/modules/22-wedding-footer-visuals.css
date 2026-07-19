@@ -1,315 +1,321 @@
 /* Migrated from src/components/Footer.jsx inline style to keep the exact visual design in styles.css. */
 .weddingFooter,
-        .weddingFooter * {
-          box-sizing: border-box;
-        }
+.weddingFooter * {
+  box-sizing: border-box;
+}
 
-        .weddingFooter {
-          position: relative;
-          overflow: hidden;
-          width: 100%;
-          padding: clamp(68px, 7vw, 80px) 0 36px;
-          color: #ffffff;
-          background:
-            radial-gradient(
-              760px 310px at 50% -10%,
-              rgba(89, 113, 160, 0.36),
-              transparent 68%
-            ),
-            linear-gradient(180deg, #101a2f 0%, #081225 58%, #061020 100%);
-        }
+.weddingFooter {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: clamp(68px, 7vw, 80px) 0 36px;
+  color: #ffffff;
+  background:
+    radial-gradient(
+      760px 310px at 50% -10%,
+      rgba(89, 113, 160, 0.36),
+      transparent 68%
+    ),
+    linear-gradient(180deg, #101a2f 0%, #081225 58%, #061020 100%);
+}
 
-        .weddingFooter::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          background: radial-gradient(
-            900px 380px at 50% 0%,
-            rgba(255, 255, 255, 0.055),
-            transparent 68%
-          );
-        }
+.weddingFooter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    900px 380px at 50% 0%,
+    rgba(255, 255, 255, 0.055),
+    transparent 68%
+  );
+}
 
-        .weddingFooter a {
-          color: inherit;
-          text-decoration: none;
-        }
+.weddingFooter a {
+  color: inherit;
+  text-decoration: none;
+}
 
-        .weddingFooter__container {
-          position: relative;
-          z-index: 1;
-          width: min(1180px, 88%);
-          margin: 0 auto;
-        }
+.weddingFooter__container {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, 88%);
+  margin: 0 auto;
+}
 
-        .weddingFooter__grid {
-          display: grid;
-          grid-template-columns: 1.22fr 0.85fr 1.25fr 1.35fr;
-          gap: clamp(38px, 5vw, 70px);
-          align-items: start;
-        }
+.weddingFooter__grid {
+  display: grid;
+  grid-template-columns: 1.22fr 0.85fr 1.25fr 1.35fr;
+  gap: clamp(38px, 5vw, 70px);
+  align-items: start;
+}
 
-        .weddingFooter__logo {
-          display: inline-flex;
-          align-items: center;
-          gap: 14px;
-          margin-bottom: 26px;
-        }
+.weddingFooter__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
 
-        .weddingFooter__logoIcon {
-          width: 50px;
-          height: 50px;
-          display: inline-grid;
-          place-items: center;
-          flex: 0 0 auto;
-          border: 1px solid rgba(255, 255, 255, 0.13);
-          border-radius: 14px;
-          background: rgba(255, 255, 255, 0.065);
-          overflow: hidden;
-        }
+.weddingFooter__logoIcon {
+  width: 50px;
+  height: 50px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.065);
+  overflow: hidden;
+}
 
-        .weddingFooter__logoImage {
-          width: 28px;
-          height: 28px;
-          object-fit: contain;
-          display: block;
-        }
+.weddingFooter__logoImage {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+}
 
-        .weddingFooter__logoText {
-          color: #ffffff;
-          font-family: var(--font-gilda, serif);
-          font-size: clamp(1.95rem, 2.8vw, 2.45rem);
-          font-weight: 400;
-          letter-spacing: 0.13em;
-          line-height: 1;
-          white-space: nowrap;
-        }
+.weddingFooter__logoText {
+  color: #ffffff;
+  font-family: var(--font-gilda, serif);
+  font-size: clamp(1.95rem, 2.8vw, 2.45rem);
+  font-weight: 400;
+  letter-spacing: 0.13em;
+  line-height: 1;
+  white-space: nowrap;
+}
 
-        .weddingFooter__description {
-          max-width: 330px;
-          margin: 0;
-          color: rgba(255, 255, 255, 0.9);
-          font-size: 1.08rem;
-          font-weight: 500;
-          line-height: 1.85;
-        }
+.weddingFooter__description {
+  max-width: 330px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.85;
+}
 
-        .weddingFooter__title {
-          margin: 0 0 24px;
-          color: #ffffff;
-          font-family: var(--font-gilda, serif);
-          font-size: clamp(1.45rem, 2.1vw, 1.75rem);
-          font-weight: 400;
-          line-height: 1.2;
-          letter-spacing: 0.01em;
-          white-space: nowrap;
-        }
+.weddingFooter__title {
+  margin: 0 0 24px;
+  color: #ffffff;
+  font-family: var(--font-gilda, serif);
+  font-size: clamp(1.45rem, 2.1vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
 
-        .weddingFooter__links,
-        .weddingFooter__details,
-        .weddingFooter__contact {
-          display: grid;
-          gap: 15px;
-        }
+.weddingFooter__links,
+.weddingFooter__details,
+.weddingFooter__contact {
+  display: grid;
+  gap: 15px;
+}
 
-        .weddingFooter__links a,
-        .weddingFooter__details p,
-        .weddingFooter__contactItem {
-          margin: 0;
-          color: rgba(255, 255, 255, 0.9);
-          font-size: 1.08rem;
-          font-weight: 500;
-          line-height: 1.5;
-        }
+.weddingFooter__links a,
+.weddingFooter__details p,
+.weddingFooter__contactItem {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
 
-        .weddingFooter__links a {
-          width: fit-content;
-          transition:
-            color 180ms ease,
-            transform 180ms ease;
-        }
+.weddingFooter__links a {
+  width: fit-content;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
 
-        .weddingFooter__links a:hover {
-          color: #d8b78c;
-          transform: translateX(4px);
-        }
+.weddingFooter__links a:hover {
+  color: #d8b78c;
+  transform: translateX(4px);
+}
 
-        .weddingFooter__contactItem {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          width: fit-content;
-          white-space: nowrap;
-          transition:
-            color 180ms ease,
-            transform 180ms ease;
-        }
+.weddingFooter__contactItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  white-space: nowrap;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
 
-        .weddingFooter__contactItem:hover {
-          color: #d8b78c;
-          transform: translateX(3px);
-        }
+.weddingFooter__contactItem:hover {
+  color: #d8b78c;
+  transform: translateX(3px);
+}
 
-        .weddingFooter__contactIcon {
-          width: 39px;
-          height: 39px;
-          display: inline-grid;
-          place-items: center;
-          flex: 0 0 auto;
-          border: 1px solid rgba(255, 255, 255, 0.13);
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.06);
-          color: rgba(255, 255, 255, 0.84);
-        }
+.weddingFooter__contactIcon {
+  width: 39px;
+  height: 39px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.84);
+}
 
-        .weddingFooter__contactText {
-          display: inline-block;
-          white-space: nowrap;
-        }
+.weddingFooter__contactText {
+  display: inline-block;
+  white-space: nowrap;
+}
 
-        .weddingFooter__bottom {
-          margin-top: clamp(64px, 8vw, 82px);
-          padding-top: 26px;
-          border-top: 1px solid rgba(216, 183, 140, 0.5);
-          text-align: center;
-        }
+.weddingFooter__bottom {
+  margin-top: clamp(64px, 8vw, 82px);
+  padding-top: 26px;
+  border-top: 1px solid rgba(216, 183, 140, 0.5);
+  text-align: center;
+}
 
-        .weddingFooter__love {
-          margin: 0 0 14px;
-          color: rgba(255, 255, 255, 0.94);
-          font-size: clamp(1.6rem, 3vw, 1.95rem);
-          font-weight: 500;
-          line-height: 1.2;
-        }
+.weddingFooter__love {
+  margin: 0 0 14px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: clamp(1.6rem, 3vw, 1.95rem);
+  font-weight: 500;
+  line-height: 1.2;
+}
 
-        .weddingFooter__copy {
-          margin: 0;
-          color: rgba(255, 255, 255, 0.9);
-          font-size: 1.08rem;
-          font-weight: 500;
-          line-height: 1.45;
-        }
+.weddingFooter__copy {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
 
-        @media (max-width: 1080px) {
-          .weddingFooter__grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            row-gap: 42px;
-          }
+@media (max-width: 1080px) {
+  .weddingFooter__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 42px;
+  }
 
-          .weddingFooter__description {
-            max-width: 380px;
-          }
-        }
+  .weddingFooter__description {
+    max-width: 380px;
+  }
+}
 
-        @media (max-width: 720px) {
-          .weddingFooter {
-            padding: 54px 0 30px;
-          }
+@media (max-width: 720px) {
+  .weddingFooter {
+    padding: 54px 0 30px;
+  }
 
-          .weddingFooter__container {
-            width: min(100%, 88%);
-          }
+  .weddingFooter__container {
+    width: min(100%, 88%);
+  }
 
-          .weddingFooter__grid {
-            grid-template-columns: 1fr;
-            gap: 36px;
-            text-align: left;
-          }
+  .weddingFooter__grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    text-align: left;
+  }
 
-          .weddingFooter__logo {
-            justify-content: flex-start;
-            margin-bottom: 18px;
-          }
+  .weddingFooter__logo {
+    justify-content: flex-start;
+    margin-bottom: 18px;
+  }
 
-          .weddingFooter__description {
-            max-width: 360px;
-            margin: 0;
-          }
+  .weddingFooter__description {
+    max-width: 360px;
+    margin: 0;
+  }
 
-          .weddingFooter__links {
-            justify-items: start;
-          }
+  .weddingFooter__links {
+    justify-items: start;
+  }
 
-          .weddingFooter__links a:hover {
-            transform: translateX(4px);
-          }
+  .weddingFooter__links a:hover {
+    transform: translateX(4px);
+  }
 
-          .weddingFooter__contact {
-            justify-items: start;
-          }
+  .weddingFooter__contact {
+    justify-items: start;
+  }
 
-          .weddingFooter__contactItem {
-            justify-content: flex-start;
-            text-align: left;
-          }
+  .weddingFooter__contactItem {
+    justify-content: flex-start;
+    text-align: left;
+  }
 
-          .weddingFooter__bottom {
-            margin-top: 44px;
-            text-align: left;
-          }
-        }
+  .weddingFooter__bottom {
+    margin-top: 44px;
+    text-align: center;
+  }
 
-        @media (max-width: 420px) {
-          .weddingFooter__container {
-            width: min(100%, 90%);
-          }
+  .weddingFooter__love,
+  .weddingFooter__copy {
+    width: 100%;
+    text-align: center;
+  }
+}
 
-          .weddingFooter__grid {
-            gap: 30px;
-          }
+@media (max-width: 420px) {
+  .weddingFooter__container {
+    width: min(100%, 90%);
+  }
 
-          .weddingFooter__logoIcon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-          }
+  .weddingFooter__grid {
+    gap: 30px;
+  }
 
-          .weddingFooter__logoImage {
-            width: 24px;
-            height: 24px;
-          }
+  .weddingFooter__logoIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
 
-          .weddingFooter__logoText {
-            font-size: 1.8rem;
-          }
+  .weddingFooter__logoImage {
+    width: 24px;
+    height: 24px;
+  }
 
-          .weddingFooter__description,
-          .weddingFooter__links a,
-          .weddingFooter__details p,
-          .weddingFooter__contactItem,
-          .weddingFooter__copy {
-            font-size: 1rem;
-          }
+  .weddingFooter__logoText {
+    font-size: 1.8rem;
+  }
 
-          .weddingFooter__contactItem {
-            max-width: 100%;
-          }
+  .weddingFooter__description,
+  .weddingFooter__links a,
+  .weddingFooter__details p,
+  .weddingFooter__contactItem,
+  .weddingFooter__copy {
+    font-size: 1rem;
+  }
 
-          .weddingFooter__contactText {
-            white-space: nowrap;
-          }
+  .weddingFooter__contactItem {
+    max-width: 100%;
+  }
 
-          .weddingFooter__love {
-            font-size: 1.45rem;
-          }
-        }
+  .weddingFooter__contactText {
+    white-space: nowrap;
+  }
 
-        @media (max-width: 360px) {
-          .weddingFooter__description,
-          .weddingFooter__links a,
-          .weddingFooter__details p,
-          .weddingFooter__contactItem,
-          .weddingFooter__copy {
-            font-size: 0.92rem;
-          }
+  .weddingFooter__love {
+    font-size: 1.45rem;
+  }
+}
 
-          .weddingFooter__contactIcon {
-            width: 36px;
-            height: 36px;
-          }
+@media (max-width: 360px) {
+  .weddingFooter__description,
+  .weddingFooter__links a,
+  .weddingFooter__details p,
+  .weddingFooter__contactItem,
+  .weddingFooter__copy {
+    font-size: 0.92rem;
+  }
 
-          .weddingFooter__contactItem {
-            gap: 10px;
-          }
-        }
+  .weddingFooter__contactIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .weddingFooter__contactItem {
+    gap: 10px;
+  }
+}
