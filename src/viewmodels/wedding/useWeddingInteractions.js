@@ -179,6 +179,30 @@ export function useWeddingInteractions() {
 
         let hasOpened = false;
 
+        const resetPageToTop = () => {
+          const root = document.documentElement;
+          const previousScrollBehavior = root.style.scrollBehavior;
+
+          root.style.scrollBehavior = "auto";
+          window.scrollTo(0, 0);
+          root.scrollTop = 0;
+          document.body.scrollTop = 0;
+
+          requestAnimationFrame(() => {
+            window.scrollTo(0, 0);
+            root.scrollTop = 0;
+            document.body.scrollTop = 0;
+            root.style.scrollBehavior = previousScrollBehavior;
+          });
+        };
+
+        if ("scrollRestoration" in window.history) {
+          window.history.scrollRestoration = "manual";
+        }
+
+        resetPageToTop();
+        window.addEventListener("pageshow", resetPageToTop, { once: true });
+
         document.body.style.overflow = "hidden";
         requestAnimationFrame(() => envelopeIntro.classList.add("isReady"));
 
@@ -192,6 +216,7 @@ export function useWeddingInteractions() {
           hasOpened = true;
           removeMusicFallbacks();
 
+          resetPageToTop();
           await tryStartMusic();
 
           envelopeIntro.classList.add("isOpen");
@@ -200,6 +225,7 @@ export function useWeddingInteractions() {
           window.setTimeout(() => {
             envelopeIntro.remove();
             document.body.style.overflow = "";
+            resetPageToTop();
             window.setTimeout(
               () => document.body.classList.remove("isInviteEntering"),
               900,
@@ -207,16 +233,9 @@ export function useWeddingInteractions() {
 
             window.dispatchEvent(new CustomEvent("wedding:invite-opened"));
 
-            const shouldUseCleanSectionPath =
-              window.location.pathname !== "/" &&
-              window.location.pathname !== "";
-
-            if (!shouldUseCleanSectionPath) {
-              const topbar = qs("#topbar");
-              if (topbar && typeof topbar.scrollIntoView === "function") {
-                topbar.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-            }
+            // Keep the main page at its true starting position after the
+            // intro disappears. This also overrides browser scroll restoration.
+            resetPageToTop();
           }, 820);
         };
 

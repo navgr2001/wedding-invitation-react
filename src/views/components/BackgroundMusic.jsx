@@ -7,7 +7,7 @@ function BackgroundMusic() {
     <audio
       id="bgMusic"
       src="assets/audio/AThousandYears.mp3"
-      preload="auto"
+      preload="none"
       loop
     />
   );

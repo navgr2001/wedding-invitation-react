@@ -1,16 +1,41 @@
+import { useEffect, useRef } from "react";
 import { HeartIcon, InfoIcon, SendIcon } from "../components/IconSvgs";
 
 function HeroSection({ hero }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+
+    const startVideo = async () => {
+      video.load();
+
+      try {
+        await video.play();
+      } catch (error) {
+        console.warn("Banner video playback was blocked:", error);
+      }
+    };
+
+    window.addEventListener("wedding:invite-opened", startVideo, { once: true });
+
+    return () => {
+      window.removeEventListener("wedding:invite-opened", startVideo);
+    };
+  }, []);
+
   return (
     <section className="hero section heroBanner">
       <div aria-hidden="true" className="heroBanner__video">
         <video
-          autoPlay
+          ref={videoRef}
           className="heroBanner__videoEl"
           loop
           muted
           playsInline
-          preload="auto"
+          preload="none"
+          poster={hero.videoPoster}
         >
           <source src={hero.video} type="video/mp4" />
         </video>
@@ -73,7 +98,7 @@ function HeroSection({ hero }) {
 function HeroPillIcon({ src }) {
   return (
     <span className="heroPill__iconWrap" aria-hidden="true">
-      <img className="heroPill__iconImg" src={src} alt="" />
+      <img className="heroPill__iconImg" src={src} alt="" decoding="async" />
     </span>
   );
 }

@@ -23,6 +23,7 @@ export const weddingContent = {
     eventDay: "Thursday",
     eventDate: "December 10, 2026",
     video: "assets/video/bannervid.mp4",
+    videoPoster: "assets/video/banner-poster.jpg",
     notificationIcon: "assets/img/icons/notification.png",
   },
 

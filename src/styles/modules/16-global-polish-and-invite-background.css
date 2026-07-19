@@ -106,7 +106,7 @@ body > *:not(.bg-icons) {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-image: url("/assets/img/invite/card-texture.png");
+  background-image: url("/assets/img/invite/card-texture.webp");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -169,7 +169,7 @@ body > *:not(.bg-icons) {
 
 .invitePaper {
   z-index: 0;
-  background-image: url("/assets/img/invite/card-texture.png");
+  background-image: url("/assets/img/invite/card-texture.webp");
   background-position: center;
   background-size: cover;
   opacity: 0.95;
@@ -178,14 +178,14 @@ body > *:not(.bg-icons) {
 
 .inviteFloralTop {
   z-index: 1;
-  background-image: url("/assets/img/invite/inviteborder-top.png");
+  background-image: url("/assets/img/invite/inviteborder-top.webp");
   background-position: top center;
   background-size: 100% auto;
 }
 
 .inviteFloralBottom {
   z-index: 1;
-  background-image: url("/assets/img/invite/inviteborder-bottom1.png");
+  background-image: url("/assets/img/invite/inviteborder-bottom1.webp");
   background-position: bottom center;
   background-size: 100% auto;
 }

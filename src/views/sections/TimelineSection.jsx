@@ -26,7 +26,7 @@ function TimelineItem({ item }) {
   const node = (
     <div className="tlNode" aria-hidden="true">
       <span className="timeline-icon" aria-label={item.iconLabel}>
-        <img src={item.icon} alt={item.iconAlt} loading="lazy" />
+        <img src={item.icon} alt={item.iconAlt} loading="lazy" decoding="async" />
       </span>
     </div>
   );

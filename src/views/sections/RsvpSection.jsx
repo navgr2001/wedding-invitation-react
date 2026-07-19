@@ -11,7 +11,7 @@ function RsvpSection({ rsvp }) {
         <div className="rsvpGrid">
           <div className="rsvpPhotoCard reveal">
             <div className="rsvpPhotoCard__img">
-              <img src={rsvp.photo} alt="Couple photo" />
+              <img src={rsvp.photo} alt="Couple photo" loading="lazy" decoding="async" />
             </div>
             <div className="rsvpSaveCard" aria-label="Save the Date">
               <div className="rsvpSaveCard__head">

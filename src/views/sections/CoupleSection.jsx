@@ -29,10 +29,10 @@ function PersonCard({ person }) {
     <article className="personCard reveal">
       <div className="personCard__img">
         <div className="personCard__badge" aria-hidden="true">
-          <img src={person.badgeIcon} alt="" className="personCard__badgeIcon" />
+          <img src={person.badgeIcon} alt="" className="personCard__badgeIcon" loading="lazy" decoding="async" />
         </div>
         <div className="personCard__imgInner">
-          <img alt={person.portraitAlt} src={person.image} />
+          <img alt={person.portraitAlt} src={person.image} loading="lazy" decoding="async" />
         </div>
       </div>
       <div className="personCard__body">

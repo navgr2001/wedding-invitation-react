@@ -23,7 +23,7 @@ function WeddingCard({ event }) {
     <article className="weddingCard reveal">
       <div className="weddingCard__icon" aria-hidden="true">
         {event.iconType === "image" ? (
-          <img src={event.icon} alt={event.iconAlt} className={event.iconClassName} />
+          <img src={event.icon} alt={event.iconAlt} className={event.iconClassName} loading="lazy" decoding="async" />
         ) : (
           <SparkleIcon />
         )}

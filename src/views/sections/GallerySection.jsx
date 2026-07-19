@@ -18,7 +18,7 @@ function GallerySection({ gallery }) {
               data-src={photo.src}
               key={photo.src}
             >
-              <img alt={photo.alt} loading="lazy" src={photo.src} />
+              <img alt={photo.alt} loading="lazy" decoding="async" src={photo.src} />
             </button>
           ))}
         </div>
