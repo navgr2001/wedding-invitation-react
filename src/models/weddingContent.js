@@ -191,8 +191,8 @@ export const weddingContent = {
       { name: "Shalom", label: "Shalom - 076 452 5012", phone: "+94764525012" },
       {
         name: "Dewmini",
-        label: "Dewmini - 077 328 4579",
-        phone: "+94773284579",
+        label: "Dewmini - 075 032 4440",
+        phone: "+94750324440",
       },
     ],
   },
