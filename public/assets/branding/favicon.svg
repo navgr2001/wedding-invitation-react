@@ -1,0 +1,88 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 128 128"
+  role="img"
+  aria-labelledby="faviconTitle"
+>
+  <title id="faviconTitle">Shalom and Dewmini wedding favicon</title>
+
+  <defs>
+    <linearGradient id="faviconGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5D9A7" />
+      <stop offset="48%" stop-color="#C89550" />
+      <stop offset="100%" stop-color="#86532D" />
+    </linearGradient>
+
+    <linearGradient id="faviconRose" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8CCC2" />
+      <stop offset="100%" stop-color="#DC8F80" />
+    </linearGradient>
+  </defs>
+
+  <rect width="128" height="128" rx="28" fill="#FFFDF9" />
+
+  <circle
+    cx="64"
+    cy="64"
+    r="48"
+    fill="none"
+    stroke="url(#faviconGold)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-dasharray="254 48"
+    transform="rotate(-32 64 64)"
+  />
+
+  <path
+    d="M27 91
+       C20 82 20 71 25 62
+       C30 74 37 80 47 83"
+    fill="none"
+    stroke="url(#faviconRose)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="M29 85
+       C21 82 17 76 15 68
+       C24 69 30 73 34 80"
+    fill="url(#faviconRose)"
+  />
+
+  <path
+    d="M37 79
+       C30 74 28 67 29 59
+       C37 63 41 70 41 77"
+    fill="url(#faviconRose)"
+  />
+
+  <text
+    x="43"
+    y="69"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="52"
+    fill="url(#faviconGold)"
+  >
+    S
+  </text>
+
+  <text
+    x="62"
+    y="91"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="50"
+    fill="url(#faviconGold)"
+  >
+    D
+  </text>
+
+  <path
+    d="M64 63
+       C61 58 54 59 54 65
+       C54 70 64 76 64 76
+       C64 76 74 70 74 65
+       C74 59 67 58 64 63Z"
+    fill="#EDA397"
+  />
+</svg>

@@ -1,0 +1,167 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 620 220"
+  role="img"
+  aria-labelledby="logoTitle logoDescription"
+>
+  <title id="logoTitle">Shalom and Dewmini</title>
+  <desc id="logoDescription">
+    Elegant wedding monogram with the initials S and D
+  </desc>
+
+  <defs>
+    <linearGradient id="goldGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F4D6A0" />
+      <stop offset="45%" stop-color="#C99652" />
+      <stop offset="100%" stop-color="#8B582D" />
+    </linearGradient>
+
+    <linearGradient id="roseGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8C7BC" />
+      <stop offset="100%" stop-color="#D9897A" />
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(20 14)">
+    <circle
+      cx="92"
+      cy="92"
+      r="75"
+      fill="none"
+      stroke="url(#goldGradient)"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-dasharray="405 66"
+      transform="rotate(-32 92 92)"
+    />
+
+    <path
+      d="M38 132
+         C27 120 25 105 31 91
+         C38 108 47 115 60 119"
+      fill="none"
+      stroke="url(#roseGradient)"
+      stroke-width="3"
+      stroke-linecap="round"
+    />
+
+    <path
+      d="M42 124
+         C31 121 24 115 20 104
+         C32 105 40 110 46 118"
+      fill="url(#roseGradient)"
+    />
+
+    <path
+      d="M50 116
+         C41 109 37 100 38 89
+         C49 95 54 104 55 113"
+      fill="url(#roseGradient)"
+    />
+
+    <path
+      d="M59 121
+         C54 109 55 99 62 90
+         C70 102 69 112 65 121"
+      fill="url(#roseGradient)"
+    />
+
+    <text
+      x="61"
+      y="100"
+      font-family="Georgia, 'Times New Roman', serif"
+      font-size="80"
+      font-weight="400"
+      fill="url(#goldGradient)"
+    >
+      S
+    </text>
+
+    <text
+      x="91"
+      y="132"
+      font-family="Georgia, 'Times New Roman', serif"
+      font-size="78"
+      font-weight="400"
+      fill="url(#goldGradient)"
+    >
+      D
+    </text>
+
+    <path
+      d="M91 91
+         C87 84 77 85 77 94
+         C77 101 91 109 91 109
+         C91 109 105 101 105 94
+         C105 85 95 84 91 91Z"
+      fill="#EFA69A"
+    />
+  </g>
+
+  <g transform="translate(205 42)">
+    <text
+      x="0"
+      y="58"
+      font-family="'Gilda Display', Georgia, serif"
+      font-size="47"
+      font-weight="400"
+      letter-spacing="4"
+      fill="#6D472B"
+    >
+      SHALOM
+    </text>
+
+    <text
+      x="217"
+      y="58"
+      font-family="'Gilda Display', Georgia, serif"
+      font-size="34"
+      font-weight="400"
+      fill="#D29A63"
+    >
+      &amp;
+    </text>
+
+    <text
+      x="255"
+      y="58"
+      font-family="'Gilda Display', Georgia, serif"
+      font-size="47"
+      font-weight="400"
+      letter-spacing="4"
+      fill="#6D472B"
+    >
+      DEWMINI
+    </text>
+
+    <line
+      x1="2"
+      y1="82"
+      x2="415"
+      y2="82"
+      stroke="#D3A066"
+      stroke-width="1"
+      opacity="0.7"
+    />
+
+    <path
+      d="M205 78
+         C201 72 193 73 193 80
+         C193 86 205 93 205 93
+         C205 93 217 86 217 80
+         C217 73 209 72 205 78Z"
+      fill="#EFA69A"
+    />
+
+    <text
+      x="3"
+      y="119"
+      font-family="'Tenor Sans', Arial, sans-serif"
+      font-size="16"
+      letter-spacing="7"
+      fill="#A46E42"
+    >
+      FOREVER BEGINS HERE
+    </text>
+  </g>
+</svg>

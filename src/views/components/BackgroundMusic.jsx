@@ -6,7 +6,7 @@ function BackgroundMusic() {
   return (
     <audio
       id="bgMusic"
-      src="assets/audio/AThousandYears.mp3"
+      src="assets/audio/EdSheeranPerfect.mp3"
       preload="none"
       loop
     />
