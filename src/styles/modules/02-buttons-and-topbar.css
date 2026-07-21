@@ -15,124 +15,293 @@
     box-shadow 0.18s ease;
   user-select: none;
 }
+
 .btn:active {
   transform: translateY(1px);
 }
+
 .btn--primary {
   background: linear-gradient(135deg, var(--brand), var(--brand-600));
   color: #fff;
   box-shadow: 0 12px 25px rgba(190, 81, 3, 0.24);
 }
+
 .btn--primary:hover {
   box-shadow: 0 16px 32px rgba(190, 81, 3, 0.28);
 }
+
 .btn--ghost {
   background: rgba(255, 255, 255, 0.55);
   border-color: rgba(190, 81, 3, 0.2);
 }
+
 .btn--ghost:hover {
   background: rgba(255, 255, 255, 0.72);
   border-color: rgba(190, 81, 3, 0.3);
 }
+
 .btn--lg {
   padding: 14px 18px;
   border-radius: 16px;
 }
+
 .btn--full {
   width: 100%;
 }
+
 .btn__icon {
   display: inline-flex;
 }
 
-/* Topbar */
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
 .topbar {
-  /* Transparent, centered menu, and scrolls away with the page */
   position: absolute;
   top: 0;
-  left: 0;
   right: 0;
+  left: 0;
   z-index: 40;
-
-  background: transparent;
-  border-bottom: none;
-  backdrop-filter: none;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18px 16px;
-  font-family: var(--font-tenorsans);
-  font-weight: 400;
-  font-size: 15px;
-  color: rgb(224, 216, 203);
-  line-height: 20px;
+
+  padding: 20px 16px;
+
+  color: #35261f;
+  background: transparent;
+  border-bottom: 0;
+
+  font-family: "Tenor Sans", serif;
+  line-height: 1;
+
+  backdrop-filter: none;
 }
 
+/* Existing brand styles */
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .brand__mark {
-  width: 38px;
-  height: 38px;
-  border-radius: 14px;
   display: grid;
   place-items: center;
-  background: rgba(190, 81, 3, 0.1);
+
+  width: 38px;
+  height: 38px;
+
   color: var(--brand-700);
+  background: rgba(190, 81, 3, 0.1);
   border: 1px solid rgba(190, 81, 3, 0.18);
-}
-.brand__text {
-  font-family: "Tenor Sans", serif;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  font-size: 18px;
+  border-radius: 14px;
 }
 
+.brand__text {
+  font-family: "Tenor Sans", serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* =========================================================
+   ELEGANT NAVIGATION
+   ========================================================= */
+
 .nav {
-  width: min(980px, 100%);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 18px;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 20px;
-  font-family: "Tenor Sans", "Tenor Sans Fallback", serif;
+  gap: clamp(30px, 4vw, 58px);
+
+  width: min(980px, 100%);
+
+  font-family: "Tenor Sans", serif;
 }
 
 .nav a {
-  font-weight: 650;
-  color: rgba(28, 27, 25, 0.78);
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid transparent;
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 1px 11px;
+
+  color: rgba(48, 35, 28, 0.88);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+
+  font-family: "Tenor Sans", serif;
+  font-size: clamp(0.84rem, 1.2vw, 0.96rem);
+  font-weight: 600;
+  letter-spacing: 0.19em;
+  line-height: 1.2;
+
+  text-decoration: none;
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.22);
+  text-transform: uppercase;
+
+  transition:
+    color 220ms ease,
+    letter-spacing 220ms ease,
+    opacity 220ms ease,
+    transform 220ms ease;
 }
-.nav a:hover {
-  background: rgba(190, 81, 3, 0.08);
-  border-color: rgba(190, 81, 3, 0.14);
-  color: var(--brand-700);
+/*
+ * Two-part underline:
+ * a subtle permanent center mark and
+ * an elegant line that expands on hover.
+ */
+.nav a::before {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+
+  width: 4px;
+  height: 1px;
+
+  background: rgba(150, 100, 63, 0.5);
+
+  content: "";
+
+  transform: translateX(-50%);
+  transition:
+    width 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease;
 }
+
+.nav a::after {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+
+  width: 0;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(166, 116, 76, 0),
+    rgba(142, 88, 50, 0.95) 28%,
+    rgba(202, 158, 108, 1) 50%,
+    rgba(142, 88, 50, 0.95) 72%,
+    rgba(166, 116, 76, 0)
+  );
+
+  content: "";
+
+  transform: translateX(-50%);
+
+  transition:
+    width 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms ease;
+}
+
+.nav a:hover,
+.nav a:focus-visible {
+  color: #774827;
+  letter-spacing: 0.22em;
+  text-shadow: 0 1px 5px rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+}
+
+.nav a:hover::before,
+.nav a:focus-visible::before {
+  width: 0;
+  background: transparent;
+}
+
+.nav a:hover::after,
+.nav a:focus-visible::after {
+  width: 100%;
+}
+
+.nav a:focus-visible {
+  outline: none;
+}
+
+/* =========================================================
+   MOBILE MENU TOGGLE
+   ========================================================= */
+
 .navToggle {
   position: absolute;
   top: 18px;
   right: 16px;
+
   display: none;
+
   width: 42px;
   height: 42px;
-  border-radius: 14px;
-  border: 1px solid rgba(190, 81, 3, 0.18);
+
   background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(190, 81, 3, 0.18);
+  border-radius: 14px;
 }
+
 .navToggle span {
   display: block;
-  height: 2px;
+
   width: 18px;
-  background: var(--brand-700);
+  height: 2px;
   margin: 4px auto;
+
+  background: var(--brand-700);
   border-radius: 999px;
 }
 
+/* =========================================================
+   RESPONSIVE NAVIGATION
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .topbar {
+    padding-top: 17px;
+    padding-bottom: 17px;
+  }
+
+  .nav {
+    gap: 22px;
+  }
+
+  .nav a {
+    padding-bottom: 10px;
+
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+  }
+
+  .nav a:hover,
+  .nav a:focus-visible {
+    letter-spacing: 0.16em;
+  }
+}
+
+@media (max-width: 520px) {
+  .nav {
+    gap: 14px;
+  }
+
+  .nav a {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+
+  .nav a:hover,
+  .nav a:focus-visible {
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .nav a::before,
+  .nav a::after {
+    transition: none;
+  }
+}

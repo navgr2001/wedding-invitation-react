@@ -186,15 +186,21 @@ p,
 }
 
 /* Top menu colors like reference (dark gray on bright hero top) */
+/* Elegant top menu colors */
 .topbar {
   background: transparent !important;
   box-shadow: none !important;
 }
+
 .topbar .nav a {
-  color: rgba(17, 24, 39, 0.72);
+  color: rgba(48, 35, 28, 0.88);
+  background: transparent;
 }
-.topbar .nav a:hover {
-  color: rgba(17, 24, 39, 0.95);
+
+.topbar .nav a:hover,
+.topbar .nav a:focus-visible {
+  color: #774827;
+  background: transparent;
 }
 
 /* =========================
@@ -213,4 +219,3 @@ p,
   opacity: 1;
   transform: translateY(0);
 }
-
