@@ -5,7 +5,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta name="theme-color" content="#BE5103" />
+    <meta name="theme-color" content="#a94720" />
+
+    <title>Shalom &amp; Dewmini • Wedding Invitation</title>
+
+    <meta
+      name="description"
+      content="The wedding invitation of Shalom and Dewmini."
+    />
 
     <link
       rel="icon"
@@ -15,50 +22,98 @@
 
     <link rel="apple-touch-icon" href="/assets/branding/wedding-logo.png" />
 
-    <title>Shalom &amp; Dewmini • Wedding Invitation</title>
+    <!--
+      Hide the website topbar before React and CSS render.
 
-    <meta
-      name="description"
-      content="A responsive wedding invitation website with countdown, locations, gallery, and RSVP via Google Forms."
-    />
+      This prevents the topbar from flashing over the
+      invitation intro on mobile, tablet and desktop.
+    -->
+    <script>
+      document.documentElement.classList.add("invitationIntroLoading");
+    </script>
+
+    <style>
+      /*
+       * Critical pre-render rule.
+       *
+       * This is intentionally placed inside index.html
+       * so the topbar cannot appear for a single frame
+       * while the React application is loading.
+       */
+      html.invitationIntroLoading .topbar,
+      body.isInvitationIntroActive .topbar {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transform: translateY(-120%) !important;
+      }
+    </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Tenor+Sans&amp;family=Libre+Baskerville:wght@400;700&amp;display=swap"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Tenor+Sans&amp;family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&amp;display=swap"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Gilda+Display&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Gilda+Display&amp;family=Inter:wght@300;400;500;600&amp;family=Lato:wght@300;400;700&amp;family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@400;500;600;700&amp;family=Montserrat:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@400;600;700&amp;family=Tenor+Sans&amp;display=swap"
       rel="stylesheet"
     />
   </head>
 
-  <body>
+  <body class="isInvitationIntroActive">
     <div id="root"></div>
+
+    <script>
+      (() => {
+        const INTRO_ID = "envelopeIntro";
+        const ACTIVE_CLASS = "isInvitationIntroActive";
+        const LOADING_CLASS = "invitationIntroLoading";
+
+        const syncInvitationIntroState = () => {
+          const invitationIntro = document.getElementById(INTRO_ID);
+
+          if (invitationIntro) {
+            document.body.classList.add(ACTIVE_CLASS);
+
+            document.documentElement.classList.add(LOADING_CLASS);
+
+            return;
+          }
+
+          document.body.classList.remove(ACTIVE_CLASS);
+
+          document.documentElement.classList.remove(LOADING_CLASS);
+        };
+
+        /*
+         * React adds and removes the invitation screen
+         * dynamically. The observer keeps the body state
+         * synchronised with the actual intro element.
+         */
+        const invitationObserver = new MutationObserver(() => {
+          syncInvitationIntroState();
+        });
+
+        invitationObserver.observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+        });
+
+        /*
+         * Run after the initial React render as well as
+         * when returning from the browser back-forward cache.
+         */
+        window.addEventListener("DOMContentLoaded", syncInvitationIntroState);
+
+        window.addEventListener("pageshow", syncInvitationIntroState);
+
+        /*
+         * Expose a safe synchronisation method for the
+         * existing invitation-opening logic if required.
+         */
+        window.syncInvitationIntroState = syncInvitationIntroState;
+      })();
+    </script>
 
     <script type="module" src="/src/main.jsx"></script>
   </body>

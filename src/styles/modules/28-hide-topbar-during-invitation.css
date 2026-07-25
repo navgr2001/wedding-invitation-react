@@ -1,0 +1,124 @@
+/* =========================================================
+   HIDE TOPBAR DURING INVITATION INTRO
+   ========================================================= */
+
+/*
+ * The invitation intro must be the only visible interface
+ * before the guest selects "View Invitation".
+ *
+ * display: none prevents:
+ * - the logo from appearing
+ * - the mobile menu icon from appearing
+ * - the navigation dropdown from being opened
+ * - the topbar from taking up visual space
+ */
+html.invitationIntroLoading .topbar,
+body.isInvitationIntroActive .topbar {
+  display: none !important;
+
+  opacity: 0 !important;
+  visibility: hidden !important;
+
+  pointer-events: none !important;
+
+  transform: translate3d(0, -120%, 0) !important;
+}
+
+/*
+ * Hide every interactive topbar child as an additional
+ * safeguard against older responsive rules.
+ */
+html.invitationIntroLoading .topbarBrand,
+html.invitationIntroLoading .nav,
+html.invitationIntroLoading .navToggle,
+body.isInvitationIntroActive .topbarBrand,
+body.isInvitationIntroActive .nav,
+body.isInvitationIntroActive .navToggle {
+  display: none !important;
+
+  opacity: 0 !important;
+  visibility: hidden !important;
+
+  pointer-events: none !important;
+}
+
+/*
+ * The invitation screen stays above all website content.
+ */
+#envelopeIntro,
+.envelopeIntro,
+.inviteIntro {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+
+  isolation: isolate;
+}
+
+/*
+ * Restore the topbar only after the intro element has
+ * been removed and the body state has been cleared.
+ */
+html:not(.invitationIntroLoading) body:not(.isInvitationIntroActive) .topbar {
+  display: flex;
+
+  opacity: 1;
+  visibility: visible;
+
+  pointer-events: auto;
+
+  transform: translate3d(0, 0, 0);
+}
+
+/* =========================================================
+   MOBILE AND TABLET SAFEGUARDS
+   ========================================================= */
+
+@media (max-width: 900px) {
+  html.invitationIntroLoading .topbar,
+  body.isInvitationIntroActive .topbar {
+    display: none !important;
+  }
+
+  html.invitationIntroLoading .navToggle,
+  body.isInvitationIntroActive .navToggle {
+    display: none !important;
+  }
+
+  html.invitationIntroLoading .nav,
+  body.isInvitationIntroActive .nav {
+    display: none !important;
+
+    opacity: 0 !important;
+    visibility: hidden !important;
+
+    pointer-events: none !important;
+  }
+}
+
+/* =========================================================
+   LANDSCAPE MOBILE SAFEGUARD
+   ========================================================= */
+
+@media (orientation: landscape) and (max-height: 600px) {
+  html.invitationIntroLoading .topbar,
+  body.isInvitationIntroActive .topbar {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.invitationIntroLoading) body:not(.isInvitationIntroActive) .topbar {
+    transition: none;
+  }
+}
