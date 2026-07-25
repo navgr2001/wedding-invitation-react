@@ -76,8 +76,8 @@ export const weddingContent = {
         lines: [
           { text: "10th December, 2026", className: "wLine wLine--strong" },
           { text: "18:30 PM onwards", className: "wLine" },
-          { text: "Ramrich Hotel, Ja -Ela", className: "wLine wLine--light" },
-          { text: "Melody Ballroom", className: "wLine wLine--muted" },
+          { text: "Melody Ballroom", className: "wLine wLine--light" },
+          { text: "Hotel Ramrich, Ja -Ela", className: "wLine wLine--muted" },
         ],
         mapUrl: "https://maps.app.goo.gl/UnUTYUmcdX7yG3z97",
       },
@@ -186,7 +186,11 @@ export const weddingContent = {
     logoText: "S & D",
     description:
       "Thank you for visiting our wedding website and being part of our love story. We can't wait to celebrate with you!",
-    details: ["10th December 2026", "Ramrich Hotel, Ja Ela", "Melody Ballroom"],
+    details: [
+      "10th December 2026",
+      "Melody Ballroom",
+      "Hotel Ramrich, Ja -Ela",
+    ],
     contacts: [
       { name: "Shalom", label: "Shalom - 076 452 5012", phone: "+94764525012" },
       {

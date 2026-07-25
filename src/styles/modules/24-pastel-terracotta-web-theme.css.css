@@ -1,0 +1,392 @@
+/* =========================================================
+   PASTEL TERRACOTTA WEBSITE THEME
+   Matches the invitation-cover palette without changing layout,
+   content, component structure, or invitation intro styling.
+   ========================================================= */
+
+:root {
+  --brand: #a8441e;
+  --brand-700: #6f2b16;
+  --brand-600: #883719;
+  --brand-500: #a8441e;
+  --brand-400: #c46d45;
+  --brand-300: #dfa27f;
+  --brand-200: #efd0ba;
+
+  --accent: #8b3518;
+  --ink: #4d2b20;
+  --muted: rgba(91, 57, 43, 0.74);
+  --line: rgba(126, 67, 39, 0.16);
+  --bg: #faeee3;
+  --card: rgba(255, 247, 239, 0.86);
+
+  --c-ink: #4d2b20;
+  --c-ink-2: #603728;
+  --c-slate: #755044;
+  --c-muted: #956f61;
+  --c-border: #e6c5ad;
+  --c-paper: #f4dfcf;
+  --c-cream: #faeee3;
+  --c-sand: #e5bea1;
+  --c-blush: #efd0c0;
+  --c-gold: #bf825d;
+  --c-rose: #c98168;
+
+  --shadow: 0 18px 55px rgba(102, 48, 25, 0.13);
+  --shadow-soft: 0 10px 26px rgba(102, 48, 25, 0.1);
+  --bg-icon-color: rgba(168, 68, 30, 0.055);
+  --tl-track: rgba(168, 68, 30, 0.18);
+}
+
+body {
+  color: var(--ink);
+  background:
+    radial-gradient(900px 560px at 8% 8%, rgba(223, 162, 127, 0.2), transparent 62%),
+    radial-gradient(850px 540px at 92% 16%, rgba(239, 208, 186, 0.34), transparent 60%),
+    linear-gradient(180deg, #fbf1e8 0%, #f9eadf 48%, #f6e3d5 100%);
+  font-family: var(--font-tenorsans);
+}
+
+#home {
+  color: var(--ink);
+}
+
+#home .section {
+  color: var(--ink);
+}
+
+#home .section--alt,
+#home .wordsSection {
+  background: linear-gradient(180deg, rgba(235, 196, 168, 0.24), rgba(248, 229, 215, 0.56));
+  border-color: rgba(168, 68, 30, 0.11);
+}
+
+#home .h2,
+#home h2,
+#home .timelineTitleV2,
+#home .countdownTitle,
+#home .finalCta__title {
+  color: #6f2b16;
+  font-family: var(--font-gilda);
+  font-weight: 400;
+  letter-spacing: 0.025em;
+}
+
+#home .h3,
+#home h3,
+#home h4,
+#home .weddingCard__title,
+#home .rsvpSaveCard__title,
+#home .seatFinderResult__title,
+#home .wordsBy {
+  color: #7d3419;
+  font-family: var(--font-tenorsans);
+  font-weight: 500;
+  letter-spacing: 0.045em;
+}
+
+#home p,
+#home .muted,
+#home .meta,
+#home .wLine,
+#home .tlText,
+#home .rsvpSaveCard__text,
+#home .rsvpHint,
+#home .seatFinderResult__text,
+#home .seatFinderResult__message {
+  color: rgba(84, 50, 38, 0.76);
+  font-family: var(--font-tenorsans);
+}
+
+/* Top navigation: same elegant terracotta palette, no link background. */
+.topbar .nav a,
+.topbar .nav__link {
+  color: rgba(91, 43, 25, 0.9);
+  background: transparent;
+}
+
+.topbar .nav a::before,
+.topbar .nav__link::before {
+  background: rgba(168, 68, 30, 0.46);
+}
+
+.topbar .nav a::after,
+.topbar .nav__link::after {
+  background: linear-gradient(90deg, transparent, #a8441e 28%, #d18a64 50%, #a8441e 72%, transparent);
+}
+
+.topbar .nav a:hover,
+.topbar .nav a:focus-visible,
+.topbar .nav__link:hover,
+.topbar .nav__link:focus-visible {
+  color: #7a2f16;
+  background: transparent;
+  text-shadow: 0 1px 4px rgba(255, 244, 235, 0.26);
+}
+
+/* Countdown */
+#home .countdown__item,
+#home .weddingCountdown__item {
+  background: rgba(255, 247, 239, 0.9);
+  border-color: rgba(168, 68, 30, 0.13);
+  box-shadow: 0 12px 28px rgba(105, 48, 24, 0.08);
+}
+
+#home .countdown__num,
+#home .weddingCountdown__value {
+  color: #8d381a;
+  font-family: var(--font-gilda);
+}
+
+#home .countdown__label,
+#home .weddingCountdown__label,
+#home .countdownTagline {
+  color: rgba(102, 62, 47, 0.72);
+}
+
+/* Couple section */
+#home .personCard__badge,
+#home .weddingDetailsSection .weddingCard__icon,
+#home .tlNode {
+  background: #a8441e;
+  color: #fff8f2;
+}
+
+#home .personCard__body .h3 {
+  color: #7d3419;
+}
+
+#home .personCard__body .tag,
+#home .personCard__body .muted,
+#home .quote {
+  color: rgba(86, 51, 39, 0.72);
+}
+
+#home .noteCard {
+  background: rgba(247, 226, 211, 0.82);
+  border-color: rgba(168, 68, 30, 0.12);
+  box-shadow: 0 14px 34px rgba(104, 48, 24, 0.07);
+}
+
+#home .noteCard__heart,
+#home .noteCard__title {
+  color: #7b3118;
+}
+
+#home .noteCard__text {
+  color: rgba(83, 49, 37, 0.76);
+}
+
+/* Wedding detail cards and timeline */
+#home .weddingDetailsSection .weddingCard,
+#home .tlCard,
+#home .rsvpSaveCard,
+#home .rsvpFormCard,
+#home .wordsCard,
+#home .seatFinderSuggestions,
+#home .seatFinderResult {
+  background: rgba(255, 247, 239, 0.9);
+  border-color: rgba(168, 68, 30, 0.13);
+  box-shadow: 0 16px 38px rgba(105, 48, 24, 0.085);
+}
+
+#home .weddingDetailsSection .weddingCard__title,
+#home .timelineTitleV2,
+#home .tlTime {
+  color: #773018;
+}
+
+#home .weddingDetailsSection .wLine,
+#home .weddingDetailsSection .wLine--strong,
+#home .weddingDetailsSection .wLine--light,
+#home .weddingDetailsSection .wLine--muted,
+#home .weddingDetailsSection .weddingCard__note,
+#home .tlText {
+  color: rgba(87, 52, 40, 0.74);
+}
+
+#home .timelineTitleV2::after,
+#home .tlList::after {
+  background: rgba(168, 68, 30, 0.88);
+}
+
+#home .weddingDetailsSection .weddingCard__btn {
+  color: #783118;
+  background: rgba(250, 235, 224, 0.88);
+  border-color: rgba(168, 68, 30, 0.18);
+}
+
+#home .weddingDetailsSection .weddingCard__btn:hover {
+  background: #f3d7c3;
+  border-color: rgba(168, 68, 30, 0.3);
+}
+
+/* RSVP and form controls */
+#home .rsvpSaveCard__icon,
+#home .rsvpSaveCard__title,
+#home .fLabel,
+#home .rsvpSuccess__title {
+  color: #763018;
+}
+
+#home .rsvpSaveCard__text,
+#home .rsvpHint,
+#home .rsvpSuccess__text {
+  color: rgba(87, 52, 40, 0.72);
+}
+
+#home .fInput {
+  color: #4f2e22;
+  background: rgba(255, 250, 246, 0.94);
+  border-color: rgba(168, 68, 30, 0.18);
+}
+
+#home .fInput::placeholder {
+  color: rgba(122, 82, 66, 0.56);
+}
+
+#home .fInput:focus {
+  border-color: rgba(168, 68, 30, 0.52);
+  box-shadow: 0 0 0 4px rgba(168, 68, 30, 0.09);
+}
+
+#home .rsvpSubmitBtn,
+#home .btn--primary {
+  color: #fff9f4;
+  background: linear-gradient(135deg, #a8441e, #7b2f16);
+  box-shadow: 0 12px 28px rgba(111, 43, 22, 0.2);
+}
+
+#home .rsvpSubmitBtn:hover,
+#home .btn--primary:hover {
+  box-shadow: 0 16px 32px rgba(111, 43, 22, 0.25);
+}
+
+#home .rsvpSuccess {
+  background: rgba(255, 247, 239, 0.9);
+  border-color: rgba(168, 68, 30, 0.16);
+}
+
+/* Words carousel */
+#home .wordsQuote {
+  color: #6a3928;
+  font-family: var(--font-gilda);
+}
+
+#home .wordsBy {
+  color: #8b3a1c;
+}
+
+#home .wordsDot {
+  background: rgba(168, 68, 30, 0.32);
+}
+
+#home .wordsDot.isActive {
+  background: #a8441e;
+}
+
+/* Gallery */
+#home .gallery__item {
+  background: rgba(255, 243, 234, 0.72);
+  border-color: rgba(168, 68, 30, 0.15);
+  box-shadow: 0 12px 30px rgba(105, 48, 24, 0.08);
+}
+
+#home .gallery__item:hover {
+  border-color: rgba(168, 68, 30, 0.3);
+  box-shadow: 0 18px 38px rgba(105, 48, 24, 0.13);
+}
+
+/* Final CTA keeps its imagery while using matching terracotta overlays. */
+#home .finalCta::before {
+  background:
+    linear-gradient(135deg, rgba(92, 34, 14, 0.72), rgba(168, 68, 30, 0.48)),
+    linear-gradient(180deg, rgba(74, 28, 13, 0.1), rgba(74, 28, 13, 0.4));
+}
+
+#home .finalCta__title,
+#home .finalCta__desc,
+#home .finalCta__icons {
+  color: #fff7f0;
+}
+
+#home .finalCtaBtn--primary {
+  color: #783018;
+  background: #faeee3;
+  border-color: rgba(255, 247, 239, 0.82);
+}
+
+#home .finalCtaBtn--ghost {
+  color: #fff8f2;
+  background: rgba(255, 239, 226, 0.12);
+  border-color: rgba(255, 247, 239, 0.58);
+}
+
+/* Seat finder */
+#home .seatFinderSuggestion {
+  color: #5d3628;
+}
+
+#home .seatFinderSuggestion:hover,
+#home .seatFinderSuggestion.isActive {
+  color: #7d3017;
+  background: rgba(168, 68, 30, 0.09);
+}
+
+#home .seatFinderResult__welcome {
+  color: #a8441e;
+}
+
+/* Footer */
+.weddingFooter {
+  color: #fff8f2;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(218, 139, 94, 0.2), transparent 32%),
+    linear-gradient(145deg, #6c2915 0%, #873719 52%, #5d2312 100%);
+}
+
+.weddingFooter::before {
+  background: radial-gradient(circle at 85% 18%, rgba(239, 193, 160, 0.13), transparent 34%);
+}
+
+.weddingFooter__logoText,
+.weddingFooter__title,
+.weddingFooter__love {
+  color: #fff8f2;
+  font-family: var(--font-gilda);
+}
+
+.weddingFooter__description,
+.weddingFooter__links a,
+.weddingFooter__links button,
+.weddingFooter__details p,
+.weddingFooter__contactItem,
+.weddingFooter__copy {
+  color: rgba(255, 240, 229, 0.88);
+}
+
+.weddingFooter__links a:hover,
+.weddingFooter__links button:hover,
+.weddingFooter__contactItem:hover {
+  color: #efc4a6;
+}
+
+.weddingFooter__contactIcon,
+.weddingFooter__logoIcon {
+  color: #f4d2bb;
+  background: rgba(255, 236, 222, 0.07);
+  border-color: rgba(255, 236, 222, 0.14);
+}
+
+/* Floating controls */
+.floatingControl {
+  color: #783018;
+  background: rgba(255, 245, 237, 0.9);
+  border-color: rgba(168, 68, 30, 0.18);
+  box-shadow: 0 10px 28px rgba(92, 34, 14, 0.14);
+}
+
+.floatingControl:hover {
+  color: #fff8f2;
+  background: #a8441e;
+}
