@@ -1,0 +1,141 @@
+/* =========================================================
+   MOBILE/TABLET NAVIGATION — SOLID BACKGROUND FIX
+   ========================================================= */
+
+@media (max-width: 900px) {
+  /*
+   * The navigation container remains responsible for
+   * positioning and opening animations.
+   */
+  .topbar .nav {
+    position: absolute;
+
+    overflow: hidden;
+
+    background: #f8e7dc !important;
+    background-color: #f8e7dc !important;
+    background-image: none !important;
+
+    border: 1px solid rgba(148, 66, 34, 0.2) !important;
+
+    box-shadow:
+      0 20px 48px rgba(65, 30, 15, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    isolation: isolate;
+  }
+
+  /*
+   * A separate solid layer guarantees that video,
+   * hero images and page content cannot appear through
+   * the dropdown even when older theme rules remain.
+   */
+  .topbar .nav::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    background: #f8e7dc;
+    background-color: #f8e7dc;
+    background-image: none;
+
+    border-radius: inherit;
+
+    content: "";
+
+    opacity: 1;
+
+    pointer-events: none;
+  }
+
+  /*
+   * Keep the closed state invisible.
+   */
+  .topbar .nav:not(.isOpen) {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  /*
+   * The opened menu itself must be fully opaque.
+   */
+  .topbar .nav.isOpen {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+
+    background: #f8e7dc !important;
+    background-color: #f8e7dc !important;
+    background-image: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    mix-blend-mode: normal;
+  }
+
+  /*
+   * Remove transparent backgrounds from the menu's
+   * structural containers.
+   */
+  .topbar .nav__mobileHeader,
+  .topbar .nav__items {
+    position: relative;
+    z-index: 1;
+
+    background: transparent;
+  }
+
+  /*
+   * Navigation items remain clean and lightweight.
+   * Only the dropdown panel receives the solid colour.
+   */
+  .topbar .nav__link {
+    position: relative;
+    z-index: 1;
+
+    background: transparent !important;
+  }
+
+  .topbar .nav__link:hover,
+  .topbar .nav__link:focus-visible {
+    background: #fdf3ec !important;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE DEVICES
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .topbar .nav,
+  .topbar .nav.isOpen,
+  .topbar .nav::before {
+    background: #f8e7dc !important;
+    background-color: #f8e7dc !important;
+    background-image: none !important;
+  }
+}
+
+/* =========================================================
+   LANDSCAPE MOBILE
+   ========================================================= */
+
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 900px) {
+  .topbar .nav,
+  .topbar .nav.isOpen,
+  .topbar .nav::before {
+    background: #f8e7dc !important;
+    background-color: #f8e7dc !important;
+    background-image: none !important;
+  }
+}

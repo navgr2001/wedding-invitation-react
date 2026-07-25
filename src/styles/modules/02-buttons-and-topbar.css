@@ -372,7 +372,7 @@ body:not(.isInvitationIntroActive) .topbar {
 }
 
 .navToggle:hover {
-  color: #c96d03e8;
+  color: #b98f03e8;
 
   background: transparent;
   border-color: transparent;
@@ -453,31 +453,6 @@ body:not(.isInvitationIntroActive) .topbar {
    ========================================================= */
 
 @media (max-width: 900px) {
-  .topbar {
-    min-height: 74px;
-
-    padding: 7px 15px;
-
-    background: rgba(255, 248, 242, 0.15);
-
-    backdrop-filter: blur(16px) saturate(135%);
-
-    -webkit-backdrop-filter: blur(16px) saturate(135%);
-  }
-
-  .topbar.isScrolled {
-    background: rgba(255, 247, 240, 0.76);
-  }
-
-  .topbarBrand {
-    width: 62px;
-    height: 60px;
-  }
-
-  .navToggle {
-    display: inline-flex;
-  }
-
   .nav {
     position: absolute;
     top: calc(100% + 11px);
@@ -493,19 +468,15 @@ body:not(.isInvitationIntroActive) .topbar {
     overflow-y: auto;
     overscroll-behavior: contain;
 
-    background: linear-gradient(
-      145deg,
-      rgba(255, 248, 242, 0.97),
-      rgba(250, 229, 215, 0.96)
-    );
+    background: #f8e7dc;
 
-    border: 1px solid rgba(163, 79, 42, 0.16);
+    border: 1px solid rgba(163, 79, 42, 0.18);
 
     border-radius: 24px;
 
     box-shadow:
-      0 22px 55px rgba(67, 31, 16, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.78);
+      0 22px 55px rgba(67, 31, 16, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
 
     opacity: 0;
     pointer-events: none;
@@ -516,9 +487,8 @@ body:not(.isInvitationIntroActive) .topbar {
 
     visibility: hidden;
 
-    backdrop-filter: blur(26px) saturate(145%);
-
-    -webkit-backdrop-filter: blur(26px) saturate(145%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 
     transition:
       opacity 220ms ease,
