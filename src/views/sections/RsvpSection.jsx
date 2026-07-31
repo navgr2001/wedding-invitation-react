@@ -11,7 +11,12 @@ function RsvpSection({ rsvp }) {
         <div className="rsvpGrid">
           <div className="rsvpPhotoCard reveal">
             <div className="rsvpPhotoCard__img">
-              <img src={rsvp.photo} alt="Couple photo" loading="lazy" decoding="async" />
+              <img
+                src={rsvp.photo}
+                alt="Couple photo"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
             <div className="rsvpSaveCard" aria-label="Save the Date">
               <div className="rsvpSaveCard__head">
@@ -41,7 +46,7 @@ function RsvpSection({ rsvp }) {
                   className="fInput"
                   type="text"
                   name="name"
-                  placeholder="Eg: Namal Perera"
+                  placeholder="Eg: Sam Crow"
                   required
                 />
               </label>
@@ -50,7 +55,9 @@ function RsvpSection({ rsvp }) {
                   Will you attend?
                   <select className="fInput" name="attendance" required>
                     <option value="">Select</option>
-                    <option value="Yes, I'll be there">Yes, I'll be there</option>
+                    <option value="Yes, I'll be there">
+                      Yes, I'll be there
+                    </option>
                     <option value="Sorry, I can't make it">
                       Sorry, I can't make it
                     </option>
