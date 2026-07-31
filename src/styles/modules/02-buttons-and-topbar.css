@@ -6,6 +6,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: 10px;
 
   padding: 12px 16px;
@@ -18,6 +19,7 @@
 
   font-weight: 650;
   line-height: 1.2;
+
   text-decoration: none;
 
   cursor: pointer;
@@ -37,6 +39,7 @@
 
 .btn:focus-visible {
   outline: 2px solid rgba(169, 71, 32, 0.7);
+
   outline-offset: 3px;
 }
 
@@ -68,6 +71,7 @@
 
 .btn--lg {
   padding: 14px 18px;
+
   border-radius: 16px;
 }
 
@@ -83,6 +87,7 @@
 
 /* =========================================================
    TOPBAR
+   DESKTOP
    ========================================================= */
 
 .topbar {
@@ -90,6 +95,7 @@
   top: 0;
   right: 0;
   left: 0;
+
   z-index: 1000;
 
   display: flex;
@@ -122,28 +128,28 @@
     backdrop-filter 220ms ease;
 }
 
-/*
- * Hide the topbar while the invitation intro
- * screen is still active.
- */
+/* Invitation screen */
 body.isInvitationIntroActive .topbar {
   opacity: 0;
+
   pointer-events: none;
-  transform: translateY(-100%);
+
+  transform: translateY(-120%);
+
   visibility: hidden;
 }
 
-/*
- * Show the topbar after the invitation intro
- * has been opened.
- */
 body:not(.isInvitationIntroActive) .topbar {
   opacity: 1;
+
   pointer-events: auto;
+
   transform: translateY(0);
+
   visibility: visible;
 }
 
+/* Scrolled state */
 .topbar.isScrolled {
   background: rgba(255, 247, 240, 0.64);
 
@@ -159,11 +165,12 @@ body:not(.isInvitationIntroActive) .topbar {
 }
 
 /* =========================================================
-   TOPBAR BRAND
+   BRAND
    ========================================================= */
 
 .topbarBrand {
   position: relative;
+
   z-index: 3;
 
   display: inline-flex;
@@ -179,6 +186,7 @@ body:not(.isInvitationIntroActive) .topbar {
   padding: 0;
 
   color: inherit;
+
   background: transparent;
 
   border: 0;
@@ -223,6 +231,7 @@ body:not(.isInvitationIntroActive) .topbar {
   position: absolute;
   top: 50%;
   left: 50%;
+
   z-index: 2;
 
   transform: translate(-50%, -50%);
@@ -248,6 +257,7 @@ body:not(.isInvitationIntroActive) .topbar {
   justify-content: center;
 
   margin: 0;
+
   padding: 8px 1px 11px;
 
   color: rgba(48, 35, 28, 0.9);
@@ -262,7 +272,9 @@ body:not(.isInvitationIntroActive) .topbar {
   font-size: clamp(0.84rem, 1.2vw, 0.96rem);
 
   font-weight: 600;
+
   letter-spacing: 0.19em;
+
   line-height: 1.2;
 
   cursor: pointer;
@@ -272,6 +284,7 @@ body:not(.isInvitationIntroActive) .topbar {
   text-shadow: 0 1px 4px rgba(255, 255, 255, 0.22);
 
   text-transform: uppercase;
+
   white-space: nowrap;
 
   transition:
@@ -324,6 +337,10 @@ body:not(.isInvitationIntroActive) .topbar {
   outline: none;
 }
 
+/*
+ * Mobile-specific content remains hidden
+ * on desktop.
+ */
 .nav__icon,
 .nav__description,
 .nav__arrow {
@@ -331,12 +348,14 @@ body:not(.isInvitationIntroActive) .topbar {
 }
 
 /* =========================================================
-   MOBILE NAVIGATION TOGGLE — ICON ONLY
+   HAMBURGER TOGGLE
+   ICON ONLY
    ========================================================= */
 
 .navToggle {
   position: relative;
-  z-index: 5;
+
+  z-index: 1002;
 
   display: none;
   align-items: center;
@@ -344,16 +363,19 @@ body:not(.isInvitationIntroActive) .topbar {
 
   flex: 0 0 auto;
 
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 
   margin: 0 0 0 auto;
+
   padding: 0;
 
   color: #8f3f21;
 
   background: transparent;
+
   border: 0;
+
   border-radius: 0;
 
   box-shadow: none;
@@ -363,7 +385,10 @@ body:not(.isInvitationIntroActive) .topbar {
   isolation: isolate;
 
   appearance: none;
+
   -webkit-appearance: none;
+
+  -webkit-tap-highlight-color: transparent;
 
   transition:
     color 180ms ease,
@@ -372,10 +397,10 @@ body:not(.isInvitationIntroActive) .topbar {
 }
 
 .navToggle:hover {
-  color: #945900e8;
+  color: #ac4d29;
 
   background: transparent;
-  border-color: transparent;
+
   box-shadow: none;
 
   transform: translateY(-1px);
@@ -386,26 +411,29 @@ body:not(.isInvitationIntroActive) .topbar {
 }
 
 .navToggle:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.58);
+  outline: 2px solid rgba(169, 71, 32, 0.55);
 
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
+
+/* =========================================================
+   SVG MENU / CLOSE ICON
+   ========================================================= */
 
 .navToggle__icon {
   position: absolute;
+
   top: 50%;
   left: 50%;
 
   display: block;
 
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 
   color: currentColor;
 
   pointer-events: none;
-
-  filter: drop-shadow(0 1px 2px rgba(73, 35, 19, 0.14));
 
   transform: translate(-50%, -50%) rotate(0deg) scale(1);
 
@@ -432,10 +460,6 @@ body:not(.isInvitationIntroActive) .topbar {
   transform: translate(-50%, -50%) rotate(-90deg) scale(0.75);
 }
 
-.navToggle[aria-expanded="true"] {
-  color: #ebb401e8;
-}
-
 .navToggle[aria-expanded="true"] .navToggle__icon--menu {
   opacity: 0;
 
@@ -445,65 +469,152 @@ body:not(.isInvitationIntroActive) .topbar {
 .navToggle[aria-expanded="true"] .navToggle__icon--close {
   opacity: 1;
 
-  transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  transform: translate(-50%, -50%) rotate(0) scale(1);
 }
 
 /* =========================================================
-   MOBILE AND TABLET NAVIGATION
+   TABLETS + MOBILE
+   IMPORTANT:
+   1024px ensures common tablets also use hamburger navigation
    ========================================================= */
 
-@media (max-width: 900px) {
-  .nav {
+@media (max-width: 1024px) {
+  .topbar {
+    min-height: 60px;
+
+    padding: 4px 14px;
+
+    background: rgba(255, 248, 242, 0.16);
+
+    backdrop-filter: blur(16px) saturate(135%);
+
+    -webkit-backdrop-filter: blur(16px) saturate(135%);
+  }
+
+  .topbar.isScrolled {
+    background: rgba(255, 247, 240, 0.82);
+  }
+
+  /*
+   * Smaller logo allows a more compact
+   * tablet/mobile header.
+   */
+  .topbarBrand {
+    width: 50px;
+    height: 48px;
+  }
+
+  /*
+   * Force the hamburger button to appear
+   * on tablets and mobile devices.
+   *
+   * !important is intentional here because
+   * older responsive CSS files in this project
+   * can override display.
+   */
+  .topbar .navToggle {
+    display: inline-flex !important;
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+  }
+
+  .navToggle {
+    width: 40px;
+    height: 40px;
+
+    color: #8c3d20;
+  }
+
+  .navToggle__icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* =======================================================
+     DROPDOWN
+     ======================================================= */
+
+  .topbar .nav {
     position: absolute;
-    top: calc(100% + 11px);
+
+    top: calc(100% + 8px);
+
     right: 14px;
     left: 14px;
-    z-index: 4;
+
+    z-index: 1001;
 
     width: auto;
-    max-height: calc(100dvh - 98px);
+
+    max-height: calc(100dvh - 82px);
 
     padding: 18px 14px 14px;
 
     overflow-y: auto;
+
     overscroll-behavior: contain;
 
-    background: #f8e7dc;
+    /*
+     * Solid background.
+     * No transparency.
+     */
+    background: #f8e7dc !important;
 
-    border: 1px solid rgba(163, 79, 42, 0.18);
+    background-color: #f8e7dc !important;
 
-    border-radius: 24px;
+    background-image: none !important;
+
+    border: 1px solid rgba(148, 66, 34, 0.18);
+
+    border-radius: 22px;
 
     box-shadow:
-      0 22px 55px rgba(67, 31, 16, 0.18),
+      0 20px 48px rgba(65, 30, 15, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
 
     opacity: 0;
+
     pointer-events: none;
 
-    transform: translateY(-12px) scale(0.98);
+    transform: translateY(-10px) scale(0.985);
 
     transform-origin: top right;
 
     visibility: hidden;
 
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    backdrop-filter: none !important;
+
+    -webkit-backdrop-filter: none !important;
 
     transition:
       opacity 220ms ease,
-      transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
       visibility 220ms ease;
   }
 
-  .nav.isOpen {
+  .topbar .nav.isOpen {
     opacity: 1;
+
     pointer-events: auto;
 
     transform: translateY(0) scale(1);
 
     visibility: visible;
+
+    background: #f8e7dc !important;
+
+    background-color: #f8e7dc !important;
+
+    background-image: none !important;
   }
+
+  /* =======================================================
+     MOBILE MENU HEADER
+     ======================================================= */
 
   .nav__mobileHeader {
     display: flex;
@@ -524,7 +635,9 @@ body:not(.isInvitationIntroActive) .topbar {
 
     font-size: 0.62rem;
     font-weight: 600;
+
     letter-spacing: 0.2em;
+
     line-height: 1.2;
 
     text-transform: uppercase;
@@ -537,10 +650,17 @@ body:not(.isInvitationIntroActive) .topbar {
       "Cormorant Garamond", "Gilda Display", "Playfair Display", serif;
 
     font-size: 1.48rem;
+
     font-weight: 500;
+
     letter-spacing: 0.015em;
+
     line-height: 1.2;
   }
+
+  /* =======================================================
+     MENU ITEMS
+     ======================================================= */
 
   .nav__items {
     display: flex;
@@ -565,22 +685,29 @@ body:not(.isInvitationIntroActive) .topbar {
     align-items: center;
 
     width: 100%;
-    min-height: 68px;
 
-    padding: 10px 12px;
+    min-height: 66px;
+
+    padding: 9px 12px;
 
     color: #6f3520;
+
     background: transparent;
 
     border: 1px solid transparent;
 
-    border-radius: 17px;
+    border-radius: 16px;
 
     font-size: inherit;
+
     letter-spacing: normal;
+
     text-align: left;
+
     text-shadow: none;
+
     text-transform: none;
+
     white-space: normal;
 
     transition:
@@ -599,7 +726,7 @@ body:not(.isInvitationIntroActive) .topbar {
   .nav__link:focus-visible {
     color: #71331c;
 
-    background: rgba(255, 250, 246, 0.74);
+    background: #fdf3ec;
 
     border-color: rgba(163, 79, 42, 0.14);
 
@@ -619,6 +746,10 @@ body:not(.isInvitationIntroActive) .topbar {
 
     outline-offset: 1px;
   }
+
+  /* =======================================================
+     MENU ICONS
+     ======================================================= */
 
   .nav__icon {
     display: grid;
@@ -657,6 +788,10 @@ body:not(.isInvitationIntroActive) .topbar {
     transform: rotate(-3deg) scale(1.04);
   }
 
+  /* =======================================================
+     ITEM CONTENT
+     ======================================================= */
+
   .nav__content {
     display: flex;
     flex-direction: column;
@@ -674,8 +809,11 @@ body:not(.isInvitationIntroActive) .topbar {
     font-family: "Tenor Sans", sans-serif;
 
     font-size: 0.82rem;
+
     font-weight: 600;
+
     letter-spacing: 0.13em;
+
     line-height: 1.2;
 
     text-transform: uppercase;
@@ -689,8 +827,11 @@ body:not(.isInvitationIntroActive) .topbar {
     font-family: "Manrope", "Lato", "Inter", sans-serif;
 
     font-size: 0.72rem;
+
     font-weight: 500;
+
     letter-spacing: 0.005em;
+
     line-height: 1.35;
   }
 
@@ -724,24 +865,28 @@ body:not(.isInvitationIntroActive) .topbar {
 }
 
 /* =========================================================
-   SMALL MOBILE DEVICES
+   MOBILE
    ========================================================= */
 
-@media (max-width: 480px) {
-  .nav {
-    right: 10px;
-    left: 10px;
+@media (max-width: 600px) {
+  .topbar {
+    min-height: 56px;
 
-    padding: 16px 11px 11px;
+    padding: 3px 12px;
+  }
 
-    border-radius: 21px;
+  .topbarBrand {
+    width: 46px;
+    height: 44px;
+  }
+
+  .topbar .navToggle {
+    display: inline-flex !important;
   }
 
   .navToggle {
-    width: 44px;
-    height: 44px;
-
-    border-radius: 14px;
+    width: 38px;
+    height: 38px;
   }
 
   .navToggle__icon {
@@ -749,12 +894,29 @@ body:not(.isInvitationIntroActive) .topbar {
     height: 23px;
   }
 
+  .topbar .nav {
+    top: calc(100% + 7px);
+
+    right: 10px;
+    left: 10px;
+
+    padding: 15px 11px 11px;
+
+    border-radius: 20px;
+  }
+
   .nav__mobileHeader {
-    padding: 2px 8px 14px;
+    padding: 2px 8px 13px;
   }
 
   .nav__mobileTitle {
     font-size: 1.35rem;
+  }
+
+  .nav__items {
+    gap: 5px;
+
+    padding-top: 9px;
   }
 
   .nav__link {
@@ -763,9 +925,9 @@ body:not(.isInvitationIntroActive) .topbar {
       minmax(0, 1fr)
       22px;
 
-    min-height: 64px;
+    min-height: 61px;
 
-    padding: 9px 10px;
+    padding: 8px 10px;
 
     border-radius: 15px;
   }
@@ -784,6 +946,7 @@ body:not(.isInvitationIntroActive) .topbar {
 
   .nav__label {
     font-size: 0.77rem;
+
     letter-spacing: 0.11em;
   }
 
@@ -793,37 +956,40 @@ body:not(.isInvitationIntroActive) .topbar {
 }
 
 /* =========================================================
-   VERY SMALL MOBILE DEVICES
+   VERY SMALL MOBILE
    ========================================================= */
 
 @media (max-width: 360px) {
   .topbar {
-    padding-right: 11px;
-    padding-left: 11px;
+    min-height: 52px;
+
+    padding: 2px 10px;
   }
 
   .topbarBrand {
-    width: 56px;
-    height: 54px;
+    width: 42px;
+    height: 40px;
+  }
+
+  .topbar .navToggle {
+    display: inline-flex !important;
   }
 
   .navToggle {
-    width: 42px;
-    height: 42px;
-
-    border-radius: 13px;
+    width: 36px;
+    height: 36px;
   }
 
   .navToggle__icon {
-    width: 22px;
-    height: 22px;
+    width: 21px;
+    height: 21px;
   }
 
-  .nav {
+  .topbar .nav {
     right: 8px;
     left: 8px;
 
-    padding: 14px 9px 9px;
+    padding: 13px 9px 9px;
   }
 
   .nav__link {
@@ -832,57 +998,129 @@ body:not(.isInvitationIntroActive) .topbar {
       minmax(0, 1fr)
       20px;
 
-    min-height: 61px;
+    min-height: 58px;
   }
 
   .nav__icon {
-    width: 37px;
-    height: 37px;
+    width: 36px;
+    height: 36px;
   }
 
   .nav__description {
-    font-size: 0.65rem;
+    font-size: 0.64rem;
   }
 }
 
 /* =========================================================
-   SHORT LANDSCAPE MOBILE
+   TABLET LANDSCAPE
+   Ensures hamburger remains visible on 1024px tablets
    ========================================================= */
 
-@media (orientation: landscape) and (max-height: 520px) and (max-width: 900px) {
-  .nav {
-    max-height: calc(100dvh - 82px);
+@media (min-width: 601px) and (max-width: 1024px) {
+  .topbar .navToggle {
+    display: inline-flex !important;
 
-    padding: 12px 11px 10px;
+    opacity: 1 !important;
+
+    visibility: visible !important;
+
+    pointer-events: auto !important;
+  }
+
+  /*
+   * Desktop nav must not remain displayed
+   * beside the hamburger icon.
+   */
+  .topbar .nav:not(.isOpen) {
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+  }
+}
+
+/* =========================================================
+   SHORT LANDSCAPE TOUCH DEVICES
+   ========================================================= */
+
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 1024px) {
+  .topbar {
+    min-height: 52px;
+
+    padding: 2px 12px;
+  }
+
+  .topbarBrand {
+    width: 44px;
+    height: 42px;
+  }
+
+  .navToggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .navToggle__icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .topbar .nav {
+    top: calc(100% + 5px);
+
+    max-height: calc(100dvh - 64px);
+
+    padding: 11px 11px 9px;
   }
 
   .nav__mobileHeader {
-    padding-bottom: 10px;
+    padding-bottom: 9px;
   }
 
   .nav__mobileTitle {
-    font-size: 1.15rem;
+    font-size: 1.12rem;
   }
 
   .nav__items {
-    gap: 4px;
+    gap: 3px;
 
-    padding-top: 7px;
+    padding-top: 6px;
   }
 
   .nav__link {
-    min-height: 53px;
+    min-height: 50px;
 
-    padding: 6px 9px;
+    padding: 5px 9px;
   }
 
   .nav__icon {
-    width: 35px;
-    height: 35px;
+    width: 34px;
+    height: 34px;
   }
 
+  /*
+   * Description is optional in short landscape
+   * mode to preserve comfortable tap targets.
+   */
   .nav__description {
     display: none;
+  }
+}
+
+/* =========================================================
+   DESKTOP ONLY
+   ========================================================= */
+
+@media (min-width: 1025px) {
+  .navToggle {
+    display: none !important;
+  }
+
+  .nav {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 }
 
@@ -900,7 +1138,7 @@ body:not(.isInvitationIntroActive) .topbar {
   .nav__icon,
   .nav__arrow,
   .navToggle,
-  .navToggle span {
+  .navToggle__icon {
     transition: none;
   }
 }
