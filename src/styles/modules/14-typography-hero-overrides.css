@@ -1,62 +1,34 @@
-/* Typography (SaveTheDate-like) */
-body {
-  font-family: var(--font-montserrat);
-  color: var(--c-ink);
-  background: var(--c-cream);
-}
-
-h2 {
-  font-family: var(--font-gilda);
-  letter-spacing: 0.02em;
-}
-
-h3,
-h4,
-h5,
-h6,
-.sectionTitle,
-.sectionSubtitle,
-.countdownTitle {
-  font-family: var(--font-tenorsans);
-  letter-spacing: 0.04em;
-}
-
-p,
-.bodyText,
-.mutedText {
-  font-family: var(--font-tenorsans);
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 24px;
-  line-height: 24px;
-  font-weight: 400;
-}
-
-/* Hero couple names (if you have a dedicated class) */
 /* =========================================================
-   HERO COUPLE NAME
-   Separate romantic script font only for "Shalom & Dewmini"
+   HERO TYPOGRAPHY
    ========================================================= */
 
-.heroBanner .heroBanner__title {
-  margin: 8px auto 12px;
+/*
+ * Couple name only.
+ * Uses Petit Formal Script separately from
+ * the main section heading typography.
+ */
+.heroBanner .heroBanner__title,
+.heroBanner h1.heroBanner__title {
+  margin: 0 auto;
 
-  color: rgba(255, 255, 255, 0.98);
+  color: #fff8f2;
 
-  font-family:
-    "Petit Formal Script", "Cormorant Garamond", "Gilda Display", Georgia, serif;
+  font-family: "Petit Formal Script", "Cormorant Garamond", Georgia, serif;
 
-  font-size: clamp(3rem, 6.2vw, 5.6rem);
+  font-size: clamp(2.85rem, 5.4vw, 4.9rem);
 
   font-style: normal;
   font-weight: 400;
 
-  letter-spacing: -0.025em;
+  letter-spacing: -0.035em;
 
   line-height: 1.3;
 
   text-align: center;
 
-  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  text-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.2),
+    0 8px 20px rgba(0, 0, 0, 0.12);
 
   text-wrap: balance;
 
@@ -64,14 +36,58 @@ p,
 }
 
 /* =========================================================
+   DATE
+   ========================================================= */
+
+.heroBanner .heroBanner__date,
+.heroBanner .heroBanner__subtitle {
+  color: rgba(255, 235, 220, 0.93);
+
+  font-family: "Cormorant Garamond", Georgia, serif;
+
+  font-size: clamp(1.05rem, 1.8vw, 1.32rem);
+
+  font-style: normal;
+
+  font-weight: 500;
+
+  letter-spacing: 0.035em;
+
+  line-height: 1.4;
+
+  text-align: center;
+
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================================
+   DO NOT APPLY HERO TITLE FONT TO GENERIC .display
+   ========================================================= */
+
+/*
+ * This is intentionally scoped narrowly.
+ *
+ * Do NOT use:
+ *
+ * .heroBanner .display { ... }
+ *
+ * because other hero elements in the current project
+ * also use shared utility classes and that can cause
+ * unexpected inheritance/size collisions.
+ */
+
+/* =========================================================
    TABLET
    ========================================================= */
 
-@media (max-width: 991px) {
-  .heroBanner .heroBanner__title {
-    font-size: clamp(2.7rem, 7vw, 4.6rem);
+@media (min-width: 601px) and (max-width: 1024px) {
+  .heroBanner .heroBanner__title,
+  .heroBanner h1.heroBanner__title {
+    max-width: 96%;
 
-    line-height: 1.28;
+    font-size: clamp(2.6rem, 6.5vw, 4.1rem);
+
+    line-height: 1.32;
   }
 }
 
@@ -79,31 +95,28 @@ p,
    MOBILE
    ========================================================= */
 
-@media (max-width: 767px) {
-  .heroBanner .heroBanner__title {
-    max-width: 95%;
+@media (max-width: 600px) {
+  .heroBanner .heroBanner__title,
+  .heroBanner h1.heroBanner__title {
+    width: 100%;
+    max-width: 100%;
 
-    font-size: clamp(2.25rem, 8.5vw, 3.5rem);
+    font-size: clamp(2.15rem, 9vw, 3.15rem);
 
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
 
-    line-height: 1.35;
+    line-height: 1.36;
 
     white-space: normal;
   }
-}
 
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
+  .heroBanner .heroBanner__date,
+  .heroBanner .heroBanner__subtitle {
+    max-width: 96%;
 
-@media (max-width: 480px) {
-  .heroBanner .heroBanner__title {
-    max-width: 100%;
+    font-size: clamp(1rem, 4.2vw, 1.15rem);
 
-    font-size: clamp(2rem, 9vw, 2.85rem);
-
-    line-height: 1.4;
+    letter-spacing: 0.025em;
   }
 }
 
@@ -111,193 +124,29 @@ p,
    VERY SMALL MOBILE
    ========================================================= */
 
-@media (max-width: 360px) {
-  .heroBanner .heroBanner__title {
-    font-size: clamp(1.85rem, 8.7vw, 2.5rem);
+@media (max-width: 380px) {
+  .heroBanner .heroBanner__title,
+  .heroBanner h1.heroBanner__title {
+    font-size: clamp(1.95rem, 8.8vw, 2.65rem);
 
-    line-height: 1.42;
+    line-height: 1.4;
   }
 }
 
-/* Countdown numbers */
-.countdown__num,
-.countdown__value {
-  font-family: var(--font-gilda);
-}
+/* =========================================================
+   LANDSCAPE
+   ========================================================= */
 
-/* Hero pill (WE'RE GETTING MARRIED) */
-.heroBanner .heroPill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  padding: 14px 24px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.38);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  font-family: var(--font-tenorsans), sans-serif;
-  color: rgba(255, 255, 255, 0.82);
-  margin-bottom: 14px;
-  max-width: 100%;
-}
+@media (orientation: landscape) and (max-height: 620px) {
+  .heroBanner .heroBanner__title,
+  .heroBanner h1.heroBanner__title {
+    font-size: clamp(1.9rem, 7vh, 3rem);
 
-.heroBanner .heroPill__iconWrap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: 22px;
-  height: 22px;
-}
-
-.heroBanner .heroPill__iconImg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.heroBanner .heroPill__text {
-  display: inline-block;
-  line-height: 1;
-  transform: translateY(1px);
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-/* Bigger hero title inside banner */
-.heroBanner .heroBanner__title {
-  font-size: clamp(44px, 6.8vw, 86px);
-  line-height: 1.04;
-  white-space: nowrap;
-  text-align: center;
-}
-
-/* tablet */
-@media (max-width: 991px) {
-  .heroBanner .heroPill {
-    gap: 12px;
-    padding: 13px 20px;
+    line-height: 1.25;
   }
 
-  .heroBanner .heroPill__iconWrap {
-    width: 20px;
-    height: 20px;
+  .heroBanner .heroBanner__date,
+  .heroBanner .heroBanner__subtitle {
+    font-size: 0.92rem;
   }
-
-  .heroBanner .heroPill__text {
-    font-size: 13px;
-    letter-spacing: 0.15em;
-  }
-
-  .heroBanner .heroBanner__title {
-    font-size: clamp(38px, 7.2vw, 66px);
-  }
-}
-
-/* mobile */
-@media (max-width: 767px) {
-  .heroBanner .heroPill {
-    gap: 10px;
-    padding: 12px 16px;
-  }
-
-  .heroBanner .heroPill__iconWrap {
-    width: 18px;
-    height: 18px;
-  }
-
-  .heroBanner .heroPill__text {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-  }
-
-  .heroBanner .heroBanner__title {
-    font-size: clamp(30px, 8vw, 52px);
-    white-space: normal;
-    text-wrap: balance;
-  }
-}
-
-/* small mobile */
-@media (max-width: 480px) {
-  .heroBanner .heroPill {
-    gap: 8px;
-    padding: 11px 14px;
-  }
-
-  .heroBanner .heroPill__iconWrap {
-    width: 16px;
-    height: 16px;
-  }
-
-  .heroBanner .heroPill__text {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-  }
-
-  .heroBanner .heroBanner__title {
-    font-size: clamp(26px, 9vw, 40px);
-  }
-}
-/* Hero text colors (white + soft shadow like reference) */
-.heroBanner .display {
-  color: rgba(255, 255, 255, 0.98);
-
-  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
-}
-.heroBanner .meta {
-  color: rgba(255, 255, 255, 0.88);
-  text-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-}
-.heroBanner .scrollHint {
-  color: rgba(255, 255, 255, 0.82);
-}
-.heroBanner .scrollHint__mouse {
-  border-color: rgba(255, 255, 255, 0.35);
-}
-.heroBanner .scrollHint__mouse::after {
-  background: rgba(255, 255, 255, 0.85);
-}
-
-/* Top menu colors like reference (dark gray on bright hero top) */
-/* Elegant top menu colors */
-.topbar {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.topbar .nav a {
-  color: rgba(48, 35, 28, 0.88);
-  background: transparent;
-}
-
-.topbar .nav a:hover,
-.topbar .nav a:focus-visible {
-  color: #774827;
-  background: transparent;
-}
-
-/* =========================
-   Scroll-in animation for H2
-   ========================= */
-.h2-reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 650ms ease,
-    transform 650ms ease;
-  will-change: opacity, transform;
-}
-
-.h2-reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
 }

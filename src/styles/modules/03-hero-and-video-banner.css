@@ -1,233 +1,553 @@
-/* Hero */
-.hero {
-  padding-top: 36px;
-  overflow: hidden;
-}
+/* =========================================================
+   HERO / WEDDING BANNER
+   SAFE RESPONSIVE VERSION
+   ========================================================= */
 
-.hero__grid {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 30px;
-  align-items: center;
-}
-.hero__photoCard {
-  position: relative;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  border: 1px solid rgba(190, 81, 3, 0.18);
-  background: rgba(255, 255, 255, 0.6);
-  box-shadow: var(--shadow);
-}
-.hero__photoCard img {
-  width: 100%;
-  height: auto;
-}
-.hero__badge {
-  position: absolute;
-  bottom: 14px;
-  left: 14px;
-  right: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(190, 81, 3, 0.18);
-  color: var(--brand-700);
-  font-weight: 750;
-}
-.hero__bg {
-  position: absolute;
-  inset: -60px -40px auto -40px;
-  height: 360px;
-  background:
-    radial-gradient(
-      420px 240px at 25% 20%,
-      rgba(190, 81, 3, 0.16),
-      transparent 60%
-    ),
-    radial-gradient(
-      360px 220px at 78% 40%,
-      rgba(190, 81, 3, 0.12),
-      transparent 60%
-    );
-  filter: blur(6px);
-  pointer-events: none;
-  z-index: -2;
-}
-.hero__sparkles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.9;
-  background-image:
-    radial-gradient(
-      2px 2px at 10% 30%,
-      rgba(190, 81, 3, 0.35),
-      transparent 60%
-    ),
-    radial-gradient(2px 2px at 35% 15%, rgba(190, 81, 3, 0.3), transparent 60%),
-    radial-gradient(
-      1.6px 1.6px at 65% 35%,
-      rgba(190, 81, 3, 0.3),
-      transparent 60%
-    ),
-    radial-gradient(
-      2px 2px at 85% 25%,
-      rgba(190, 81, 3, 0.25),
-      transparent 60%
-    ),
-    radial-gradient(
-      1.6px 1.6px at 18% 70%,
-      rgba(190, 81, 3, 0.2),
-      transparent 60%
-    ),
-    radial-gradient(2px 2px at 78% 68%, rgba(190, 81, 3, 0.22), transparent 60%);
-  animation: floatSparkles 8s ease-in-out infinite;
-}
-@keyframes floatSparkles {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(10px);
-  }
-}
-
-/* Hero Banner (video cover + centered content) */
-/* Fullscreen Banner Hero */
 .heroBanner {
   position: relative;
-  height: 100vh;
-  height: 100svh; /* mobile-safe viewport */
+
+  width: 100%;
   min-height: 100vh;
   min-height: 100svh;
-  display: grid;
-  place-items: center;
-  padding: 0; /* override .section padding */
+
   overflow: hidden;
-  align-items: center;
+
+  background: #15100d;
+
+  isolation: isolate;
 }
 
-/* remove inherited section spacing for hero */
-.heroBanner.section {
-  padding: 0;
-}
+/* =========================================================
+   VIDEO
+   ========================================================= */
 
-/* keep content away from sticky header but still inside full height */
-.heroBanner .container {
-  padding-top: 86px; /* approx sticky header height */
-  padding-bottom: 34px;
-}
-
-.heroBanner__video {
+.heroBanner__media {
   position: absolute;
   inset: 0;
-  z-index: -3;
-  overflow: hidden;
-}
-.heroBanner__videoEl {
-  position: absolute;
-  inset: 0;
+  z-index: 0;
+
   width: 100%;
   height: 100%;
-  object-fit: cover;
 
-  filter: brightness(1.05) contrast(1.05) saturate(1.02);
+  overflow: hidden;
 }
 
-.heroBanner__scrim {
+.heroBanner__video,
+.heroBanner__media > video {
   position: absolute;
   inset: 0;
-  /* Light airy overlay like savethedate hero */
-  background:
-    radial-gradient(
-      1200px 600px at 50% 45%,
-      rgba(255, 255, 255, 0),
-      rgba(0, 0, 0, 0.22) 75%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.1) 0%,
-      rgba(255, 255, 255, 0.02) 55%,
-      rgba(0, 0, 0, 0.63) 100%
-    );
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center center;
+
+  pointer-events: none;
 }
 
-.heroBanner .hero__grid {
-  grid-template-columns: 1fr;
-  align-items: center; /* vertical center */
-  justify-content: center;
-  justify-items: center;
-  text-align: center;
-  gap: 22px;
+/* =========================================================
+   CINEMATIC OVERLAY
+   ========================================================= */
+
+.heroBanner::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background: linear-gradient(
+    180deg,
+    rgba(21, 14, 10, 0.2) 0%,
+    rgba(21, 14, 10, 0.1) 28%,
+    rgba(17, 10, 7, 0.18) 52%,
+    rgba(10, 7, 5, 0.48) 78%,
+    rgba(6, 5, 4, 0.82) 100%
+  );
+
+  content: "";
+
+  pointer-events: none;
 }
-.heroBanner .hero__left {
+
+.heroBanner::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  background: radial-gradient(
+    circle at 50% 38%,
+    rgba(255, 230, 211, 0.08),
+    transparent 48%
+  );
+
+  content: "";
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   HERO CONTENT
+   ========================================================= */
+
+.heroBanner__content {
+  position: relative;
+  z-index: 4;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.heroBanner .hero__actions {
   justify-content: center;
-}
-.heroBanner .scrollHint {
-  justify-content: center;
-}
-.heroBanner .hero__right {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-.heroBanner .hero__photoCard {
-  width: min(92vw, 560px);
+
+  width: min(92%, 900px);
+  min-height: 100vh;
+  min-height: 100svh;
+
+  margin: 0 auto;
+
+  padding: clamp(120px, 16vh, 170px) clamp(18px, 4vw, 46px)
+    clamp(110px, 14vh, 150px);
+
+  box-sizing: border-box;
+
+  text-align: center;
 }
 
-.hero__actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+/* =========================================================
+   "WE'RE GETTING MARRIED" PILL
+   ========================================================= */
+
+.heroBanner__eyebrow,
+.heroBanner__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  width: auto;
+  max-width: 100%;
+
+  margin: 0 auto clamp(18px, 2.5vw, 26px);
+
+  padding: 8px 16px;
+
+  color: rgba(255, 249, 244, 0.96);
+
+  background: rgba(255, 247, 240, 0.06);
+
+  border: 1px solid rgba(255, 247, 240, 0.58);
+
+  border-radius: 999px;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  font-family: "Tenor Sans", sans-serif;
+
+  font-size: clamp(0.58rem, 0.9vw, 0.72rem);
+
+  font-weight: 500;
+
+  letter-spacing: 0.13em;
+
+  line-height: 1;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
 }
-.scrollHint {
+
+/*
+ * IMPORTANT:
+ * Do not apply generic SVG dimensions here.
+ * Your bell icon is already sized by its own component/class.
+ * This prevents the giant icon issue shown in the screenshot.
+ */
+.heroBanner__eyebrow .heroBanner__badgeIcon,
+.heroBanner__badge .heroBanner__badgeIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 17px;
+  height: 17px;
+}
+
+.heroBanner__eyebrow .heroBanner__badgeIcon svg,
+.heroBanner__badge .heroBanner__badgeIcon svg {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.heroBanner__title {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0 auto;
+
+  color: #fff8f2;
+
+  text-align: center;
+
+  text-wrap: balance;
+}
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+.heroBanner__date,
+.heroBanner__subtitle {
+  width: 100%;
+
+  margin: clamp(12px, 1.8vw, 16px) auto 0;
+
+  color: rgba(255, 233, 218, 0.92);
+
+  text-align: center;
+}
+
+/* =========================================================
+   SWIPE / SCROLL HINT
+   ========================================================= */
+
+.heroBanner__scrollHint,
+.heroSwipeHint {
   display: flex;
   align-items: center;
+  justify-content: center;
+
   gap: 10px;
-  margin: 18px 0 22px;
-  color: rgba(28, 27, 25, 0.62);
+
+  margin: clamp(34px, 5vh, 48px) auto 0;
+
+  color: rgba(255, 248, 242, 0.94);
+
+  font-family: "Tenor Sans", sans-serif;
+
+  font-size: clamp(0.66rem, 1vw, 0.78rem);
+
+  font-weight: 500;
+
+  line-height: 1.2;
+
+  text-align: center;
+}
+
+.heroBanner__scrollIcon,
+.heroSwipeHint__icon {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  width: 23px;
+  height: 40px;
+
+  flex: 0 0 auto;
+
+  border: 1.4px solid rgba(255, 250, 246, 0.76);
+
+  border-radius: 999px;
+}
+
+.heroBanner__scrollIcon::after,
+.heroSwipeHint__icon::after {
+  width: 4px;
+  height: 7px;
+
+  margin-top: 8px;
+
+  background: rgba(255, 250, 246, 0.92);
+
+  border-radius: 999px;
+
+  content: "";
+
+  animation: heroScrollIndicator 1.9s ease-in-out infinite;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.heroBanner__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  width: 100%;
+
+  margin-top: clamp(22px, 3vh, 30px);
+}
+
+.heroBanner__actions .btn {
+  min-height: 46px;
+
+  padding: 12px 20px;
+
+  border-radius: 13px;
+
+  font-family: "Tenor Sans", sans-serif;
+
+  font-size: 0.78rem;
+
   font-weight: 600;
 }
-.scrollHint__mouse {
-  width: 26px;
-  height: 42px;
-  border-radius: 999px;
-  border: 2px solid rgba(190, 81, 3, 0.25);
-  position: relative;
+
+/* RSVP */
+.heroBanner__actions .btn--primary {
+  color: #fffaf6;
+
+  background: linear-gradient(135deg, #b64a24, #923718);
+
+  border: 1px solid rgba(255, 230, 212, 0.18);
+
+  box-shadow: 0 10px 25px rgba(56, 20, 8, 0.28);
 }
-.scrollHint__mouse::after {
-  content: "";
-  width: 6px;
-  height: 6px;
-  background: var(--brand);
-  border-radius: 99px;
+
+/* View Details */
+.heroBanner__actions .btn--ghost {
+  color: #603526;
+
+  background: rgba(255, 244, 236, 0.9);
+
+  border: 1px solid rgba(255, 255, 255, 0.42);
+
+  box-shadow: 0 9px 22px rgba(35, 18, 10, 0.16);
+}
+
+/*
+ * Only size icons inside actual buttons.
+ * This does NOT affect bell icons elsewhere.
+ */
+.heroBanner__actions .btn .btn__icon,
+.heroBanner__actions .btn > svg {
+  flex: 0 0 auto;
+
+  width: 18px;
+  height: 18px;
+}
+
+/* =========================================================
+   BOTTOM DECORATIVE LINE
+   ========================================================= */
+
+.heroBanner__divider {
   position: absolute;
-  left: 50%;
-  top: 8px;
-  transform: translateX(-50%);
-  animation: mouseDot 1.3s ease-in-out infinite;
+
+  right: clamp(22px, 5vw, 70px);
+  bottom: clamp(62px, 8vh, 92px);
+  left: clamp(22px, 5vw, 70px);
+
+  z-index: 4;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(229, 183, 151, 0.8) 15%,
+    rgba(239, 207, 182, 0.9) 50%,
+    rgba(229, 183, 151, 0.8) 85%,
+    transparent
+  );
+
+  pointer-events: none;
 }
-@keyframes mouseDot {
-  0% {
-    transform: translate(-50%, 0);
-    opacity: 1;
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  .heroBanner__content {
+    width: min(90%, 720px);
+
+    padding: 100px 28px 100px;
   }
-  70% {
-    transform: translate(-50%, 14px);
-    opacity: 0.2;
+
+  .heroBanner__eyebrow,
+  .heroBanner__badge {
+    margin-bottom: 20px;
   }
-  100% {
-    opacity: 0;
+
+  .heroBanner__scrollHint,
+  .heroSwipeHint {
+    margin-top: 34px;
+  }
+
+  .heroBanner__divider {
+    right: 34px;
+    bottom: 62px;
+    left: 34px;
   }
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .heroBanner__video,
+  .heroBanner__media > video {
+    object-position: center center;
+  }
+
+  .heroBanner__content {
+    width: 100%;
+
+    padding: clamp(88px, 13vh, 112px) 18px clamp(94px, 13vh, 120px);
+  }
+
+  .heroBanner__eyebrow,
+  .heroBanner__badge {
+    margin-bottom: 18px;
+
+    padding: 7px 13px;
+
+    font-size: 0.56rem;
+
+    letter-spacing: 0.11em;
+  }
+
+  .heroBanner__eyebrow .heroBanner__badgeIcon,
+  .heroBanner__badge .heroBanner__badgeIcon {
+    width: 15px;
+    height: 15px;
+  }
+
+  .heroBanner__scrollHint,
+  .heroSwipeHint {
+    margin-top: 32px;
+
+    font-size: 0.68rem;
+  }
+
+  .heroBanner__actions {
+    gap: 10px;
+
+    margin-top: 22px;
+  }
+
+  .heroBanner__actions .btn {
+    min-height: 44px;
+
+    padding: 11px 16px;
+
+    font-size: 0.73rem;
+  }
+
+  .heroBanner__divider {
+    right: 20px;
+    bottom: 54px;
+    left: 20px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .heroBanner__content {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .heroBanner__eyebrow,
+  .heroBanner__badge {
+    padding: 7px 10px;
+
+    font-size: 0.52rem;
+  }
+
+  .heroBanner__actions .btn {
+    padding: 10px 13px;
+
+    font-size: 0.68rem;
+  }
+}
+
+/* =========================================================
+   LANDSCAPE MOBILE / TABLET
+   ========================================================= */
+
+@media (orientation: landscape) and (max-height: 620px) {
+  .heroBanner__content {
+    min-height: 100svh;
+
+    padding: 66px 22px 66px;
+  }
+
+  .heroBanner__eyebrow,
+  .heroBanner__badge {
+    margin-bottom: 10px;
+  }
+
+  .heroBanner__scrollHint,
+  .heroSwipeHint {
+    margin-top: 14px;
+  }
+
+  .heroBanner__actions {
+    margin-top: 13px;
+  }
+
+  .heroBanner__divider {
+    bottom: 26px;
+  }
+}
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes heroScrollIndicator {
+  0% {
+    opacity: 0;
+
+    transform: translateY(0);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+
+    transform: translateY(13px);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .heroBanner__scrollIcon::after,
+  .heroSwipeHint__icon::after {
+    animation: none;
+  }
+}

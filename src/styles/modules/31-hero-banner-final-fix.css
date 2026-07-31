@@ -1,0 +1,795 @@
+/* =========================================================
+   HERO BANNER - FINAL STRUCTURE FIX
+   Matches the ACTUAL HeroSection.jsx markup
+   ========================================================= */
+
+/*
+ * Force the banner itself to always occupy
+ * the complete browser width and viewport height.
+ */
+#home .hero.heroBanner.section,
+.hero.heroBanner.section {
+  position: relative !important;
+
+  display: block !important;
+
+  width: 100% !important;
+  max-width: none !important;
+
+  height: 100vh !important;
+  height: 100svh !important;
+
+  min-height: 100vh !important;
+  min-height: 100svh !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  background: #100c0a !important;
+
+  isolation: isolate;
+}
+
+/* =========================================================
+   VIDEO WRAPPER
+   ========================================================= */
+
+#home .heroBanner__video,
+.heroBanner__video {
+  position: absolute !important;
+
+  inset: 0 !important;
+
+  z-index: 0 !important;
+
+  display: block !important;
+
+  width: 100% !important;
+  max-width: none !important;
+
+  height: 100% !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  background: #100c0a !important;
+}
+
+/* =========================================================
+   VIDEO ELEMENT
+   ========================================================= */
+
+#home .heroBanner__videoEl,
+.heroBanner__videoEl {
+  position: absolute !important;
+
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+
+  display: block !important;
+
+  width: 100% !important;
+  max-width: none !important;
+
+  height: 100% !important;
+  max-height: none !important;
+
+  margin: 0 !important;
+
+  object-fit: cover !important;
+  object-position: center center !important;
+
+  background: #100c0a !important;
+
+  filter: brightness(0.86) contrast(1.04) saturate(0.92) !important;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   CINEMATIC SCRIM
+   ========================================================= */
+
+#home .heroBanner__scrim,
+.heroBanner__scrim {
+  position: absolute !important;
+
+  inset: 0 !important;
+
+  z-index: 1 !important;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  background:
+    radial-gradient(
+      ellipse 65% 48% at 50% 38%,
+      rgba(255, 225, 202, 0.07) 0%,
+      rgba(33, 21, 15, 0.03) 52%,
+      rgba(12, 8, 6, 0.12) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(17, 12, 9, 0.22) 0%,
+      rgba(17, 11, 8, 0.08) 25%,
+      rgba(14, 9, 7, 0.14) 50%,
+      rgba(9, 6, 5, 0.48) 76%,
+      rgba(5, 4, 3, 0.9) 100%
+    ) !important;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   REMOVE OLD DECORATIVE HERO BACKGROUNDS
+   ========================================================= */
+
+#home .heroBanner .hero__bg,
+#home .heroBanner .hero__sparkles,
+.heroBanner .hero__bg,
+.heroBanner .hero__sparkles {
+  display: none !important;
+}
+
+/* =========================================================
+   ACTUAL HERO CONTAINER
+   ========================================================= */
+
+#home .hero.heroBanner.section > .container.hero__grid,
+.hero.heroBanner.section > .container.hero__grid {
+  position: relative !important;
+
+  z-index: 3 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 100% !important;
+  max-width: 100% !important;
+
+  height: 100% !important;
+  min-height: 100% !important;
+
+  margin: 0 !important;
+
+  padding: clamp(100px, 14vh, 150px) max(20px, env(safe-area-inset-left))
+    clamp(90px, 13vh, 130px) max(20px, env(safe-area-inset-right)) !important;
+
+  box-sizing: border-box !important;
+
+  text-align: center !important;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   LEFT / MAIN CONTENT
+   ========================================================= */
+
+#home .heroBanner .hero__left,
+.heroBanner .hero__left {
+  position: relative !important;
+
+  z-index: 4 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: min(100%, 920px) !important;
+  max-width: 920px !important;
+
+  margin: 0 auto !important;
+
+  text-align: center !important;
+}
+
+/* =========================================================
+   UNUSED RIGHT CARD
+   ========================================================= */
+
+/*
+ * HeroSection.jsx still contains the old Save-the-Date
+ * photo-card markup. It is not part of the current
+ * full-screen video design, so keep it out of layout.
+ */
+#home .heroBanner .hero__right,
+.heroBanner .hero__right {
+  display: none !important;
+}
+
+/* =========================================================
+   GETTING MARRIED PILL
+   ========================================================= */
+
+#home .heroBanner .heroPill,
+.heroBanner .heroPill {
+  position: relative !important;
+
+  display: inline-flex !important;
+
+  flex-direction: row !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex-wrap: nowrap !important;
+
+  gap: 10px !important;
+
+  width: auto !important;
+  max-width: calc(100vw - 40px) !important;
+
+  min-height: 38px !important;
+
+  margin: 0 auto clamp(18px, 2.5vh, 26px) !important;
+
+  padding: 8px 16px !important;
+
+  color: rgba(255, 249, 244, 0.96) !important;
+
+  background: rgba(255, 247, 239, 0.055) !important;
+
+  border: 1px solid rgba(255, 246, 238, 0.54) !important;
+
+  border-radius: 999px !important;
+
+  box-shadow:
+    0 8px 26px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+
+  backdrop-filter: blur(5px) !important;
+
+  -webkit-backdrop-filter: blur(5px) !important;
+
+  box-sizing: border-box !important;
+
+  white-space: nowrap !important;
+}
+
+/* =========================================================
+   CRITICAL FIX: BELL ICON WRAPPER
+   ========================================================= */
+
+#home .heroBanner .heroPill .heroPill__iconWrap,
+.heroBanner .heroPill .heroPill__iconWrap {
+  position: relative !important;
+
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 17px !important;
+
+  width: 17px !important;
+  min-width: 17px !important;
+  max-width: 17px !important;
+
+  height: 17px !important;
+  min-height: 17px !important;
+  max-height: 17px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  line-height: 0 !important;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   CRITICAL FIX: 512x512 BELL IMAGE
+   ========================================================= */
+
+#home .heroBanner .heroPill .heroPill__iconImg,
+.heroBanner .heroPill .heroPill__iconImg {
+  position: static !important;
+
+  display: block !important;
+
+  flex: none !important;
+
+  width: 17px !important;
+  min-width: 17px !important;
+  max-width: 17px !important;
+
+  height: 17px !important;
+  min-height: 17px !important;
+  max-height: 17px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  object-fit: contain !important;
+  object-position: center !important;
+
+  opacity: 0.9 !important;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   PILL TEXT
+   ========================================================= */
+
+#home .heroBanner .heroPill__text,
+.heroBanner .heroPill__text {
+  display: inline-block !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: rgba(255, 249, 244, 0.94) !important;
+
+  font-family: "Tenor Sans", sans-serif !important;
+
+  font-size: clamp(0.58rem, 0.8vw, 0.72rem) !important;
+
+  font-weight: 500 !important;
+
+  letter-spacing: 0.14em !important;
+
+  line-height: 1.1 !important;
+
+  text-align: center !important;
+  text-transform: uppercase !important;
+
+  white-space: nowrap !important;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   COUPLE NAME
+   ========================================================= */
+
+#home .heroBanner h1.heroBanner__title,
+.heroBanner h1.heroBanner__title {
+  display: block !important;
+
+  width: 100% !important;
+  max-width: 100% !important;
+
+  margin: 0 auto !important;
+
+  padding: 0 !important;
+
+  color: #fff8f2 !important;
+
+  font-family:
+    "Petit Formal Script", "Cormorant Garamond", Georgia, serif !important;
+
+  font-size: clamp(2.8rem, 5.5vw, 5rem) !important;
+
+  font-style: normal !important;
+  font-weight: 400 !important;
+
+  letter-spacing: -0.035em !important;
+
+  line-height: 1.3 !important;
+
+  text-align: center !important;
+
+  text-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.24),
+    0 10px 26px rgba(0, 0, 0, 0.14) !important;
+
+  text-wrap: balance !important;
+
+  white-space: nowrap !important;
+
+  transform: none;
+}
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+#home .heroBanner p.meta,
+.heroBanner p.meta {
+  width: auto !important;
+  max-width: 100% !important;
+
+  margin: 10px auto 0 !important;
+
+  padding: 0 !important;
+
+  color: rgba(255, 232, 216, 0.92) !important;
+
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem) !important;
+
+  font-weight: 500 !important;
+
+  letter-spacing: 0.035em !important;
+
+  line-height: 1.4 !important;
+
+  text-align: center !important;
+
+  text-shadow: 0 2px 9px rgba(0, 0, 0, 0.32) !important;
+}
+
+#home .heroBanner p.meta .date,
+.heroBanner p.meta .date {
+  color: inherit !important;
+
+  font: inherit !important;
+}
+
+/* =========================================================
+   SWIPE HINT
+   ========================================================= */
+
+#home .heroBanner .scrollHint,
+.heroBanner .scrollHint {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 10px !important;
+
+  width: auto !important;
+
+  margin: clamp(30px, 5vh, 44px) auto 0 !important;
+
+  padding: 0 !important;
+
+  color: rgba(255, 248, 243, 0.94) !important;
+
+  font-family: "Tenor Sans", sans-serif !important;
+
+  font-size: clamp(0.68rem, 0.9vw, 0.8rem) !important;
+
+  font-weight: 500 !important;
+
+  line-height: 1.2 !important;
+
+  text-align: center !important;
+
+  text-decoration: none !important;
+}
+
+#home .heroBanner .scrollHint__mouse,
+.heroBanner .scrollHint__mouse {
+  position: relative !important;
+
+  display: block !important;
+
+  flex: 0 0 23px !important;
+
+  width: 23px !important;
+  height: 40px !important;
+
+  margin: 0 !important;
+
+  border: 1.4px solid rgba(255, 249, 245, 0.75) !important;
+
+  border-radius: 999px !important;
+
+  box-sizing: border-box !important;
+}
+
+#home .heroBanner .scrollHint__mouse::after,
+.heroBanner .scrollHint__mouse::after {
+  position: absolute !important;
+
+  top: 7px !important;
+  left: 50% !important;
+
+  width: 4px !important;
+  height: 7px !important;
+
+  margin: 0 !important;
+
+  background: rgba(255, 249, 245, 0.94) !important;
+
+  border-radius: 999px !important;
+
+  content: "" !important;
+
+  transform: translateX(-50%) !important;
+
+  animation: heroFinalScrollDot 1.7s ease-in-out infinite !important;
+}
+
+/* =========================================================
+   BUTTON ROW
+   ========================================================= */
+
+#home .heroBanner .hero__actions,
+.heroBanner .hero__actions {
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex-wrap: wrap !important;
+
+  gap: 11px !important;
+
+  width: 100% !important;
+
+  margin: 22px auto 0 !important;
+}
+
+/* =========================================================
+   HERO BUTTONS
+   ========================================================= */
+
+#home .heroBanner .hero__actions .btn,
+.heroBanner .hero__actions .btn {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 8px !important;
+
+  min-height: 46px !important;
+
+  margin: 0 !important;
+
+  padding: 12px 20px !important;
+
+  border-radius: 13px !important;
+
+  font-family: "Tenor Sans", sans-serif !important;
+
+  font-size: 0.78rem !important;
+
+  font-weight: 600 !important;
+
+  line-height: 1 !important;
+}
+
+/* RSVP */
+#home .heroBanner .hero__actions .btn--primary,
+.heroBanner .hero__actions .btn--primary {
+  color: #fffaf6 !important;
+
+  background: linear-gradient(135deg, #bc4d25, #913618) !important;
+
+  border: 1px solid rgba(255, 230, 213, 0.18) !important;
+
+  box-shadow: 0 11px 26px rgba(45, 16, 6, 0.28) !important;
+}
+
+/* Details */
+#home .heroBanner .hero__actions .btn--ghost,
+.heroBanner .hero__actions .btn--ghost {
+  color: #603426 !important;
+
+  background: rgba(255, 244, 236, 0.9) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.44) !important;
+
+  box-shadow: 0 10px 24px rgba(34, 17, 9, 0.17) !important;
+}
+
+/* =========================================================
+   HERO BUTTON ICONS
+   ========================================================= */
+
+#home .heroBanner .hero__actions .btn__icon,
+.heroBanner .hero__actions .btn__icon {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 18px !important;
+
+  width: 18px !important;
+  height: 18px !important;
+}
+
+#home .heroBanner .hero__actions .btn__icon svg,
+.heroBanner .hero__actions .btn__icon svg {
+  display: block !important;
+
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  #home .hero.heroBanner.section > .container.hero__grid,
+  .hero.heroBanner.section > .container.hero__grid {
+    padding: 88px 24px 86px !important;
+  }
+
+  #home .heroBanner h1.heroBanner__title,
+  .heroBanner h1.heroBanner__title {
+    font-size: clamp(2.55rem, 6.5vw, 4rem) !important;
+  }
+
+  #home .heroBanner .heroPill,
+  .heroBanner .heroPill {
+    margin-bottom: 18px !important;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  #home .hero.heroBanner.section > .container.hero__grid,
+  .hero.heroBanner.section > .container.hero__grid {
+    padding: clamp(78px, 11vh, 96px) 16px clamp(76px, 11vh, 100px) !important;
+  }
+
+  #home .heroBanner .heroPill,
+  .heroBanner .heroPill {
+    gap: 8px !important;
+
+    min-height: 34px !important;
+
+    margin-bottom: 17px !important;
+
+    padding: 7px 12px !important;
+  }
+
+  #home .heroBanner .heroPill .heroPill__iconWrap,
+  #home .heroBanner .heroPill .heroPill__iconImg,
+  .heroBanner .heroPill .heroPill__iconWrap,
+  .heroBanner .heroPill .heroPill__iconImg {
+    width: 15px !important;
+    min-width: 15px !important;
+    max-width: 15px !important;
+
+    height: 15px !important;
+    min-height: 15px !important;
+    max-height: 15px !important;
+
+    flex-basis: 15px !important;
+  }
+
+  #home .heroBanner .heroPill__text,
+  .heroBanner .heroPill__text {
+    font-size: 0.54rem !important;
+
+    letter-spacing: 0.1em !important;
+  }
+
+  #home .heroBanner h1.heroBanner__title,
+  .heroBanner h1.heroBanner__title {
+    font-size: clamp(2.05rem, 9vw, 3rem) !important;
+
+    line-height: 1.38 !important;
+
+    white-space: normal !important;
+  }
+
+  #home .heroBanner p.meta,
+  .heroBanner p.meta {
+    font-size: clamp(0.98rem, 4vw, 1.12rem) !important;
+  }
+
+  #home .heroBanner .scrollHint,
+  .heroBanner .scrollHint {
+    margin-top: 28px !important;
+
+    font-size: 0.67rem !important;
+  }
+
+  #home .heroBanner .hero__actions .btn,
+  .heroBanner .hero__actions .btn {
+    min-height: 44px !important;
+
+    padding: 11px 16px !important;
+
+    font-size: 0.72rem !important;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  #home .heroBanner h1.heroBanner__title,
+  .heroBanner h1.heroBanner__title {
+    font-size: clamp(1.85rem, 8.8vw, 2.55rem) !important;
+  }
+
+  #home .heroBanner .hero__actions .btn,
+  .heroBanner .hero__actions .btn {
+    padding: 10px 13px !important;
+
+    font-size: 0.67rem !important;
+  }
+}
+
+/* =========================================================
+   SHORT LANDSCAPE
+   ========================================================= */
+
+@media (orientation: landscape) and (max-height: 620px) {
+  #home .hero.heroBanner.section > .container.hero__grid,
+  .hero.heroBanner.section > .container.hero__grid {
+    padding: 62px 22px 54px !important;
+  }
+
+  #home .heroBanner .heroPill,
+  .heroBanner .heroPill {
+    margin-bottom: 9px !important;
+  }
+
+  #home .heroBanner h1.heroBanner__title,
+  .heroBanner h1.heroBanner__title {
+    font-size: clamp(1.8rem, 7vh, 2.8rem) !important;
+  }
+
+  #home .heroBanner p.meta,
+  .heroBanner p.meta {
+    margin-top: 5px !important;
+
+    font-size: 0.9rem !important;
+  }
+
+  #home .heroBanner .scrollHint,
+  .heroBanner .scrollHint {
+    margin-top: 12px !important;
+  }
+
+  #home .heroBanner .hero__actions,
+  .heroBanner .hero__actions {
+    margin-top: 11px !important;
+  }
+}
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes heroFinalScrollDot {
+  0% {
+    opacity: 1;
+
+    transform: translate(-50%, 0);
+  }
+
+  70% {
+    opacity: 0.25;
+
+    transform: translate(-50%, 13px);
+  }
+
+  100% {
+    opacity: 0;
+
+    transform: translate(-50%, 13px);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  #home .heroBanner .scrollHint__mouse::after,
+  .heroBanner .scrollHint__mouse::after {
+    animation: none !important;
+  }
+}
