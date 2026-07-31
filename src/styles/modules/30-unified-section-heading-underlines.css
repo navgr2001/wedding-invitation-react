@@ -1,0 +1,109 @@
+/* =========================================================
+   UNIFIED SECTION HEADING UNDERLINES
+   Exact same style as "Find Your Seat"
+   ========================================================= */
+
+/*
+ * In this project most major section headings use:
+ *
+ * <h2 className="h2 timelineTitleV2">
+ *
+ * The terracotta theme also has:
+ *
+ * #home .timelineTitleV2::after
+ *
+ * so we intentionally use #home here to make sure
+ * this rule wins and every heading matches
+ * Find Your Seat exactly.
+ */
+
+#home .timelineTitleV2,
+#home .seatFinderTitle {
+  position: relative;
+}
+
+/* =========================================================
+   EXACT FIND YOUR SEAT UNDERLINE
+   ========================================================= */
+
+#home .timelineTitleV2::after,
+#home .seatFinderTitle::after {
+  content: "";
+
+  display: block;
+
+  width: min(150px, 30vw);
+  height: 4px;
+
+  margin: clamp(12px, 2vw, 18px) auto 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(190, 81, 3, 0.34),
+    transparent
+  ) !important;
+
+  border: 0;
+  border-radius: 999px;
+
+  box-shadow: none;
+
+  opacity: 1;
+
+  transform: none;
+}
+
+/* =========================================================
+   REMOVE ANY OLD HEADING DECORATIONS
+   ========================================================= */
+
+#home .timelineTitleV2::before,
+#home .seatFinderTitle::before {
+  display: none !important;
+
+  content: none !important;
+}
+
+/* =========================================================
+   TABLET
+   Keep same proportions as Find Your Seat
+   ========================================================= */
+
+@media (max-width: 900px) {
+  #home .timelineTitleV2::after,
+  #home .seatFinderTitle::after {
+    width: min(140px, 30vw);
+    height: 4px;
+
+    margin: clamp(12px, 2vw, 16px) auto 0;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  #home .timelineTitleV2::after,
+  #home .seatFinderTitle::after {
+    width: min(120px, 30vw);
+    height: 3px;
+
+    margin: 12px auto 0;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  #home .timelineTitleV2::after,
+  #home .seatFinderTitle::after {
+    width: min(105px, 30vw);
+    height: 3px;
+
+    margin: 11px auto 0;
+  }
+}

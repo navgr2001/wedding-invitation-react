@@ -1,9 +1,9 @@
 /*
  * Main stylesheet entry.
  *
- * The original visual CSS was split into ordered modules to keep this file small
- * while preserving the exact same fonts, colors, animations, selectors,
- * breakpoints and visual appearance.
+ * The visual CSS is split into ordered modules.
+ * Keep the order because later files intentionally
+ * refine or override earlier component styles.
  */
 
 @import "./modules/01-design-tokens-base-and-protection.css";
@@ -35,3 +35,4 @@
 @import "./modules/27-elegant-responsive-typography.css";
 @import "./modules/28-hide-topbar-during-invitation.css";
 @import "./modules/29-mobile-nav-solid-background-fix.css";
+@import "./modules/30-unified-section-heading-underlines.css";

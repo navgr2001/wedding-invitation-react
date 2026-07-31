@@ -1,43 +1,26 @@
 /* =========================================================
-   ELEGANT RESPONSIVE TYPOGRAPHY
-   Typography-only overrides. No colours, spacing, sizing,
-   layout, animation, imagery or component behaviour changed.
+   ELEGANT WEDDING TYPOGRAPHY
    ========================================================= */
 
 :root {
-  --font-display-elegant:
-    "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-wedding-heading:
+    "Cormorant Garamond", Georgia, "Times New Roman", serif;
 
-  --font-body-readable:
-    "Manrope", "Lato", "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  --font-wedding-body: "Manrope", "Lato", "Inter", Arial, sans-serif;
 
-  --font-label-elegant: "Tenor Sans", "Montserrat", system-ui, sans-serif;
-
-  --font-heading: var(--font-display-elegant);
-  --font-serif: var(--font-display-elegant);
-  --font-gilda: var(--font-display-elegant);
-
-  --font-body: var(--font-body-readable);
-  --font-sans: var(--font-body-readable);
-  --font-montserrat: var(--font-body-readable);
-  --font-lato: var(--font-body-readable);
-
-  --font-tenorsans: var(--font-label-elegant);
+  --font-wedding-label: "Tenor Sans", "Montserrat", Arial, sans-serif;
 }
 
+/* =========================================================
+   GLOBAL BODY TYPOGRAPHY
+   ========================================================= */
+
 html,
-body,
-button,
-input,
-textarea,
-select {
-  font-family: var(--font-body-readable);
+body {
+  font-family: var(--font-wedding-body);
 }
 
 body {
-  font-family: var(--font-body-readable);
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -45,48 +28,133 @@ body {
 }
 
 /* =========================================================
-   DISPLAY HEADINGS
+   SECTION HEADINGS
    ========================================================= */
 
-h1,
-h2,
-h3,
-.h2,
-.h3,
-.display,
-.timelineTitleV2,
-.inviteNames,
-.heroTitle,
-.hero__title,
-.countdownTitle,
-.countdownComplete__title,
-.seatFinderTitle,
-.personCard__body .h3,
-.noteCard__title,
-.weddingCard__title,
+.sectionTitle,
+.sectionHeader h2,
+section > h2,
+.weddingDetails__title,
 .timelineTitle,
+.timelineTitleV2,
 .rsvpTitle,
 .rsvpCard__title,
 .wordsTitle,
+.galleryTitle,
 .finalCta__title,
-.weddingFooter__logoText {
-  font-family: var(--font-display-elegant);
+.seatFinderTitle,
+.countdownTitle,
+.coupleSection .sectionTitle,
+.happyCouple .sectionTitle,
+#couple .sectionTitle {
+  font-family: var(--font-wedding-heading);
+
+  font-weight: 600;
+
+  letter-spacing: 0.02em;
+
+  line-height: 1.05;
+
+  text-wrap: balance;
+
+  font-kerning: normal;
 }
 
 /* =========================================================
-   NAVIGATION, LABELS AND BUTTONS
+   PERSON NAMES
    ========================================================= */
 
-.topbar,
+.personCard__body .h3,
+.coupleName,
+.coupleCard__name,
+.coupleProfile__name,
+.happyCouple__name,
+.inviteNames {
+  font-family: var(--font-wedding-heading);
+
+  font-weight: 600;
+
+  letter-spacing: 0.035em;
+
+  line-height: 1.05;
+
+  text-wrap: balance;
+}
+
+/* =========================================================
+   NOTE / ROMANTIC HEADINGS
+   ========================================================= */
+
+.noteCard__title,
+.coupleNote__title,
+.coupleNoteCard__title,
+.noteFromCouple__title,
+.wordsAuthor,
+.weddingFooter__logoText {
+  font-family: var(--font-wedding-heading);
+
+  font-weight: 500;
+
+  letter-spacing: 0.04em;
+
+  line-height: 1.15;
+}
+
+/* =========================================================
+   BODY TEXT
+   ========================================================= */
+
+p,
+.muted,
+.sectionSubtitle,
+.sectionHeader .muted,
+.personCard__body .muted,
+.coupleDescription,
+.coupleCard__description,
+.coupleProfile__description,
+.happyCouple__description,
+.seatFinderDescription,
+.rsvpDescription,
+.rsvpCard__description,
+.weddingCard__description,
+.finalCta__desc,
+.weddingFooter__description {
+  font-family: var(--font-wedding-body);
+
+  line-height: 1.7;
+}
+
+/* =========================================================
+   ROMANTIC QUOTES
+   ========================================================= */
+
+.noteCard__text,
+.quote,
+.wordsText {
+  font-family: var(--font-wedding-heading);
+
+  font-style: italic;
+
+  font-weight: 400;
+
+  letter-spacing: 0.01em;
+
+  line-height: 1.65;
+}
+
+/* =========================================================
+   NAVIGATION, BUTTONS, LABELS
+   ========================================================= */
+
 .nav,
-.nav a,
 .nav__link,
+.nav__label,
+.nav__mobileEyebrow,
 .kicker,
 .tag,
 .inviteKicker,
 .inviteMeta,
 .inviteBtn,
-.meta,
 .countdownTagline,
 .countdownUnit__label,
 .seatFinderEyebrow,
@@ -99,55 +167,69 @@ h3,
 .tlText,
 .rsvpEyebrow,
 .rsvpForm label,
-.rsvpForm input,
-.rsvpForm textarea,
-.rsvpForm select,
 .rsvpButton,
-.wordsAuthor,
-.finalCtaBtn,
 .weddingFooter__title,
 .weddingFooter__links,
 .weddingFooter__details,
 .weddingFooter__contact,
 .weddingFooter__bottom,
 .btn {
-  font-family: var(--font-label-elegant);
+  font-family: var(--font-wedding-label);
 }
 
 /* =========================================================
-   BODY AND SUPPORTING TEXT
+   FORM ELEMENTS
    ========================================================= */
 
-p,
-.muted,
-.personCard__body .muted,
-.noteCard__text,
-.quote,
-.sectionHeader .muted,
-.seatFinderDescription,
-.weddingCard__description,
-.rsvpDescription,
-.rsvpCard__description,
-.wordsText,
-.finalCta__desc,
-.weddingFooter__description {
-  font-family: var(--font-body-readable);
-}
-
-/* =========================================================
-   QUOTATIONS AND ROMANTIC COPY
-   ========================================================= */
-
-.noteCard__text,
-.quote,
-.wordsText {
-  font-family: var(--font-display-elegant);
-}
-
-/* Keep form controls consistent across devices. */
-button,
 input,
 textarea,
 select {
-  font: inherit;
+  font-family: var(--font-wedding-body);
+}
+
+/* =========================================================
+   MOBILE TYPOGRAPHY REFINEMENT
+   ========================================================= */
+
+@media (max-width: 720px) {
+  .sectionTitle,
+  .sectionHeader h2,
+  section > h2,
+  .weddingDetails__title,
+  .timelineTitle,
+  .timelineTitleV2,
+  .rsvpTitle,
+  .rsvpCard__title,
+  .wordsTitle,
+  .galleryTitle,
+  .finalCta__title,
+  .seatFinderTitle,
+  .countdownTitle,
+  .coupleSection .sectionTitle,
+  .happyCouple .sectionTitle,
+  #couple .sectionTitle {
+    letter-spacing: 0.01em;
+
+    line-height: 1.08;
+  }
+
+  .personCard__body .h3,
+  .coupleName,
+  .coupleCard__name,
+  .coupleProfile__name,
+  .happyCouple__name {
+    letter-spacing: 0.02em;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .sectionTitle,
+  .sectionHeader h2,
+  section > h2 {
+    line-height: 1.1;
+  }
 }
