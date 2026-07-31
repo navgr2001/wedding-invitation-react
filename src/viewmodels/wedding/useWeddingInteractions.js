@@ -409,98 +409,206 @@ export function useWeddingInteractions() {
         const dotsWrap = qs("#wordsDots");
         const carousel = qs("#wordsCarousel");
 
-        if (!track || !dotsWrap || !carousel) return;
+        const previousButton = qs("#wordsPrevious");
+
+        const nextButton = qs("#wordsNext");
+
+        if (!track || !dotsWrap || !carousel) {
+          return;
+        }
 
         let slides = [];
+
+        /*
+         * The rendered structure is:
+         *
+         * clone(last)
+         * slide 1
+         * slide 2
+         * ...
+         * clone(first)
+         *
+         * Therefore index 1 is always the
+         * first genuine slide.
+         */
         let index = 1;
+
         let width = 0;
         let timer = null;
         let pollTimer = null;
+
         let isAnimating = false;
+
         let lastFingerprint = "";
 
         let isDragging = false;
+
         let dragStartX = 0;
-        let dragCurrentX = 0;
         let dragStartY = 0;
+        let dragCurrentX = 0;
+
         let activePointerId = null;
 
-        const AUTO_DELAY = 2500;
-        const TRANSITION_MS = 650;
+        /*
+         * null = direction not decided
+         * x    = horizontal carousel gesture
+         * y    = normal vertical page scroll
+         */
+        let dragAxis = null;
+
+        const AUTO_DELAY = 6000;
+        const TRANSITION_MS = 600;
         const POLL_INTERVAL_MS = 5000;
-        const SWIPE_MAX_WIDTH = 1024;
 
         const escapeHtml = (value) =>
-          String(value == null ? "" : value).replace(/[&<>"']/g, (m) => {
-            const map = {
-              "&": "&amp;",
-              "<": "&lt;",
-              ">": "&gt;",
-              '"': "&quot;",
-              "'": "&#39;",
-            };
-            return map[m] || m;
-          });
+          String(value == null ? "" : value).replace(
+            /[&<>"']/g,
+            (character) => {
+              const entities = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              };
 
-        function isSwipeDevice() {
-          return window.matchMedia(`(max-width: ${SWIPE_MAX_WIDTH}px)`).matches;
+              return entities[character] || character;
+            },
+          );
+
+        /*
+         * Do not decide swipe support purely by
+         * viewport width.
+         *
+         * Some tablets use desktop-sized logical
+         * viewports, especially in landscape mode.
+         */
+        function isTouchCapable() {
+          return (
+            "ontouchstart" in window ||
+            navigator.maxTouchPoints > 0 ||
+            window.matchMedia("(pointer: coarse)").matches
+          );
         }
 
         function makeFingerprint(items) {
           return JSON.stringify(items);
         }
 
+        function updateControls() {
+          const disabled = slides.length <= 1;
+
+          if (previousButton) {
+            previousButton.disabled = disabled;
+
+            previousButton.setAttribute("aria-hidden", String(disabled));
+          }
+
+          if (nextButton) {
+            nextButton.disabled = disabled;
+
+            nextButton.setAttribute("aria-hidden", String(disabled));
+          }
+        }
+
         function buildDots(count) {
           dotsWrap.innerHTML = "";
 
-          for (let i = 0; i < count; i++) {
-            const btn = document.createElement("button");
-            btn.className = "wordsDot";
-            btn.type = "button";
-            btn.setAttribute("aria-label", `Go to message ${i + 1}`);
-            btn.addEventListener("click", () => {
-              goTo(i + 1);
+          for (let dotIndex = 0; dotIndex < count; dotIndex += 1) {
+            const button = document.createElement("button");
+
+            button.className = "wordsDot";
+
+            button.type = "button";
+
+            button.setAttribute(
+              "aria-label",
+              `Read message ${dotIndex + 1} of ${count}`,
+            );
+
+            button.addEventListener("click", () => {
+              goTo(dotIndex + 1);
+
               restartAuto();
             });
-            dotsWrap.appendChild(btn);
+
+            dotsWrap.appendChild(button);
           }
 
           setActiveDot();
         }
 
         function setActiveDot() {
-          if (!slides.length) return;
+          if (!slides.length) {
+            return;
+          }
 
           const realCount = slides.length;
+
           const realIndex = (((index - 1) % realCount) + realCount) % realCount;
 
-          Array.from(dotsWrap.children).forEach((dot, i) => {
-            dot.classList.toggle("isActive", i === realIndex);
+          Array.from(dotsWrap.children).forEach((dot, dotIndex) => {
+            const isActive = dotIndex === realIndex;
+
+            dot.classList.toggle("isActive", isActive);
+
+            if (isActive) {
+              dot.setAttribute("aria-current", "true");
+            } else {
+              dot.removeAttribute("aria-current");
+            }
           });
         }
 
+        function getCarouselWidth() {
+          const bounds = carousel.getBoundingClientRect();
+
+          return bounds.width || carousel.clientWidth || 0;
+        }
+
         function applyTransform(useTransition = true, customOffset = null) {
+          if (!width) {
+            return;
+          }
+
           track.style.transition = useTransition
             ? `transform ${TRANSITION_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
             : "none";
 
           const offset = customOffset == null ? -index * width : customOffset;
+
           track.style.transform = `translate3d(${offset}px, 0, 0)`;
         }
 
         function setWidth() {
-          if (!track.children.length) return;
+          if (!track.children.length) {
+            return;
+          }
 
-          width = carousel.clientWidth;
+          const nextWidth = getCarouselWidth();
+
+          if (!nextWidth) {
+            window.requestAnimationFrame(setWidth);
+
+            return;
+          }
+
+          width = nextWidth;
+
           applyTransform(false);
         }
 
         function goTo(targetIndex) {
-          if (isAnimating || slides.length <= 1) return;
+          if (isAnimating || slides.length <= 1) {
+            return;
+          }
 
           isAnimating = true;
+
           index = targetIndex;
+
           setActiveDot();
+
           applyTransform(true);
         }
 
@@ -512,99 +620,154 @@ export function useWeddingInteractions() {
           goTo(index - 1);
         }
 
+        function stop() {
+          if (!timer) {
+            return;
+          }
+
+          window.clearInterval(timer);
+
+          timer = null;
+        }
+
         function start() {
           stop();
 
-          if (slides.length <= 1) return;
+          if (slides.length <= 1 || document.hidden) {
+            return;
+          }
 
           timer = window.setInterval(() => {
-            next();
+            if (!isDragging && !isAnimating) {
+              next();
+            }
           }, AUTO_DELAY);
-        }
-
-        function stop() {
-          if (timer) {
-            window.clearInterval(timer);
-            timer = null;
-          }
         }
 
         function restartAuto() {
           stop();
+
+          /*
+           * Give the guest time to read after
+           * manually navigating.
+           */
           start();
         }
 
         function stopPolling() {
-          if (pollTimer) {
-            window.clearInterval(pollTimer);
-            pollTimer = null;
+          if (!pollTimer) {
+            return;
           }
+
+          window.clearInterval(pollTimer);
+
+          pollTimer = null;
         }
 
         function renderEmptyState(message) {
           stop();
 
           slides = [];
+
           index = 0;
+          width = 0;
+
           isAnimating = false;
           isDragging = false;
+          dragAxis = null;
 
           track.style.transition = "none";
+
           track.style.transform = "translate3d(0, 0, 0)";
+
           track.innerHTML = `
-      <div class="wordsSlide wordsSlide--empty" role="group" aria-label="No guest messages yet">
+      <div
+        class="wordsSlide wordsSlide--empty"
+        role="group"
+        aria-label="Guest messages"
+      >
         <div class="wordsSlide__inner">
-          <p class="wordsQuote wordsQuote--empty">${escapeHtml(
-            message || "No wishes have been submitted yet.",
-          )}</p>
+          <p class="wordsQuote wordsQuote--empty">
+            ${escapeHtml(message || "No wishes have been submitted yet.")}
+          </p>
         </div>
       </div>
     `;
 
           dotsWrap.innerHTML = "";
+
+          updateControls();
+        }
+
+        function createSlideMarkup(item, isClone = false) {
+          const message = escapeHtml(item.message);
+
+          const name = escapeHtml(item.name);
+
+          return `
+      <div
+        class="wordsSlide${isClone ? " wordsSlide--clone" : ""}"
+        role="group"
+        ${isClone ? 'aria-hidden="true"' : 'aria-label="Guest message"'}
+      >
+        <div class="wordsSlide__inner">
+          <p class="wordsQuote">
+            “${message}”
+          </p>
+
+          <p class="wordsBy">
+            ${name}
+          </p>
+        </div>
+      </div>
+    `;
         }
 
         function renderSlides(items) {
           if (!items.length) {
             renderEmptyState("No wishes have been submitted yet.");
+
             return;
           }
 
           slides = items;
 
-          const slideHtml = slides.map((item) => {
-            const message = escapeHtml(item.message);
-            const name = escapeHtml(item.name);
+          const genuineSlides = slides.map((item) =>
+            createSlideMarkup(item, false),
+          );
 
-            return `
-        <div class="wordsSlide" role="group" aria-label="Guest message">
-          <div class="wordsSlide__inner">
-            <p class="wordsQuote">"${message}"</p>
-            <p class="wordsBy">- ${name}</p>
-          </div>
-        </div>
-      `;
-          });
+          const firstClone = createSlideMarkup(slides[0], true);
 
-          const first = slideHtml[0];
-          const last = slideHtml[slideHtml.length - 1];
+          const lastClone = createSlideMarkup(slides[slides.length - 1], true);
 
-          track.innerHTML = last + slideHtml.join("") + first;
+          track.innerHTML = lastClone + genuineSlides.join("") + firstClone;
 
           index = 1;
+          width = 0;
+
           isAnimating = false;
           isDragging = false;
+          dragAxis = null;
 
           buildDots(slides.length);
 
+          updateControls();
+
           window.requestAnimationFrame(() => {
             setWidth();
-            restartAuto();
+
+            /*
+             * One additional frame ensures
+             * layout has settled on the first
+             * visit before auto movement begins.
+             */
+            window.requestAnimationFrame(start);
           });
         }
 
         function normalizeItemsFromSheet(gvizPayload) {
           const table = gvizPayload && gvizPayload.table;
+
           const rows = (table && table.rows) || [];
 
           return rows
@@ -612,7 +775,9 @@ export function useWeddingInteractions() {
               const cells = row.c || [];
 
               const nameCell = cells[1];
+
               const attendanceCell = cells[2];
+
               const messageCell = cells[4];
 
               const name = String(
@@ -633,7 +798,11 @@ export function useWeddingInteractions() {
                   : "",
               ).trim();
 
-              return { name, attendance, message };
+              return {
+                name,
+                attendance,
+                message,
+              };
             })
             .filter((item) => item.name !== "" && item.message !== "")
             .filter((item) => item.attendance !== "Sorry, I can't make it")
@@ -655,6 +824,7 @@ export function useWeddingInteractions() {
           )}`;
 
           const url = buildSheetJsonpUrl(callbackName);
+
           const payload = await loadScriptJsonp(url, callbackName, 15000);
 
           return normalizeItemsFromSheet(payload);
@@ -667,13 +837,16 @@ export function useWeddingInteractions() {
             let items = await fetchWordsOnce();
 
             if (options.poll && !items.length) {
-              for (let i = 0; i < 4; i++) {
+              for (let attempt = 0; attempt < 4; attempt += 1) {
                 await new Promise((resolve) =>
                   window.setTimeout(resolve, 1200),
                 );
+
                 items = await fetchWordsOnce();
 
-                if (items.length) break;
+                if (items.length) {
+                  break;
+                }
               }
             }
 
@@ -681,6 +854,7 @@ export function useWeddingInteractions() {
 
             if (nextFingerprint !== lastFingerprint) {
               lastFingerprint = nextFingerprint;
+
               renderSlides(items);
             } else if (slides.length > 1 && !timer) {
               start();
@@ -689,8 +863,9 @@ export function useWeddingInteractions() {
             }
           } catch (error) {
             console.error("Words of Love load failed:", error);
+
             renderEmptyState(
-              "Unable to load wishes right now. Please check the Google Sheet settings.",
+              "Unable to load wishes right now. Please try again shortly.",
             );
           }
         }
@@ -705,73 +880,132 @@ export function useWeddingInteractions() {
           }, POLL_INTERVAL_MS);
         }
 
+        function resetDrag() {
+          isDragging = false;
+
+          dragAxis = null;
+
+          activePointerId = null;
+
+          carousel.classList.remove("wordsCard--dragging");
+        }
+
         function onPointerDown(event) {
-          if (!isSwipeDevice()) return;
-          if (slides.length <= 1) return;
-          if (isAnimating) return;
-          if (event.pointerType === "mouse") return;
+          if (slides.length <= 1) {
+            return;
+          }
+
+          /*
+           * Touch and pen always work.
+           * Mouse dragging is also supported,
+           * making desktop interaction intuitive.
+           */
+          if (event.pointerType === "mouse" && event.button !== 0) {
+            return;
+          }
+
+          if (isAnimating) {
+            return;
+          }
 
           isDragging = true;
+
+          dragAxis = null;
+
           dragStartX = event.clientX;
+
           dragCurrentX = event.clientX;
+
           dragStartY = event.clientY;
+
           activePointerId = event.pointerId;
 
           stop();
 
           carousel.classList.add("wordsCard--dragging");
+
           track.style.transition = "none";
 
-          if (carousel.setPointerCapture) {
-            carousel.setPointerCapture(activePointerId);
+          if (carousel.setPointerCapture && event.pointerId != null) {
+            try {
+              carousel.setPointerCapture(event.pointerId);
+            } catch {
+              // Pointer capture is optional.
+            }
           }
         }
 
         function onPointerMove(event) {
-          if (!isDragging) return;
-          if (event.pointerId !== activePointerId) return;
+          if (!isDragging || event.pointerId !== activePointerId) {
+            return;
+          }
 
           dragCurrentX = event.clientX;
 
           const diffX = dragCurrentX - dragStartX;
+
           const diffY = event.clientY - dragStartY;
 
-          if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 12) {
+          /*
+           * Wait for enough movement before
+           * deciding whether the guest intends
+           * to scroll vertically or swipe.
+           */
+          if (
+            dragAxis === null &&
+            (Math.abs(diffX) > 8 || Math.abs(diffY) > 8)
+          ) {
+            dragAxis = Math.abs(diffX) > Math.abs(diffY) ? "x" : "y";
+          }
+
+          /*
+           * Never interfere with normal
+           * vertical page scrolling.
+           */
+          if (dragAxis === "y") {
             return;
           }
 
-          if (Math.abs(diffX) > 8) {
+          if (dragAxis !== "x") {
+            return;
+          }
+
+          if (event.cancelable) {
             event.preventDefault();
           }
 
+          const maximumDrag = width * 0.72;
+
           const limitedDiffX = Math.max(
-            Math.min(diffX, width * 0.75),
-            -width * 0.75,
+            Math.min(diffX, maximumDrag),
+            -maximumDrag,
           );
+
           applyTransform(false, -index * width + limitedDiffX);
         }
 
         function onPointerEnd(event) {
-          if (!isDragging) return;
-          if (event.pointerId !== activePointerId) return;
+          if (!isDragging || event.pointerId !== activePointerId) {
+            return;
+          }
 
           const diffX = dragCurrentX - dragStartX;
-          const threshold = Math.min(90, width * 0.18);
 
-          isDragging = false;
-          activePointerId = null;
+          const wasHorizontalSwipe = dragAxis === "x";
 
-          carousel.classList.remove("wordsCard--dragging");
+          const threshold = Math.min(72, width * 0.15);
 
           if (carousel.releasePointerCapture && event.pointerId != null) {
             try {
               carousel.releasePointerCapture(event.pointerId);
             } catch {
-              // ignore release errors
+              // Ignore unsupported releases.
             }
           }
 
-          if (Math.abs(diffX) >= threshold) {
+          resetDrag();
+
+          if (wasHorizontalSwipe && Math.abs(diffX) >= threshold) {
             if (diffX < 0) {
               next();
             } else {
@@ -784,62 +1018,177 @@ export function useWeddingInteractions() {
           restartAuto();
         }
 
-        track.addEventListener("transitionend", () => {
+        function onTransitionEnd(event) {
+          if (event.target !== track || event.propertyName !== "transform") {
+            return;
+          }
+
           const realCount = slides.length;
-          if (!realCount) return;
+
+          if (!realCount) {
+            return;
+          }
 
           if (index === realCount + 1) {
             index = 1;
+
             applyTransform(false);
           } else if (index === 0) {
             index = realCount;
+
             applyTransform(false);
           }
 
           setActiveDot();
+
           isAnimating = false;
+        }
+
+        function onKeyDown(event) {
+          if (slides.length <= 1) {
+            return;
+          }
+
+          if (event.key === "ArrowLeft") {
+            event.preventDefault();
+
+            previous();
+
+            restartAuto();
+          }
+
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+
+            next();
+
+            restartAuto();
+          }
+        }
+
+        /*
+         * Explicit previous/next controls.
+         */
+        if (previousButton) {
+          previousButton.addEventListener("click", () => {
+            previous();
+
+            restartAuto();
+          });
+        }
+
+        if (nextButton) {
+          nextButton.addEventListener("click", () => {
+            next();
+
+            restartAuto();
+          });
+        }
+
+        /*
+         * Pointer Events cover current Android,
+         * iOS/iPadOS Safari, Chrome, Edge and
+         * modern touch-screen browsers.
+         */
+        carousel.addEventListener("pointerdown", onPointerDown);
+
+        carousel.addEventListener("pointermove", onPointerMove, {
+          passive: false,
         });
 
-        carousel.addEventListener("pointerdown", onPointerDown);
-        carousel.addEventListener("pointermove", onPointerMove);
         carousel.addEventListener("pointerup", onPointerEnd);
-        carousel.addEventListener("pointercancel", onPointerEnd);
-        carousel.addEventListener("lostpointercapture", () => {
-          if (!isDragging) return;
 
-          isDragging = false;
-          activePointerId = null;
-          carousel.classList.remove("wordsCard--dragging");
+        carousel.addEventListener("pointercancel", onPointerEnd);
+
+        carousel.addEventListener("keydown", onKeyDown);
+
+        carousel.addEventListener("lostpointercapture", () => {
+          if (!isDragging) {
+            return;
+          }
+
+          resetDrag();
+
           applyTransform(true);
+
           restartAuto();
         });
 
-        window.addEventListener("resize", () => {
-          setWidth();
+        track.addEventListener("transitionend", onTransitionEnd);
 
-          if (!isSwipeDevice() && isDragging) {
-            isDragging = false;
-            activePointerId = null;
-            carousel.classList.remove("wordsCard--dragging");
-            applyTransform(true);
-            restartAuto();
-          }
+        /*
+         * Pause while a desktop guest is
+         * interacting with the carousel.
+         */
+        carousel.addEventListener("mouseenter", stop);
+
+        carousel.addEventListener("mouseleave", start);
+
+        carousel.addEventListener("focusin", stop);
+
+        carousel.addEventListener("focusout", start);
+
+        /*
+         * ResizeObserver is more accurate than
+         * relying only on window resize. It also
+         * handles mobile orientation changes.
+         */
+        if ("ResizeObserver" in window) {
+          const resizeObserver = new ResizeObserver(() => {
+            setWidth();
+          });
+
+          resizeObserver.observe(carousel);
+        } else {
+          window.addEventListener("resize", setWidth);
+        }
+
+        window.addEventListener("orientationchange", () => {
+          window.setTimeout(setWidth, 100);
         });
 
-        window.addEventListener("focus", () => refreshWords());
+        window.addEventListener("focus", () => {
+          refreshWords();
+        });
 
         document.addEventListener("visibilitychange", () => {
           if (!document.hidden) {
+            setWidth();
+
             refreshWords();
           } else {
             stop();
           }
         });
 
+        /*
+         * Existing RSVP flow uses this callback
+         * after a new guest message is submitted.
+         */
         window.__refreshWordsCarousel = refreshWords;
 
+        /*
+         * Keep controls hidden until real
+         * messages have loaded.
+         */
+        updateControls();
+
+        /*
+         * Initial page visit.
+         */
         refreshWords();
+
         startPolling();
+
+        /*
+         * The variable is deliberately referenced
+         * here because touch capability should be
+         * evaluated on first load, including tablets
+         * whose viewport is wider than 1024px.
+         */
+        if (isTouchCapable()) {
+          carousel.classList.add("wordsCard--touch");
+        }
       }
 
       function initSeatFinder() {
