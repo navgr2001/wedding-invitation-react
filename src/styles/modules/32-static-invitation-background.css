@@ -1,0 +1,76 @@
+/* =========================================================
+   STATIC INVITATION BACKGROUND
+   ========================================================= */
+
+/*
+ * The main invitation artwork is already rendered by:
+ *
+ * .inviteScene__artwork
+ *
+ * The elements below are duplicate cropped copies of the
+ * same artwork that were previously used to animate the:
+ *
+ * - top leaves
+ * - left branches
+ * - right-side flowers
+ *
+ * Hide only those duplicate motion layers.
+ *
+ * This keeps the invitation background completely static
+ * without changing the image, content, colors, layout,
+ * responsive behaviour or View Invitation functionality.
+ */
+
+.inviteIntro .inviteScene__motion,
+.inviteScene__motion {
+  display: none !important;
+
+  animation: none !important;
+
+  transform: none !important;
+
+  transition: none !important;
+
+  will-change: auto !important;
+
+  pointer-events: none !important;
+}
+
+/* =========================================================
+   TOP LEAVES
+   ========================================================= */
+
+.inviteIntro .inviteScene__motion--topLeaves,
+.inviteScene__motion--topLeaves {
+  display: none !important;
+
+  animation: none !important;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   LEFT BRANCHES
+   ========================================================= */
+
+.inviteIntro .inviteScene__motion--leftBranches,
+.inviteScene__motion--leftBranches {
+  display: none !important;
+
+  animation: none !important;
+
+  transform: none !important;
+}
+
+/* =========================================================
+   RIGHT FLOWERS
+   ========================================================= */
+
+.inviteIntro .inviteScene__motion--rightFlowers,
+.inviteScene__motion--rightFlowers {
+  display: none !important;
+
+  animation: none !important;
+
+  transform: none !important;
+}

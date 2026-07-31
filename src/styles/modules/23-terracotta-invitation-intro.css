@@ -253,7 +253,7 @@
 
   font-family: "Gilda Display", "Playfair Display", serif;
 
-  font-size: clamp(2.45rem, 4vw, 4.65rem);
+  font-size: clamp(2.5rem, 4.5vw, 4.9rem);
 
   font-weight: 400;
   letter-spacing: 0.005em;
@@ -615,7 +615,7 @@
   }
 
   .inviteNames {
-    font-size: clamp(2.35rem, 6.8vw, 4rem);
+    font-size: clamp(2.7rem, 6.8vw, 4rem);
   }
 }
 
@@ -645,7 +645,7 @@
   }
 
   .inviteNames {
-    font-size: clamp(1.95rem, 9.7vw, 3rem);
+    font-size: clamp(2.95rem, 9.7vw, 3rem);
 
     line-height: 0.88 !important;
   }
@@ -659,7 +659,7 @@
 
     max-width: 29ch;
 
-    font-size: clamp(0.56rem, 1.9vw, 0.66rem);
+    font-size: clamp(0.67rem, 1.9vw, 0.66rem);
 
     letter-spacing: 0.09em;
   }
@@ -669,7 +669,7 @@
 
     padding: 12px 21px;
 
-    font-size: 0.62rem;
+    font-size: 0.65rem;
   }
 
   .inviteScene__motion--topLeaves {
