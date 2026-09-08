@@ -12,8 +12,6 @@ function HeroSection({ hero }) {
     }
 
     const startVideo = async () => {
-      video.load();
-
       try {
         await video.play();
       } catch (error) {
@@ -43,7 +41,7 @@ function HeroSection({ hero }) {
           loop
           muted
           playsInline
-          preload="none"
+          preload="auto"
           poster={hero.videoPoster}
           /*
            * Browser deterrents:

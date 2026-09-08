@@ -55,12 +55,37 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Manrope:wght@400;500;600;700&amp;family=Tenor+Sans&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Manrope:wght@400;500;600;700&amp;family=Petit+Formal+Script&amp;family=Tenor+Sans&amp;display=swap"
       rel="stylesheet"
     />
+
+    <!-- Load only the invitation artwork needed by the current device. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Petit+Formal+Script&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="image"
+      href="/assets/img/invite/terracotta-invitation-mobile.webp"
+      media="(max-width: 600px), (min-width: 1025px) and (orientation: landscape), (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) and (max-height: 720px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/img/invite/terracotta-invitation-tablet.webp"
+      media="(min-width: 601px) and (max-width: 1024px) and (orientation: portrait)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/img/invite/terracotta-invitation-desktop.webp"
+      media="(min-width: 601px) and (max-width: 1024px) and (orientation: landscape) and (min-height: 721px), (min-width: 1025px) and (orientation: portrait)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/video/banner-poster.jpg"
+      fetchpriority="high"
     />
   </head>
 
@@ -87,6 +112,13 @@
           document.body.classList.remove(ACTIVE_CLASS);
 
           document.documentElement.classList.remove(LOADING_CLASS);
+
+          /*
+           * The intro is removed only once during a page visit.
+           * Stop observing after that so later carousel/upload DOM
+           * updates do not trigger unnecessary document-wide checks.
+           */
+          invitationObserver?.disconnect();
         };
 
         /*

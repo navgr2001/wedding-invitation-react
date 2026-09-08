@@ -39,12 +39,18 @@ function GallerySection({ gallery }) {
               type="button"
               aria-label={`Open photo ${index + 1}`}
               className="gallery__item"
-              data-src={photo.src}
+              data-src={photo.fullSrc || photo.src}
               key={photo.src}
               onContextMenu={(event) => event.preventDefault()}
             >
               <img
                 src={photo.src}
+                srcSet={
+                  photo.smallSrc
+                    ? `${photo.smallSrc} 480w, ${photo.src} 960w`
+                    : undefined
+                }
+                sizes="(max-width: 680px) 48vw, (max-width: 900px) 32vw, 24vw"
                 alt={photo.alt}
                 loading="lazy"
                 decoding="async"

@@ -150,7 +150,7 @@ export const weddingContent = {
     title: "RSVP",
     description:
       "We can't wait to celebrate with you! Please let us know if you'll be joining us on our special day.",
-    photo: "assets/img/rsvp_cta/8.jpg",
+    photo: "assets/img/rsvp_cta/8-optimized.webp",
     formAction:
       "https://script.google.com/macros/s/AKfycbyDZ8T3Qru7FGbVZOLm8TE4Eb47nD7p8YzHvfROR2Er40cwbC9B_Fhthbimj8eDdUB2cw/exec",
   },
@@ -167,16 +167,20 @@ export const weddingContent = {
       "Captured memories of the smiles, dreams, and magic leading up to our big day.",
 
     /*
-     * Gallery files available from 1.jpg - 20.jpg.
+     * Optimized responsive gallery images.
      *
-     * Images that should not be displayed:
-     * 8.jpg
-     * 19.jpg
+     * 480 version: small/mobile thumbnails
+     * 960 version: tablet/desktop thumbnails
+     * full version: lightbox only
+     *
+     * Original JPG files are kept untouched.
      */
     photos: Array.from({ length: 20 }, (_, index) => index + 1)
       .filter((number) => ![8, 19].includes(number))
       .map((number) => ({
-        src: `/assets/img/gallery/${number}.jpg`,
+        src: `/assets/img/gallery/optimized/${number}-960.webp`,
+        smallSrc: `/assets/img/gallery/optimized/${number}-480.webp`,
+        fullSrc: `/assets/img/gallery/optimized/${number}-full.webp`,
         alt: `Shalom and Dewmini - moment ${number}`,
       })),
   },
