@@ -1,4 +1,22 @@
+import { useState } from "react";
+
 function GallerySection({ gallery }) {
+  const [failedImages, setFailedImages] = useState(new Set());
+
+  const handleImageError = (src) => {
+    setFailedImages((currentFailedImages) => {
+      const nextFailedImages = new Set(currentFailedImages);
+
+      nextFailedImages.add(src);
+
+      return nextFailedImages;
+    });
+  };
+
+  const visiblePhotos = gallery.photos.filter(
+    (photo) => !failedImages.has(photo.src),
+  );
+
   return (
     <section className="section section--alt" id="gallery">
       <div className="container">
@@ -13,7 +31,7 @@ function GallerySection({ gallery }) {
           className="gallery reveal"
           id="galleryGrid"
         >
-          {gallery.photos.map((photo, index) => (
+          {visiblePhotos.map((photo, index) => (
             <button
               type="button"
               aria-label={`Open photo ${index + 1}`}
@@ -26,6 +44,7 @@ function GallerySection({ gallery }) {
                 alt={photo.alt}
                 loading="lazy"
                 decoding="async"
+                onError={() => handleImageError(photo.src)}
               />
             </button>
           ))}

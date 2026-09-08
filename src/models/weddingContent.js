@@ -150,7 +150,7 @@ export const weddingContent = {
     title: "RSVP",
     description:
       "We can't wait to celebrate with you! Please let us know if you'll be joining us on our special day.",
-    photo: "assets/img/gallery/8.jpg",
+    photo: "assets/img/rsvp_cta/8.jpg",
     formAction:
       "https://script.google.com/macros/s/AKfycbyDZ8T3Qru7FGbVZOLm8TE4Eb47nD7p8YzHvfROR2Er40cwbC9B_Fhthbimj8eDdUB2cw/exec",
   },
@@ -166,16 +166,19 @@ export const weddingContent = {
     description:
       "Captured memories of the smiles, dreams, and magic leading up to our big day.",
 
-    // public/assets/img/gallery currently contains 1.jpg - 20.jpg.
-    // Keep this count in sync when new gallery images are added.
-    photos: Array.from({ length: 20 }, (_, index) => {
-      const number = index + 1;
-
-      return {
+    /*
+     * Gallery files available from 1.jpg - 20.jpg.
+     *
+     * Images that should not be displayed:
+     * 8.jpg
+     * 19.jpg
+     */
+    photos: Array.from({ length: 20 }, (_, index) => index + 1)
+      .filter((number) => ![8, 19].includes(number))
+      .map((number) => ({
         src: `/assets/img/gallery/${number}.jpg`,
         alt: `Shalom and Dewmini - moment ${number}`,
-      };
-    }),
+      })),
   },
 
   finalCta: {
