@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { useGuestMediaUploadViewModel } from "../../viewmodels/guestUpload/useGuestMediaUploadViewModel";
-
-import { useGuestVideoRecorder } from "../../viewmodels/guestUpload/useGuestVideoRecorder";
 
 const UploadIcon = () => (
   <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
@@ -13,7 +11,6 @@ const UploadIcon = () => (
       strokeLinejoin="round"
       strokeWidth="1.8"
     />
-
     <path
       d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"
       stroke="currentColor"
@@ -31,8 +28,13 @@ const CameraIcon = () => (
       strokeLinejoin="round"
       strokeWidth="1.7"
     />
-
-    <circle cx="12" cy="13" r="3.2" stroke="currentColor" strokeWidth="1.7" />
+    <circle
+      cx="12"
+      cy="13"
+      r="3.2"
+      stroke="currentColor"
+      strokeWidth="1.7"
+    />
   </svg>
 );
 
@@ -47,9 +49,13 @@ const GalleryIcon = () => (
       x="3"
       y="4.5"
     />
-
-    <circle cx="8.5" cy="9" r="1.5" stroke="currentColor" strokeWidth="1.5" />
-
+    <circle
+      cx="8.5"
+      cy="9"
+      r="1.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    />
     <path
       d="m5.5 17 4.2-4.2 2.7 2.6 2-2 4.1 3.6"
       stroke="currentColor"
@@ -95,56 +101,28 @@ const CheckIcon = () => (
 
 function GuestUploadSection({ guestUpload }) {
   const libraryInputRef = useRef(null);
-
-  const cameraInputRef = useRef(null);
-
-  const videoPreviewRef = useRef(null);
-
+  const photoInputRef = useRef(null);
+  const videoInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
   const {
     guestName,
     setGuestName,
-
     selectedFiles,
-
     isUploading,
     uploadedCount,
-
     message,
-
-    eventToken,
-
     addFiles,
     removeFile,
     clearFiles,
     uploadAll,
-
     maxFiles,
     maxFileSizeMb,
   } = useGuestMediaUploadViewModel({
     endpoint: guestUpload.endpoint,
-
     eventToken: guestUpload.eventToken,
-
     maxFileSizeMb: guestUpload.maxFileSizeMb,
   });
-
-  const recorder = useGuestVideoRecorder({
-    endpoint: guestUpload.endpoint,
-
-    eventToken,
-
-    guestName,
-
-    maxDurationMinutes: guestUpload.recording?.maxDurationMinutes || 10,
-  });
-
-  useEffect(() => {
-    if (videoPreviewRef.current && recorder.stream) {
-      videoPreviewRef.current.srcObject = recorder.stream;
-    }
-  }, [recorder.stream]);
 
   const openLibraryPicker = (event) => {
     event?.stopPropagation();
@@ -154,23 +132,24 @@ function GuestUploadSection({ guestUpload }) {
     }
   };
 
-  const openCamera = (event) => {
+  const openPhotoCamera = (event) => {
     event?.stopPropagation();
 
     if (!isUploading) {
-      cameraInputRef.current?.click();
+      photoInputRef.current?.click();
     }
   };
 
-  const handleLibraryChange = (event) => {
-    addFiles(event.target.files);
+  const openVideoCamera = (event) => {
+    event?.stopPropagation();
 
-    event.target.value = "";
+    if (!isUploading) {
+      videoInputRef.current?.click();
+    }
   };
 
-  const handleCameraChange = (event) => {
+  const handleFileChange = (event) => {
     addFiles(event.target.files);
-
     event.target.value = "";
   };
 
@@ -207,10 +186,9 @@ function GuestUploadSection({ guestUpload }) {
 
             <div>
               <h3>Share what you captured</h3>
-
               <p>
                 Choose existing photos or videos, take a new photo, or record a
-                video directly from this page.
+                video using your device camera and share it with us.
               </p>
             </div>
           </div>
@@ -223,7 +201,7 @@ function GuestUploadSection({ guestUpload }) {
 
             <input
               autoComplete="name"
-              disabled={isUploading || recorder.isRecording}
+              disabled={isUploading}
               id="guestUploadName"
               maxLength={80}
               onChange={(event) => setGuestName(event.target.value)}
@@ -234,11 +212,11 @@ function GuestUploadSection({ guestUpload }) {
           </div>
 
           <input
-            accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/quicktime,video/webm,video/x-m4v"
+            accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/quicktime,video/webm,video/x-m4v,video/3gpp"
             className="guestUploadNativeInput"
             disabled={isUploading}
             multiple
-            onChange={handleLibraryChange}
+            onChange={handleFileChange}
             ref={libraryInputRef}
             type="file"
           />
@@ -248,8 +226,18 @@ function GuestUploadSection({ guestUpload }) {
             capture="environment"
             className="guestUploadNativeInput"
             disabled={isUploading}
-            onChange={handleCameraChange}
-            ref={cameraInputRef}
+            onChange={handleFileChange}
+            ref={photoInputRef}
+            type="file"
+          />
+
+          <input
+            accept="video/*"
+            capture="environment"
+            className="guestUploadNativeInput"
+            disabled={isUploading}
+            onChange={handleFileChange}
+            ref={videoInputRef}
             type="file"
           />
 
@@ -266,15 +254,14 @@ function GuestUploadSection({ guestUpload }) {
 
               <span className="guestUploadAction__content">
                 <strong>Choose Photos & Videos</strong>
-
-                <small>Select media already on your device</small>
+                <small>Select media already saved on your device</small>
               </span>
             </button>
 
             <button
               className="guestUploadAction"
               disabled={isUploading}
-              onClick={openCamera}
+              onClick={openPhotoCamera}
               type="button"
             >
               <span className="guestUploadAction__icon">
@@ -283,15 +270,14 @@ function GuestUploadSection({ guestUpload }) {
 
               <span className="guestUploadAction__content">
                 <strong>Take a Photo</strong>
-
-                <small>Use your device camera</small>
+                <small>Open your device camera and take a photo</small>
               </span>
             </button>
 
             <button
               className="guestUploadAction guestUploadAction--record"
-              disabled={isUploading || recorder.isFinalizing}
-              onClick={recorder.openCamera}
+              disabled={isUploading}
+              onClick={openVideoCamera}
               type="button"
             >
               <span className="guestUploadAction__icon">
@@ -300,8 +286,7 @@ function GuestUploadSection({ guestUpload }) {
 
               <span className="guestUploadAction__content">
                 <strong>Record a Video</strong>
-
-                <small>Record and upload automatically</small>
+                <small>Open your device camera and record a video</small>
               </span>
             </button>
           </div>
@@ -311,18 +296,22 @@ function GuestUploadSection({ guestUpload }) {
             onClick={openLibraryPicker}
             onDragEnter={(event) => {
               event.preventDefault();
-
               setIsDragging(true);
             }}
             onDragLeave={(event) => {
               event.preventDefault();
-
               setIsDragging(false);
             }}
             onDragOver={(event) => event.preventDefault()}
             onDrop={handleDrop}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                openLibraryPicker(event);
+              }
+            }}
             role="button"
-            tabIndex={0}
+            tabIndex={isUploading ? -1 : 0}
           >
             <span className="guestUploadDropzone__icon">
               <UploadIcon />
@@ -345,8 +334,9 @@ function GuestUploadSection({ guestUpload }) {
               <div className="guestUploadSelection__header">
                 <div>
                   <strong>Selected memories</strong>
-
-                  <span>{selectedFiles.length} files</span>
+                  <span>
+                    {selectedFiles.length} {selectedFiles.length === 1 ? "file" : "files"}
+                  </span>
                 </div>
 
                 {!isUploading && (
@@ -366,13 +356,16 @@ function GuestUploadSection({ guestUpload }) {
                     <div className="guestUploadPreview__media">
                       {item.type === "video" ? (
                         <video
+                          controls
+                          controlsList="nodownload noremoteplayback"
+                          disablePictureInPicture
                           muted
                           playsInline
                           preload="metadata"
                           src={item.previewUrl}
                         />
                       ) : (
-                        <img alt="" src={item.previewUrl} />
+                        <img alt="Selected wedding memory" src={item.previewUrl} />
                       )}
 
                       {item.status === "uploaded" && (
@@ -383,7 +376,7 @@ function GuestUploadSection({ guestUpload }) {
 
                       {!isUploading && item.status !== "uploaded" && (
                         <button
-                          aria-label="Remove file"
+                          aria-label={`Remove ${item.file.name}`}
                           className="guestUploadPreview__remove"
                           onClick={() => removeFile(item.id)}
                           type="button"
@@ -394,20 +387,14 @@ function GuestUploadSection({ guestUpload }) {
                     </div>
 
                     <div className="guestUploadPreview__details">
-                      <strong>{item.file.name}</strong>
-
+                      <strong title={item.file.name}>{item.file.name}</strong>
                       <small>{formatFileSize(item.file.size)}</small>
 
                       {item.status === "uploading" && (
                         <>
                           <div className="guestUploadFileProgress">
-                            <span
-                              style={{
-                                width: `${item.progress}%`,
-                              }}
-                            />
+                            <span style={{ width: `${item.progress}%` }} />
                           </div>
-
                           <small>{item.progress}%</small>
                         </>
                       )}
@@ -432,7 +419,9 @@ function GuestUploadSection({ guestUpload }) {
 
           {message && (
             <div
+              aria-live="polite"
               className={`guestUploadMessage guestUploadMessage--${message.type}`}
+              role={message.type === "error" ? "alert" : "status"}
             >
               {message.text}
             </div>
@@ -448,116 +437,17 @@ function GuestUploadSection({ guestUpload }) {
 
             {isUploading
               ? `Uploading ${uploadedCount}/${selectedFiles.length}…`
-              : `Upload ${selectedFiles.length || ""} ${
-                  selectedFiles.length === 1 ? "memory" : "memories"
-                }`}
+              : selectedFiles.length > 0
+                ? `Upload ${selectedFiles.length} ${selectedFiles.length === 1 ? "memory" : "memories"}`
+                : "Select memories to upload"}
           </button>
 
           <p className="guestUploadPrivacy">
-            Photos and videos are uploaded directly to the couple's private
-            wedding Drive folder.
+            Your uploads are sent directly to the couple&apos;s private wedding
+            Drive folder and are not displayed publicly on this page.
           </p>
         </div>
       </div>
-
-      {recorder.isCameraOpen && (
-        <div aria-modal="true" className="guestRecorder" role="dialog">
-          <div className="guestRecorder__panel">
-            <div className="guestRecorder__videoWrap">
-              <video
-                autoPlay
-                className="guestRecorder__preview"
-                muted
-                playsInline
-                ref={videoPreviewRef}
-              />
-
-              {recorder.isRecording && (
-                <div className="guestRecorder__recordingBadge">
-                  <span />
-                  REC {formatDuration(recorder.elapsedSeconds)}
-                </div>
-              )}
-            </div>
-
-            <div className="guestRecorder__information">
-              {!recorder.isRecording && !recorder.isFinalizing && (
-                <p>Camera ready. Press Start Recording when you're ready.</p>
-              )}
-
-              {recorder.isRecording && (
-                <>
-                  <strong>Recording & uploading…</strong>
-
-                  <div className="guestRecorder__stats">
-                    <span>
-                      Recorded {formatFileSize(recorder.recordedBytes)}
-                    </span>
-
-                    <span>
-                      Uploaded {formatFileSize(recorder.uploadedBytes)}
-                    </span>
-
-                    <span>Waiting {formatFileSize(recorder.pendingBytes)}</span>
-                  </div>
-
-                  <small>Keep this page open while recording.</small>
-                </>
-              )}
-
-              {recorder.isFinalizing && (
-                <strong>Finishing your video upload…</strong>
-              )}
-
-              {recorder.error && (
-                <div className="guestUploadMessage guestUploadMessage--error">
-                  {recorder.error}
-                </div>
-              )}
-
-              {recorder.successMessage && (
-                <div className="guestUploadMessage guestUploadMessage--success">
-                  {recorder.successMessage}
-                </div>
-              )}
-            </div>
-
-            <div className="guestRecorder__actions">
-              {!recorder.isRecording &&
-                !recorder.isFinalizing &&
-                !recorder.successMessage && (
-                  <button
-                    className="guestRecorder__start"
-                    onClick={recorder.startRecording}
-                    type="button"
-                  >
-                    <span className="guestRecorder__recordDot" />
-                    Start Recording
-                  </button>
-                )}
-
-              {recorder.isRecording && (
-                <button
-                  className="guestRecorder__stop"
-                  onClick={recorder.stopRecording}
-                  type="button"
-                >
-                  Stop Recording
-                </button>
-              )}
-
-              <button
-                className="guestRecorder__close"
-                disabled={recorder.isRecording || recorder.isFinalizing}
-                onClick={recorder.closeCamera}
-                type="button"
-              >
-                {recorder.successMessage ? "Done" : "Close"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }
@@ -572,17 +462,6 @@ function formatFileSize(bytes) {
   }
 
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function formatDuration(seconds) {
-  const minutes = Math.floor(seconds / 60);
-
-  const remaining = seconds % 60;
-
-  return `${String(minutes).padStart(2, "0")}:${String(remaining).padStart(
-    2,
-    "0",
-  )}`;
 }
 
 export default GuestUploadSection;
