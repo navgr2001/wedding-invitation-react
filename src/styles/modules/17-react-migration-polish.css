@@ -9,9 +9,17 @@
   .weddingCard,
   .noteCard,
   .rsvpFormCard,
-  .rsvpPhotoCard,
-  .finalCta__inner {
+  .rsvpPhotoCard {
     backdrop-filter: blur(14px);
+  }
+
+  /*
+   * Keep a light glass effect in the final CTA,
+   * but allow the background photo to remain clearer.
+   */
+  .finalCta__inner {
+    backdrop-filter: blur(0.5px);
+    -webkit-backdrop-filter: blur(3px);
   }
 }
 
@@ -346,4 +354,3 @@
     height: 50px;
   }
 }
-

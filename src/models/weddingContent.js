@@ -150,7 +150,7 @@ export const weddingContent = {
     title: "RSVP",
     description:
       "We can't wait to celebrate with you! Please let us know if you'll be joining us on our special day.",
-    photo: "assets/img/bride.jpeg",
+    photo: "assets/img/gallery/8.jpg",
     formAction:
       "https://script.google.com/macros/s/AKfycbyDZ8T3Qru7FGbVZOLm8TE4Eb47nD7p8YzHvfROR2Er40cwbC9B_Fhthbimj8eDdUB2cw/exec",
   },
@@ -165,11 +165,15 @@ export const weddingContent = {
     title: "Moments Before Forever",
     description:
       "Captured memories of the smiles, dreams, and magic leading up to our big day.",
-    photos: Array.from({ length: 8 }, (_, index) => {
-      const number = String(index + 1).padStart(2, "0");
+
+    // public/assets/img/gallery currently contains 1.jpg - 20.jpg.
+    // Keep this count in sync when new gallery images are added.
+    photos: Array.from({ length: 20 }, (_, index) => {
+      const number = index + 1;
+
       return {
-        src: `assets/img/gallery/${number}.svg`,
-        alt: `Couple photo ${index + 1}`,
+        src: `/assets/img/gallery/${number}.jpg`,
+        alt: `Shalom and Dewmini - moment ${number}`,
       };
     }),
   },
