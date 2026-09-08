@@ -11,9 +11,7 @@ function createPreview(file) {
   const fallbackId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
   return {
-    id: `${file.name}-${file.size}-${file.lastModified}-${
-      globalThis.crypto?.randomUUID?.() || fallbackId
-    }`,
+    id: globalThis.crypto?.randomUUID?.() || fallbackId,
 
     file,
 
@@ -23,6 +21,8 @@ function createPreview(file) {
 
     status: "ready",
 
+    progress: 0,
+
     error: "",
   };
 }
@@ -30,7 +30,7 @@ function createPreview(file) {
 export function useGuestMediaUploadViewModel({
   endpoint,
   eventToken: configuredEventToken = "",
-  maxFileSizeMb = 25,
+  maxFileSizeMb = 500,
 }) {
   const [guestName, setGuestName] = useState("");
 
@@ -57,20 +57,18 @@ export function useGuestMediaUploadViewModel({
   }, []);
 
   /*
-   * Support BOTH:
+   * Supports both:
    *
-   * 1. QR URL:
-   *    ?eventToken=ABC#guest-upload
+   * QR:
+   * ?eventToken=ABC#guest-upload
    *
-   * 2. Normal website:
-   *    uses configured wedding token.
+   * Direct visit:
+   * token configured in weddingContent.js
    */
   const eventToken = useMemo(() => {
     const parameters = new URLSearchParams(window.location.search);
 
-    const urlToken = parameters.get("eventToken");
-
-    return urlToken || configuredEventToken || "";
+    return parameters.get("eventToken") || configuredEventToken || "";
   }, [configuredEventToken]);
 
   const addFiles = (incomingFiles) => {
@@ -97,7 +95,6 @@ export function useGuestMediaUploadViewModel({
     const filesToProcess = files.slice(0, availableSlots);
 
     const validFiles = [];
-
     const errors = [];
 
     filesToProcess.forEach((file) => {
@@ -112,17 +109,16 @@ export function useGuestMediaUploadViewModel({
       validFiles.push(createPreview(file));
     });
 
-    if (files.length > availableSlots) {
-      errors.push(
-        `Only the first ${availableSlots} additional files were selected.`,
-      );
-    }
-
     setSelectedFiles((current) => [...current, ...validFiles]);
+
+    if (files.length > availableSlots) {
+      errors.push(`Only ${availableSlots} additional files could be selected.`);
+    }
 
     if (errors.length) {
       setMessage({
         type: "error",
+
         text: errors[0],
       });
     }
@@ -160,8 +156,21 @@ export function useGuestMediaUploadViewModel({
     setMessage(null);
   };
 
+  const updateFile = (id, changes) => {
+    setSelectedFiles((current) =>
+      current.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              ...changes,
+            }
+          : item,
+      ),
+    );
+  };
+
   const uploadAll = async () => {
-    if (isUploading || selectedFiles.length === 0) {
+    if (isUploading || !selectedFiles.length) {
       return;
     }
 
@@ -169,7 +178,7 @@ export function useGuestMediaUploadViewModel({
       setMessage({
         type: "error",
 
-        text: "Wedding upload service is not configured correctly. Please contact the couple.",
+        text: "Wedding upload service is not configured correctly.",
       });
 
       return;
@@ -181,23 +190,17 @@ export function useGuestMediaUploadViewModel({
 
     setMessage(null);
 
-    let successfulUploads = 0;
+    let successCount = 0;
 
     try {
-      for (const selectedFile of selectedFiles) {
-        setSelectedFiles((current) =>
-          current.map((item) =>
-            item.id === selectedFile.id
-              ? {
-                  ...item,
+      for (const item of selectedFiles) {
+        updateFile(item.id, {
+          status: "uploading",
 
-                  status: "uploading",
+          progress: 0,
 
-                  error: "",
-                }
-              : item,
-          ),
-        );
+          error: "",
+        });
 
         try {
           await uploadGuestMedia({
@@ -207,56 +210,48 @@ export function useGuestMediaUploadViewModel({
 
             guestName,
 
-            file: selectedFile.file,
+            file: item.file,
+
+            onProgress: ({ percent }) => {
+              updateFile(item.id, {
+                progress: percent,
+              });
+            },
           });
 
-          successfulUploads += 1;
+          successCount += 1;
 
-          setUploadedCount(successfulUploads);
+          setUploadedCount(successCount);
 
-          setSelectedFiles((current) =>
-            current.map((item) =>
-              item.id === selectedFile.id
-                ? {
-                    ...item,
+          updateFile(item.id, {
+            status: "uploaded",
 
-                    status: "uploaded",
+            progress: 100,
 
-                    error: "",
-                  }
-                : item,
-            ),
-          );
+            error: "",
+          });
         } catch (error) {
-          setSelectedFiles((current) =>
-            current.map((item) =>
-              item.id === selectedFile.id
-                ? {
-                    ...item,
+          updateFile(item.id, {
+            status: "failed",
 
-                    status: "failed",
-
-                    error: error?.message || "Unable to upload this file.",
-                  }
-                : item,
-            ),
-          );
+            error: error?.message || "Unable to upload this file.",
+          });
         }
       }
 
-      if (successfulUploads === selectedFiles.length) {
+      if (successCount === selectedFiles.length) {
         setMessage({
           type: "success",
 
           text: "Your memories have been uploaded successfully. Thank you for sharing them with us! ♡",
         });
-      } else if (successfulUploads > 0) {
+      } else if (successCount > 0) {
         setMessage({
           type: "warning",
 
           text:
-            `${successfulUploads} of ${selectedFiles.length} files were uploaded. ` +
-            "Please try the failed files again.",
+            `${successCount} of ${selectedFiles.length} files uploaded successfully. ` +
+            "Please retry the failed files.",
         });
       } else {
         setMessage({
@@ -270,14 +265,8 @@ export function useGuestMediaUploadViewModel({
     }
   };
 
-  const progress =
-    selectedFiles.length > 0
-      ? Math.round((uploadedCount / selectedFiles.length) * 100)
-      : 0;
-
   return {
     guestName,
-
     setGuestName,
 
     selectedFiles,
@@ -286,16 +275,13 @@ export function useGuestMediaUploadViewModel({
 
     uploadedCount,
 
-    progress,
-
     message,
 
+    eventToken,
+
     addFiles,
-
     removeFile,
-
     clearFiles,
-
     uploadAll,
 
     maxFiles: MAX_FILES_PER_BATCH,

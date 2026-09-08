@@ -198,7 +198,12 @@ export const weddingContent = {
      */
     eventToken: "SD-WEDDING-2026-DEC10-L9W7P4N2K6",
 
-    maxFileSizeMb: 25,
+    maxFileSizeMb: 500,
+
+    recording: {
+      enabled: true,
+      maxDurationMinutes: 10,
+    },
   },
 
   finalCta: {
