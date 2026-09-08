@@ -6,7 +6,6 @@ function GallerySection({ gallery }) {
   const handleImageError = (src) => {
     setFailedImages((currentFailedImages) => {
       const nextFailedImages = new Set(currentFailedImages);
-
       nextFailedImages.add(src);
 
       return nextFailedImages;
