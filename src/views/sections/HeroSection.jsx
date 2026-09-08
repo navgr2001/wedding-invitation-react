@@ -6,7 +6,10 @@ function HeroSection({ hero }) {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return undefined;
+
+    if (!video) {
+      return undefined;
+    }
 
     const startVideo = async () => {
       video.load();
@@ -18,7 +21,9 @@ function HeroSection({ hero }) {
       }
     };
 
-    window.addEventListener("wedding:invite-opened", startVideo, { once: true });
+    window.addEventListener("wedding:invite-opened", startVideo, {
+      once: true,
+    });
 
     return () => {
       window.removeEventListener("wedding:invite-opened", startVideo);
@@ -27,7 +32,11 @@ function HeroSection({ hero }) {
 
   return (
     <section className="hero section heroBanner">
-      <div aria-hidden="true" className="heroBanner__video">
+      <div
+        aria-hidden="true"
+        className="heroBanner__video"
+        data-protected-media="true"
+      >
         <video
           ref={videoRef}
           className="heroBanner__videoEl"
@@ -36,24 +45,40 @@ function HeroSection({ hero }) {
           playsInline
           preload="none"
           poster={hero.videoPoster}
+          /*
+           * Browser deterrents:
+           * - no download option
+           * - no remote playback
+           * - no picture-in-picture
+           */
+          controlsList="nodownload noremoteplayback"
+          disablePictureInPicture
+          disableRemotePlayback
+          onContextMenu={(event) => event.preventDefault()}
+          onDragStart={(event) => event.preventDefault()}
         >
           <source src={hero.video} type="video/mp4" />
         </video>
 
         <div className="heroBanner__scrim"></div>
       </div>
+
       <div className="container hero__grid">
         <div className="hero__left">
           <div className="heroPill reveal">
             <HeroPillIcon src={hero.notificationIcon} />
+
             <span className="heroPill__text">WE’RE GETTING MARRIED</span>
+
             <HeroPillIcon src={hero.notificationIcon} />
           </div>
+
           <h1 className="display reveal heroBanner__title">{hero.title}</h1>
 
           <p className="meta reveal">
             {hero.eventDay}, <span className="date">{hero.eventDate}</span>
           </p>
+
           <a
             aria-label="Swipe for more"
             className="scrollHint reveal scrollHint--link"
@@ -61,8 +86,10 @@ function HeroSection({ hero }) {
             id="btnSwipeMore"
           >
             <span aria-hidden="true" className="scrollHint__mouse"></span>
+
             <span className="scrollHint__txt">Swipe up for more</span>
           </a>
+
           <div className="hero__actions reveal">
             <a className="btn btn--primary" href="/rsvp">
               <span aria-hidden="true" className="btn__icon">
@@ -70,6 +97,7 @@ function HeroSection({ hero }) {
               </span>
               RSVP
             </a>
+
             <a className="btn btn--ghost" href="/details">
               <span aria-hidden="true" className="btn__icon">
                 <InfoIcon />
@@ -78,6 +106,7 @@ function HeroSection({ hero }) {
             </a>
           </div>
         </div>
+
         <div className="hero__right reveal">
           <div className="hero__photoCard">
             <div className="hero__badge">
@@ -89,7 +118,9 @@ function HeroSection({ hero }) {
           </div>
         </div>
       </div>
+
       <div aria-hidden="true" className="hero__bg"></div>
+
       <div aria-hidden="true" className="hero__sparkles"></div>
     </section>
   );
@@ -98,7 +129,13 @@ function HeroSection({ hero }) {
 function HeroPillIcon({ src }) {
   return (
     <span className="heroPill__iconWrap" aria-hidden="true">
-      <img className="heroPill__iconImg" src={src} alt="" decoding="async" />
+      <img
+        className="heroPill__iconImg"
+        src={src}
+        alt=""
+        decoding="async"
+        draggable="false"
+      />
     </span>
   );
 }
