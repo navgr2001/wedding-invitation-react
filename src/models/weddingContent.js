@@ -181,6 +181,26 @@ export const weddingContent = {
       })),
   },
 
+  guestUpload: {
+    title: "Share Your Moments",
+
+    description:
+      "Captured something special today? Share your photos and videos with us so we can relive every beautiful moment through your eyes.",
+
+    endpoint:
+      "https://script.google.com/macros/s/AKfycbxN7HnaGGgasfz_nPHACut76CkG7QA_-sFf-AtNt4saEQl-vq-UZ8oRnZTlUSeAXFhM/exec",
+
+    /*
+     * Used for guests who enter the website directly.
+     *
+     * If the QR URL supplies ?eventToken=..., that token can
+     * still override this value.
+     */
+    eventToken: "SD-WEDDING-2026-DEC10-L9W7P4N2K6",
+
+    maxFileSizeMb: 25,
+  },
+
   finalCta: {
     title: "We Can't Wait to Celebrate",
     titleBreak: "with You!",

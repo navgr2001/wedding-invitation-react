@@ -119,6 +119,25 @@ const ArrowIcon = () => (
   </svg>
 );
 
+const UploadMomentsIcon = () => (
+  <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+    <path
+      d="M12 16V5m0 0L8 9m4-4 4 4"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.7"
+    />
+
+    <path
+      d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeWidth="1.7"
+    />
+  </svg>
+);
+
 const NAVIGATION_ITEMS = [
   {
     label: "Details",
@@ -137,6 +156,12 @@ const NAVIGATION_ITEMS = [
     description: "View our memories",
     sectionId: "gallery",
     icon: GalleryIcon,
+  },
+  {
+    label: "Share Moments",
+    description: "Upload photos & videos",
+    sectionId: "guest-upload",
+    icon: UploadMomentsIcon,
   },
 ];
 
