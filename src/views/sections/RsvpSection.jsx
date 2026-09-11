@@ -46,7 +46,7 @@ function RsvpSection({ rsvp }) {
                   className="fInput"
                   type="text"
                   name="name"
-                  placeholder="Eg: Sam Crow"
+                  placeholder="Eg: Sam Colby"
                   required
                 />
               </label>
