@@ -9,11 +9,14 @@ function FinalCtaSection({ finalCta }) {
           <span className="finalCta__spark">✧</span>
           <span className="finalCta__icon">♡</span>
         </div>
+
         <h2 className="finalCta__title">
           {finalCta.title} <br />
           {finalCta.titleBreak}
         </h2>
+
         <p className="finalCta__desc">{finalCta.description}</p>
+
         <div className="finalCta__actions">
           <a className="finalCtaBtn finalCtaBtn--primary" href="/rsvp">
             <span className="finalCtaBtn__icon" aria-hidden="true">
@@ -21,6 +24,7 @@ function FinalCtaSection({ finalCta }) {
             </span>
             <span>RSVP with Love</span>
           </a>
+
           <a className="finalCtaBtn finalCtaBtn--ghost" href="/gallery">
             <span className="finalCtaBtn__icon" aria-hidden="true">
               <CameraIcon />

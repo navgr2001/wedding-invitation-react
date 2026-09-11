@@ -1,0 +1,448 @@
+/* =========================================================
+   Section Background System
+   ---------------------------------------------------------
+   Purpose:
+   - One consistent background inside each section.
+   - Background changes only when a new section begins.
+   - No page-wide gradient bleeding between sections.
+   - Keeps the existing terracotta / wedding palette.
+   - Does not modify cards, images, videos or components.
+   ========================================================= */
+
+/* =========================================================
+   Global page base
+   ========================================================= */
+
+html {
+  background: #fffaf6;
+}
+
+body {
+  /*
+   * Older theme modules use several large radial gradients
+   * on body. Those can make the colour appear to change
+   * while scrolling inside a single section.
+   *
+   * Keep body itself neutral instead.
+   */
+  background: #fffaf6 !important;
+  background-image: none !important;
+}
+
+/* =========================================================
+   Main page
+   ========================================================= */
+
+#home {
+  width: 100%;
+
+  margin: 0;
+
+  padding: 0;
+
+  background: #fffaf6;
+
+  overflow: visible;
+}
+
+/* =========================================================
+   Generic section behaviour
+   ========================================================= */
+
+#home > section {
+  /*
+   * Every section owns its own background.
+   *
+   * This guarantees there is no transparent gap where
+   * the body background could become visible.
+   */
+  position: relative;
+
+  width: 100%;
+
+  isolation: isolate;
+
+  background-image: none;
+}
+
+/*
+ * Older CSS applies gradients to .section--alt.
+ *
+ * Remove those page-level gradients here.
+ * Individual cards/buttons are NOT affected.
+ */
+#home .section--alt {
+  background-image: none !important;
+}
+
+/* =========================================================
+   01 — Hero
+   ========================================================= */
+
+#home > .heroBanner {
+  /*
+   * The hero itself contains the wedding video,
+   * so this colour works as its loading/fallback background.
+   */
+  background-color: #f7e8df !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   02 — Countdown
+   ========================================================= */
+
+#countdownSection {
+  background-color: #f8e9df !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   03 — Seat Finder
+   ========================================================= */
+
+#seatFinder {
+  background-color: #fffaf6 !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   04 — Happy Couple
+   ========================================================= */
+
+#couple {
+  background-color: #fdf1e9 !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   05 — Wedding Details
+   ========================================================= */
+
+#details {
+  background-color: #f7e5da !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   06 — Timeline
+   ========================================================= */
+
+#timeline {
+  background-color: #fffaf6 !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   07 — RSVP
+   ========================================================= */
+
+#rsvp {
+  background-color: #fdf1e9 !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   08 — Words of Love
+   ========================================================= */
+
+#words {
+  background-color: #f7e5da !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   09 — Gallery
+   ========================================================= */
+
+#gallery {
+  background-color: #fffaf6 !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   10 — Share Your Moments
+   ========================================================= */
+
+#guest-upload {
+  /*
+   * Module 33 previously gives this section radial
+   * gradients. Override them with one solid colour so
+   * the background remains identical from the first
+   * pixel to the last pixel of this section.
+   */
+  background-color: #fdf1e9 !important;
+
+  background-image: none !important;
+}
+
+/* =========================================================
+   11 — Final CTA
+   ========================================================= */
+
+/*
+ * IMPORTANT:
+ *
+ * Do NOT remove the final CTA photograph.
+ *
+ * The final CTA intentionally uses an image background.
+ * It is its own complete section, therefore it still
+ * follows the rule that the background only changes
+ * when entering this section.
+ */
+
+#finalCta {
+  position: relative;
+
+  isolation: isolate;
+}
+
+/* =========================================================
+   Prevent decorative pseudo backgrounds from changing
+   the SECTION background colour
+   ========================================================= */
+
+/*
+ * Some sections may receive visual backgrounds through
+ * pseudo-elements from older style modules.
+ *
+ * We only neutralize them on normal content sections.
+ *
+ * The final CTA is intentionally excluded because its
+ * photographic overlay is part of its design.
+ */
+
+#countdownSection::before,
+#countdownSection::after,
+#seatFinder::before,
+#seatFinder::after,
+#couple::before,
+#couple::after,
+#details::before,
+#details::after,
+#timeline::before,
+#timeline::after,
+#rsvp::before,
+#rsvp::after,
+#words::before,
+#words::after,
+#gallery::before,
+#gallery::after,
+#guest-upload::before,
+#guest-upload::after {
+  /*
+   * Do not allow a pseudo-element to paint a large
+   * alternate section background.
+   *
+   * Component-level decorative elements continue
+   * working normally because this targets only the
+   * root section itself.
+   */
+  background-image: none;
+}
+
+/* =========================================================
+   Clean section boundaries
+   ========================================================= */
+
+#countdownSection,
+#seatFinder,
+#couple,
+#details,
+#timeline,
+#rsvp,
+#words,
+#gallery,
+#guest-upload {
+  /*
+   * Ensures the background extends through all
+   * section content and padding.
+   */
+  background-clip: border-box;
+
+  box-shadow: none;
+}
+
+/* =========================================================
+   Optional subtle boundary
+   ---------------------------------------------------------
+   This is intentionally extremely light.
+   It makes the exact section transition visible without
+   creating a heavy horizontal divider.
+   ========================================================= */
+
+#seatFinder,
+#couple,
+#details,
+#timeline,
+#rsvp,
+#words,
+#gallery,
+#guest-upload {
+  border-top: 1px solid rgba(168, 68, 30, 0.035);
+}
+
+/* =========================================================
+   Tablet
+   ========================================================= */
+
+@media (max-width: 900px) {
+  /*
+   * Keep EXACTLY the same section colours.
+   *
+   * Do not introduce responsive gradients because that
+   * would make desktop/mobile visually inconsistent.
+   */
+
+  #countdownSection {
+    background-color: #f8e9df !important;
+  }
+
+  #seatFinder {
+    background-color: #fffaf6 !important;
+  }
+
+  #couple {
+    background-color: #fdf1e9 !important;
+  }
+
+  #details {
+    background-color: #f7e5da !important;
+  }
+
+  #timeline {
+    background-color: #fffaf6 !important;
+  }
+
+  #rsvp {
+    background-color: #fdf1e9 !important;
+  }
+
+  #words {
+    background-color: #f7e5da !important;
+  }
+
+  #gallery {
+    background-color: #fffaf6 !important;
+  }
+
+  #guest-upload {
+    background-color: #fdf1e9 !important;
+  }
+}
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 650px) {
+  /*
+   * Section background behaviour remains identical on
+   * mobile. Only the layout inside each section changes
+   * through the existing responsive modules.
+   */
+
+  body {
+    background-color: #fffaf6 !important;
+
+    background-image: none !important;
+  }
+
+  #home {
+    background-color: #fffaf6;
+  }
+
+  #countdownSection {
+    background-color: #f8e9df !important;
+  }
+
+  #seatFinder {
+    background-color: #fffaf6 !important;
+  }
+
+  #couple {
+    background-color: #fdf1e9 !important;
+  }
+
+  #details {
+    background-color: #f7e5da !important;
+  }
+
+  #timeline {
+    background-color: #fffaf6 !important;
+  }
+
+  #rsvp {
+    background-color: #fdf1e9 !important;
+  }
+
+  #words {
+    background-color: #f7e5da !important;
+  }
+
+  #gallery {
+    background-color: #fffaf6 !important;
+  }
+
+  #guest-upload {
+    background-color: #fdf1e9 !important;
+  }
+}
+
+/* =========================================================
+   Very small devices
+   ========================================================= */
+
+@media (max-width: 420px) {
+  /*
+   * Do not change colours at smaller breakpoints.
+   *
+   * This prevents colour flashes when the browser
+   * changes viewport height/width while scrolling.
+   */
+
+  #countdownSection {
+    background-color: #f8e9df !important;
+  }
+
+  #seatFinder {
+    background-color: #fffaf6 !important;
+  }
+
+  #couple {
+    background-color: #fdf1e9 !important;
+  }
+
+  #details {
+    background-color: #f7e5da !important;
+  }
+
+  #timeline {
+    background-color: #fffaf6 !important;
+  }
+
+  #rsvp {
+    background-color: #fdf1e9 !important;
+  }
+
+  #words {
+    background-color: #f7e5da !important;
+  }
+
+  #gallery {
+    background-color: #fffaf6 !important;
+  }
+
+  #guest-upload {
+    background-color: #fdf1e9 !important;
+  }
+}

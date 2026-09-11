@@ -197,26 +197,63 @@
 
   text-align: center;
 
+  /*
+   * The image is rendered through ::after so the
+   * photograph can receive a small amount of blur
+   * without affecting the CTA content.
+   */
+  background-image: none;
+
+  overflow: hidden;
+
+  isolation: isolate;
+}
+
+/* =========================================================
+   FINAL CTA BACKGROUND IMAGE
+   ========================================================= */
+
+/*
+ * LOW BLUR EFFECT
+ *
+ * 2px is intentionally subtle.
+ *
+ * The photograph remains clearly recognizable while
+ * receiving a soft/glassy appearance.
+ */
+.finalCta::after {
+  content: "";
+
+  position: absolute;
+
+  /*
+   * Slightly larger than the section so the blur
+   * does not create visible edges around the image.
+   */
+  inset: -8px;
+
   background-image: url("/assets/img/rsvp_cta/19-optimized.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
-  overflow: hidden;
+  filter: blur(0.5px);
+  -webkit-filter: blur(0.5px);
+
+  /*
+   * Prevents the blurred edges from becoming visible.
+   */
+  transform: scale(1.01);
+
+  z-index: -2;
+
+  pointer-events: none;
 }
 
-/*
- * Reduced overlay strength.
- *
- * Previously the opacity was around:
- * 0.85 / 0.72 / 0.86
- *
- * It is now:
- * 0.68 / 0.55 / 0.70
- *
- * This keeps the text readable while allowing the
- * original background photo to show much more clearly.
- */
+/* =========================================================
+   FINAL CTA OVERLAY
+   ========================================================= */
+
 .finalCta::before {
   content: "";
 
@@ -236,7 +273,9 @@
       rgba(58, 33, 12, 0.7) 100%
     );
 
-  z-index: 0;
+  z-index: -1;
+
+  pointer-events: none;
 }
 
 /* =========================================================
@@ -383,10 +422,6 @@
 
   border-color: rgba(255, 255, 255, 0.72);
 
-  /*
-   * Reduced blur as well so the button itself
-   * does not look excessively glassy.
-   */
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
 }
@@ -419,6 +454,16 @@
     background-position: center center;
   }
 
+  /*
+   * Keep the image almost clear on tablet.
+   */
+  .finalCta::after {
+    filter: blur(0.5px);
+    -webkit-filter: blur(0.5px);
+
+    transform: scale(1.01);
+  }
+
   .finalCta__inner {
     width: min(760px, 90%);
   }
@@ -446,10 +491,16 @@
   }
 
   /*
-   * Slightly stronger than desktop because mobile
-   * text sits over a smaller portion of the image,
-   * but still considerably lighter than before.
+   * Very low blur on mobile so the original photograph
+   * remains easy to see.
    */
+  .finalCta::after {
+    filter: blur(0.5px);
+    -webkit-filter: blur(0.5px);
+
+    transform: scale(1.01);
+  }
+
   .finalCta::before {
     background:
       radial-gradient(
@@ -519,6 +570,13 @@
 @media (max-width: 360px) {
   .finalCta {
     padding: 60px 0;
+  }
+
+  .finalCta::after {
+    filter: blur(0.5px);
+    -webkit-filter: blur(0.5px);
+
+    transform: scale(1.01);
   }
 
   .finalCta__title {
