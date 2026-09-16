@@ -113,7 +113,7 @@ export const weddingContent = {
       },
       {
         side: "right",
-        time: "18.30 PM",
+        time: "18.00 PM",
         text: "Couple enters the hall",
         icon: "assets/img/icons/gem.png",
         iconAlt: "Diamond icon",
