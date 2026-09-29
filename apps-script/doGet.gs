@@ -2,8 +2,20 @@ var SPREADSHEET_ID = "1_D3_kgP8MUqUyuPEvJ7gVwwCwRT7oSMqu3vA_06DZJM";
 var SHEET_NAME = "RSVP Responses"; // change if your tab name is different
 var HEADERS = ["Timestamp", "Name", "Attendance", "Guests", "Message"];
 
-var GUEST_UPLOAD_MAX_BYTES = 30 * 1024 * 1024;
-var GUEST_UPLOAD_ALLOWED_PREFIXES = ["image/", "video/"];
+var GUEST_UPLOAD_MAX_IMAGE_BYTES = 500 * 1024 * 1024;
+var GUEST_UPLOAD_MAX_VIDEO_BYTES = 5 * 1024 * 1024 * 1024;
+var GUEST_UPLOAD_ALLOWED_TYPES = {
+  "image/jpeg": "jpeg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/heic": "heic",
+  "image/heif": "heif",
+  "video/mp4": "mp4",
+  "video/quicktime": "mov",
+  "video/webm": "webm",
+  "video/x-m4v": "m4v",
+  "video/3gpp": "3gp",
+};
 
 function getSheet_() {
   var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -18,6 +30,21 @@ function getSheet_() {
 
 function sanitize_(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function escapeHtml_(value) {
+  return sanitize_(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Prevent user-controlled cells from being interpreted as spreadsheet formulas.
+function safeSheetValue_(value, maxLength) {
+  var text = sanitize_(value).substring(0, maxLength || 1000);
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
 }
 
 function createJsonOutput_(payload) {
@@ -41,7 +68,7 @@ function createJsonpOutput_(callbackName, payload) {
 function createHtmlOutput_(message) {
   return HtmlService.createHtmlOutput(
     "<!doctype html><html><body>" +
-      sanitize_(message || "OK") +
+      escapeHtml_(message || "OK") +
       "</body></html>",
   );
 }
@@ -142,18 +169,25 @@ function isGuestMediaUploadRequest_(e) {
 
 function handleRsvpSubmission_(e) {
   var params = (e && e.parameter) || {};
-  var name = sanitize_(params.name);
+  var name = safeSheetValue_(params.name, 120);
   var attendance = sanitize_(params.attendance);
   var guestsRaw = sanitize_(params.guests);
-  var message = sanitize_(params.message);
+  var message = safeSheetValue_(params.message, 1000);
 
   if (!name || !attendance || !guestsRaw) {
     return createHtmlOutput_("Missing required RSVP fields.");
   }
 
+  if (
+    attendance !== "Yes, I'll be there" &&
+    attendance !== "Sorry, I can't make it"
+  ) {
+    return createHtmlOutput_("Invalid attendance selection.");
+  }
+
   var guests = Number(guestsRaw);
-  if (!isFinite(guests) || guests < 1) {
-    return createHtmlOutput_("Guest count must be at least 1.");
+  if (!isFinite(guests) || Math.floor(guests) !== guests || guests < 1 || guests > 20) {
+    return createHtmlOutput_("Guest count must be between 1 and 20.");
   }
 
   var sheet = getSheet_();
@@ -167,7 +201,7 @@ function handleRsvpSubmission_(e) {
 function handleGuestMediaUpload_(e) {
   var request = JSON.parse(e.postData.contents);
 
-  if (request.action !== "guestMediaUpload") {
+  if (request.action !== "guestMediaUploadInit") {
     throw new Error("Invalid upload action.");
   }
 
@@ -176,41 +210,62 @@ function handleGuestMediaUpload_(e) {
   var fileName = sanitizeUploadFileName_(request.fileName);
   var mimeType = sanitize_(request.mimeType);
   var fileSize = Number(request.fileSize || 0);
-  var base64 = sanitize_(request.base64);
+  var fileHeaderBase64 = sanitize_(request.fileHeaderBase64);
   var guestName = sanitizeGuestName_(request.guestName) || "Guest";
 
-  validateGuestUpload_(fileName, mimeType, fileSize, base64);
+  validateGuestUpload_(fileName, mimeType, fileSize, fileHeaderBase64);
+
+  var headerBytes = Utilities.base64Decode(fileHeaderBase64);
+  validateFileSignature_(headerBytes, mimeType);
 
   var folder = getWeddingUploadFolder_();
-  var decodedBytes = Utilities.base64Decode(base64);
-
-  if (decodedBytes.length > GUEST_UPLOAD_MAX_BYTES) {
-    throw new Error("The uploaded file is larger than the allowed 30 MB limit.");
-  }
-
   var timestamp = Utilities.formatDate(
     new Date(),
     Session.getScriptTimeZone(),
     "yyyyMMdd_HHmmss",
   );
-
   var storedFileName = timestamp + "_" + guestName + "_" + fileName;
-  var blob = Utilities.newBlob(decodedBytes, mimeType, storedFileName);
-  var driveFile = folder.createFile(blob);
 
-  driveFile.setDescription(
-    [
+  // Create a Google Drive resumable-upload session. The large media file never
+  // passes through Apps Script; the guest's browser sends the original binary
+  // directly to Drive, avoiding Base64 overhead and Apps Script body limits.
+  var metadata = {
+    name: storedFileName,
+    parents: [folder.getId()],
+    description: [
       "Wedding guest upload",
       "Guest: " + guestName,
       "Original filename: " + fileName,
       "Uploaded: " + new Date().toISOString(),
     ].join("\n"),
+  };
+
+  var response = UrlFetchApp.fetch(
+    "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id",
+    {
+      method: "post",
+      contentType: "application/json",
+      payload: JSON.stringify(metadata),
+      headers: {
+        Authorization: "Bearer " + ScriptApp.getOAuthToken(),
+        "X-Upload-Content-Type": mimeType,
+        "X-Upload-Content-Length": String(fileSize),
+      },
+      muteHttpExceptions: true,
+    },
   );
+
+  var status = response.getResponseCode();
+  var headers = response.getAllHeaders();
+  var uploadUrl = headers.Location || headers.location;
+
+  if (status < 200 || status >= 300 || !uploadUrl) {
+    throw new Error("Unable to create the secure Drive upload session.");
+  }
 
   return createJsonOutput_({
     success: true,
-    message: "Upload successful.",
-    fileId: driveFile.getId(),
+    uploadUrl: String(uploadUrl),
   });
 }
 
@@ -240,7 +295,7 @@ function getWeddingUploadFolder_() {
   return DriveApp.getFolderById(folderId);
 }
 
-function validateGuestUpload_(fileName, mimeType, fileSize, base64) {
+function validateGuestUpload_(fileName, mimeType, fileSize, fileHeaderBase64) {
   if (!fileName) {
     throw new Error("File name is missing.");
   }
@@ -249,24 +304,83 @@ function validateGuestUpload_(fileName, mimeType, fileSize, base64) {
     throw new Error("File type is missing.");
   }
 
-  var allowed = GUEST_UPLOAD_ALLOWED_PREFIXES.some(function (prefix) {
-    return mimeType.indexOf(prefix) === 0;
-  });
-
-  if (!allowed) {
-    throw new Error("Only photos and videos are allowed.");
+  if (!GUEST_UPLOAD_ALLOWED_TYPES[mimeType]) {
+    throw new Error("Only supported photos and videos are allowed.");
   }
 
-  if (!fileSize || fileSize <= 0) {
-    throw new Error("The selected file is empty.");
+  if (!fileSize || fileSize <= 0 || Math.floor(fileSize) !== fileSize) {
+    throw new Error("The selected file is empty or invalid.");
   }
 
-  if (fileSize > GUEST_UPLOAD_MAX_BYTES) {
-    throw new Error("The selected file is larger than the allowed 30 MB limit.");
+  var isVideo = mimeType.indexOf("video/") === 0;
+  var maximumBytes = isVideo
+    ? GUEST_UPLOAD_MAX_VIDEO_BYTES
+    : GUEST_UPLOAD_MAX_IMAGE_BYTES;
+
+  if (fileSize > maximumBytes) {
+    throw new Error(
+      isVideo
+        ? "The selected video is larger than the allowed 5 GB limit."
+        : "The selected photo is larger than the allowed 500 MB limit.",
+    );
   }
 
-  if (!base64) {
-    throw new Error("File data is missing.");
+  if (!fileHeaderBase64) {
+    throw new Error("File header is missing.");
+  }
+
+  var headerBytes;
+  try {
+    headerBytes = Utilities.base64Decode(fileHeaderBase64);
+  } catch (error) {
+    throw new Error("The selected file header is invalid.");
+  }
+
+  if (!headerBytes || headerBytes.length < 12 || headerBytes.length > 64) {
+    throw new Error("The selected file header is invalid.");
+  }
+}
+
+function validateFileSignature_(bytes, mimeType) {
+  if (!bytes || bytes.length < 12) {
+    throw new Error("The uploaded file is invalid or incomplete.");
+  }
+
+  function u(index) {
+    return bytes[index] < 0 ? bytes[index] + 256 : bytes[index];
+  }
+
+  function ascii(start, length) {
+    var value = "";
+    for (var i = start; i < start + length && i < bytes.length; i += 1) {
+      value += String.fromCharCode(u(i));
+    }
+    return value;
+  }
+
+  var valid = false;
+
+  if (mimeType === "image/jpeg") {
+    valid = u(0) === 0xff && u(1) === 0xd8 && u(2) === 0xff;
+  } else if (mimeType === "image/png") {
+    valid = u(0) === 0x89 && ascii(1, 3) === "PNG" && u(4) === 0x0d && u(5) === 0x0a;
+  } else if (mimeType === "image/webp") {
+    valid = ascii(0, 4) === "RIFF" && ascii(8, 4) === "WEBP";
+  } else if (mimeType === "video/webm") {
+    valid = u(0) === 0x1a && u(1) === 0x45 && u(2) === 0xdf && u(3) === 0xa3;
+  } else if (
+    mimeType === "video/mp4" ||
+    mimeType === "video/quicktime" ||
+    mimeType === "video/x-m4v" ||
+    mimeType === "video/3gpp" ||
+    mimeType === "image/heic" ||
+    mimeType === "image/heif"
+  ) {
+    valid = ascii(4, 4) === "ftyp";
+  }
+
+  if (!valid) {
+    throw new Error("The file contents do not match the declared file type.");
   }
 }
 
@@ -281,7 +395,7 @@ function sanitizeGuestName_(value) {
 function sanitizeUploadFileName_(value) {
   return String(value || "")
     .trim()
-    .replace(/[\\/:*?"<>|]/g, "_")
+    .replace(/[\x00-\x1F\x7F\\/:*?"<>|]/g, "_")
     .replace(/\s+/g, "_")
     .substring(0, 150);
 }

@@ -1,4 +1,4 @@
-const DEFAULT_MAX_FILE_SIZE_MB = 500;
+const DEFAULT_MAX_FILE_SIZE_MB = 30;
 
 const ALLOWED_IMAGE_TYPES = new Set([
   "image/jpeg",

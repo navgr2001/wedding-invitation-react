@@ -117,11 +117,13 @@ function GuestUploadSection({ guestUpload }) {
     clearFiles,
     uploadAll,
     maxFiles,
-    maxFileSizeMb,
+    maxImageSizeMb,
+    maxVideoSizeMb,
   } = useGuestMediaUploadViewModel({
     endpoint: guestUpload.endpoint,
     eventToken: guestUpload.eventToken,
-    maxFileSizeMb: guestUpload.maxFileSizeMb,
+    maxImageSizeMb: guestUpload.maxImageSizeMb,
+    maxVideoSizeMb: guestUpload.maxVideoSizeMb,
   });
 
   const openLibraryPicker = (event) => {

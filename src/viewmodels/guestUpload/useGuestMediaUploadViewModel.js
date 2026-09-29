@@ -12,17 +12,11 @@ function createPreview(file) {
 
   return {
     id: globalThis.crypto?.randomUUID?.() || fallbackId,
-
     file,
-
     previewUrl: URL.createObjectURL(file),
-
     type: file.type.startsWith("video/") ? "video" : "image",
-
     status: "ready",
-
     progress: 0,
-
     error: "",
   };
 }
@@ -30,18 +24,14 @@ function createPreview(file) {
 export function useGuestMediaUploadViewModel({
   endpoint,
   eventToken: configuredEventToken = "",
-  maxFileSizeMb = 500,
+  maxImageSizeMb = 500,
+  maxVideoSizeMb = 5120,
 }) {
   const [guestName, setGuestName] = useState("");
-
   const [selectedFiles, setSelectedFiles] = useState([]);
-
   const [isUploading, setIsUploading] = useState(false);
-
   const [uploadedCount, setUploadedCount] = useState(0);
-
   const [message, setMessage] = useState(null);
-
   const selectedFilesRef = useRef([]);
 
   useEffect(() => {
@@ -56,53 +46,38 @@ export function useGuestMediaUploadViewModel({
     };
   }, []);
 
-  /*
-   * Supports both:
-   *
-   * QR:
-   * ?eventToken=ABC#guest-upload
-   *
-   * Direct visit:
-   * token configured in weddingContent.js
-   */
   const eventToken = useMemo(() => {
     const parameters = new URLSearchParams(window.location.search);
-
     return parameters.get("eventToken") || configuredEventToken || "";
   }, [configuredEventToken]);
 
   const addFiles = (incomingFiles) => {
     setMessage(null);
-
     const files = Array.from(incomingFiles || []);
-
-    if (!files.length) {
-      return;
-    }
+    if (!files.length) return;
 
     const availableSlots = MAX_FILES_PER_BATCH - selectedFiles.length;
-
     if (availableSlots <= 0) {
       setMessage({
         type: "error",
-
         text: `You can upload up to ${MAX_FILES_PER_BATCH} files at a time.`,
       });
-
       return;
     }
 
     const filesToProcess = files.slice(0, availableSlots);
-
     const validFiles = [];
     const errors = [];
 
     filesToProcess.forEach((file) => {
-      const validationError = validateGuestMediaFile(file, maxFileSizeMb);
+      const validationError = validateGuestMediaFile(
+        file,
+        maxImageSizeMb,
+        maxVideoSizeMb,
+      );
 
       if (validationError) {
         errors.push(validationError);
-
         return;
       }
 
@@ -116,153 +91,108 @@ export function useGuestMediaUploadViewModel({
     }
 
     if (errors.length) {
-      setMessage({
-        type: "error",
-
-        text: errors[0],
-      });
+      setMessage({ type: "error", text: errors[0] });
     }
   };
 
   const removeFile = (id) => {
-    if (isUploading) {
-      return;
-    }
+    if (isUploading) return;
 
     setSelectedFiles((current) => {
       const target = current.find((item) => item.id === id);
-
-      if (target) {
-        URL.revokeObjectURL(target.previewUrl);
-      }
-
+      if (target) URL.revokeObjectURL(target.previewUrl);
       return current.filter((item) => item.id !== id);
     });
   };
 
   const clearFiles = () => {
-    if (isUploading) {
-      return;
-    }
+    if (isUploading) return;
 
-    selectedFiles.forEach((item) => {
-      URL.revokeObjectURL(item.previewUrl);
-    });
-
+    selectedFiles.forEach((item) => URL.revokeObjectURL(item.previewUrl));
     setSelectedFiles([]);
-
     setUploadedCount(0);
-
     setMessage(null);
   };
 
   const updateFile = (id, changes) => {
     setSelectedFiles((current) =>
       current.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              ...changes,
-            }
-          : item,
+        item.id === id ? { ...item, ...changes } : item,
       ),
     );
   };
 
+  const removeUploadedFile = (id) => {
+    setSelectedFiles((current) => {
+      const target = current.find((item) => item.id === id);
+      if (target) URL.revokeObjectURL(target.previewUrl);
+      return current.filter((item) => item.id !== id);
+    });
+  };
+
   const uploadAll = async () => {
-    if (isUploading || !selectedFiles.length) {
-      return;
-    }
+    if (isUploading || !selectedFiles.length) return;
 
     if (!eventToken) {
       setMessage({
         type: "error",
-
         text: "Wedding upload service is not configured correctly.",
       });
-
       return;
     }
 
+    const filesToUpload = [...selectedFiles];
     setIsUploading(true);
-
     setUploadedCount(0);
-
     setMessage(null);
 
     let successCount = 0;
 
     try {
-      for (const item of selectedFiles) {
-        updateFile(item.id, {
-          status: "uploading",
-
-          progress: 0,
-
-          error: "",
-        });
+      for (const item of filesToUpload) {
+        updateFile(item.id, { status: "uploading", progress: 0, error: "" });
 
         try {
           await uploadGuestMedia({
             endpoint,
-
             eventToken,
-
             guestName,
-
             file: item.file,
-
             onProgress: ({ percent }) => {
-              updateFile(item.id, {
-                progress: percent,
-              });
+              updateFile(item.id, { progress: percent });
             },
           });
 
           successCount += 1;
-
           setUploadedCount(successCount);
 
-          updateFile(item.id, {
-            status: "uploaded",
-
-            progress: 100,
-
-            error: "",
-          });
+          // Successful media is removed immediately so an uploaded photo/video
+          // never remains visible as if it were still waiting to be uploaded.
+          removeUploadedFile(item.id);
         } catch (error) {
           updateFile(item.id, {
             status: "failed",
-
             error: error?.message || "Unable to upload this file.",
           });
         }
       }
 
-      if (successCount === selectedFiles.length) {
+      if (successCount === filesToUpload.length) {
         setMessage({
           type: "success",
-
           text: "Your memories have been uploaded successfully. Thank you for sharing them with us! ♡",
         });
       } else if (successCount > 0) {
         setMessage({
           type: "warning",
-
           text:
-            `${successCount} of ${selectedFiles.length} files uploaded successfully. ` +
+            `${successCount} of ${filesToUpload.length} files uploaded successfully. ` +
             "Please retry the failed files.",
         });
       } else {
-        const firstFailure = selectedFilesRef.current.find(
-          (item) => item.status === "failed" && item.error,
-        );
-
         setMessage({
           type: "error",
-          text:
-            firstFailure?.error ||
-            "We couldn't upload the selected files. Please try again.",
+          text: "We couldn't upload the selected files. Please check your connection and try again.",
         });
       }
     } finally {
@@ -273,24 +203,17 @@ export function useGuestMediaUploadViewModel({
   return {
     guestName,
     setGuestName,
-
     selectedFiles,
-
     isUploading,
-
     uploadedCount,
-
     message,
-
     eventToken,
-
     addFiles,
     removeFile,
     clearFiles,
     uploadAll,
-
     maxFiles: MAX_FILES_PER_BATCH,
-
-    maxFileSizeMb,
+    maxImageSizeMb,
+    maxVideoSizeMb,
   };
 }

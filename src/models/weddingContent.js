@@ -202,7 +202,9 @@ export const weddingContent = {
      */
     eventToken: "SD-WEDDING-2026-DEC10-L9W7P4N2K6",
 
-    maxFileSizeMb: 500,
+    maxImageSizeMb: 500,
+
+    maxVideoSizeMb: 5120,
 
     recording: {
       enabled: true,
