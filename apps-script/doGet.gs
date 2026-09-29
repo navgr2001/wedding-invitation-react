@@ -2,7 +2,10 @@ var SPREADSHEET_ID = "1_D3_kgP8MUqUyuPEvJ7gVwwCwRT7oSMqu3vA_06DZJM";
 var SHEET_NAME = "RSVP Responses"; // change if your tab name is different
 var HEADERS = ["Timestamp", "Name", "Attendance", "Guests", "Message"];
 
-var GUEST_UPLOAD_MAX_BYTES = 30 * 1024 * 1024;
+// Separate limits for images and videos.
+var GUEST_UPLOAD_MAX_IMAGE_BYTES = 30 * 1024 * 1024; // 30 MB
+var GUEST_UPLOAD_MAX_VIDEO_BYTES = 500 * 1024 * 1024; // 500 MB
+
 var GUEST_UPLOAD_ALLOWED_TYPES = {
   "image/jpeg": "jpeg",
   "image/png": "png",
@@ -110,6 +113,7 @@ function listWords_() {
 function doGet(e) {
   try {
     var params = (e && e.parameter) || {};
+
     var payload = {
       ok: true,
       items: listWords_(),
@@ -163,11 +167,14 @@ function isGuestMediaUploadRequest_(e) {
 
   var content = sanitize_(e.postData.contents);
 
-  return content.charAt(0) === "{" && content.indexOf('"guestMediaUpload"') !== -1;
+  return (
+    content.charAt(0) === "{" && content.indexOf('"guestMediaUpload"') !== -1
+  );
 }
 
 function handleRsvpSubmission_(e) {
   var params = (e && e.parameter) || {};
+
   var name = safeSheetValue_(params.name, 120);
   var attendance = sanitize_(params.attendance);
   var guestsRaw = sanitize_(params.guests);
@@ -185,11 +192,18 @@ function handleRsvpSubmission_(e) {
   }
 
   var guests = Number(guestsRaw);
-  if (!isFinite(guests) || Math.floor(guests) !== guests || guests < 1 || guests > 20) {
+
+  if (
+    !isFinite(guests) ||
+    Math.floor(guests) !== guests ||
+    guests < 1 ||
+    guests > 20
+  ) {
     return createHtmlOutput_("Guest count must be between 1 and 20.");
   }
 
   var sheet = getSheet_();
+
   sheet.appendRow([new Date(), name, attendance, guests, message]);
 
   SpreadsheetApp.flush();
@@ -215,16 +229,28 @@ function handleGuestMediaUpload_(e) {
   validateGuestUpload_(fileName, mimeType, fileSize, base64);
 
   var folder = getWeddingUploadFolder_();
+
+  /*
+   * IMPORTANT:
+   * The current implementation receives the complete file as Base64.
+   * Large videos may still exceed Google Apps Script platform/request
+   * limits even though our application allows videos up to 500 MB.
+   */
   var decodedBytes = Utilities.base64Decode(base64);
 
-  if (decodedBytes.length > GUEST_UPLOAD_MAX_BYTES) {
-    throw new Error("The uploaded file is larger than the allowed 30 MB limit.");
+  var maxAllowedBytes = getGuestUploadMaxBytes_(mimeType);
+
+  if (decodedBytes.length > maxAllowedBytes) {
+    throw new Error(getGuestUploadSizeError_(mimeType));
   }
 
+  // Prevent mismatches between the client-declared size
+  // and the actual decoded file.
   if (decodedBytes.length !== fileSize) {
     throw new Error("The uploaded file size does not match the request.");
   }
 
+  // Verify the actual binary file signature.
   validateFileSignature_(decodedBytes, mimeType);
 
   var timestamp = Utilities.formatDate(
@@ -234,7 +260,9 @@ function handleGuestMediaUpload_(e) {
   );
 
   var storedFileName = timestamp + "_" + guestName + "_" + fileName;
+
   var blob = Utilities.newBlob(decodedBytes, mimeType, storedFileName);
+
   var driveFile = folder.createFile(blob);
 
   driveFile.setDescription(
@@ -246,6 +274,7 @@ function handleGuestMediaUpload_(e) {
     ].join("\n"),
   );
 
+  // Do not expose the Google Drive file ID publicly.
   return createJsonOutput_({
     success: true,
     message: "Upload successful.",
@@ -278,6 +307,53 @@ function getWeddingUploadFolder_() {
   return DriveApp.getFolderById(folderId);
 }
 
+/**
+ * Return the maximum permitted upload size based on
+ * the validated MIME type.
+ *
+ * Images: 30 MB
+ * Videos: 500 MB
+ */
+function getGuestUploadMaxBytes_(mimeType) {
+  if (isGuestImageType_(mimeType)) {
+    return GUEST_UPLOAD_MAX_IMAGE_BYTES;
+  }
+
+  if (isGuestVideoType_(mimeType)) {
+    return GUEST_UPLOAD_MAX_VIDEO_BYTES;
+  }
+
+  throw new Error("Only supported photos and videos are allowed.");
+}
+
+function getGuestUploadSizeError_(mimeType) {
+  if (isGuestVideoType_(mimeType)) {
+    return "The selected video is larger than the allowed 500 MB limit.";
+  }
+
+  return "The selected photo is larger than the allowed 30 MB limit.";
+}
+
+function isGuestImageType_(mimeType) {
+  return (
+    mimeType === "image/jpeg" ||
+    mimeType === "image/png" ||
+    mimeType === "image/webp" ||
+    mimeType === "image/heic" ||
+    mimeType === "image/heif"
+  );
+}
+
+function isGuestVideoType_(mimeType) {
+  return (
+    mimeType === "video/mp4" ||
+    mimeType === "video/quicktime" ||
+    mimeType === "video/webm" ||
+    mimeType === "video/x-m4v" ||
+    mimeType === "video/3gpp"
+  );
+}
+
 function validateGuestUpload_(fileName, mimeType, fileSize, base64) {
   if (!fileName) {
     throw new Error("File name is missing.");
@@ -287,16 +363,19 @@ function validateGuestUpload_(fileName, mimeType, fileSize, base64) {
     throw new Error("File type is missing.");
   }
 
+  // Exact MIME allowlist.
   if (!GUEST_UPLOAD_ALLOWED_TYPES[mimeType]) {
     throw new Error("Only supported photos and videos are allowed.");
   }
 
-  if (!fileSize || fileSize <= 0) {
+  if (!fileSize || !isFinite(fileSize) || fileSize <= 0) {
     throw new Error("The selected file is empty.");
   }
 
-  if (fileSize > GUEST_UPLOAD_MAX_BYTES) {
-    throw new Error("The selected file is larger than the allowed 30 MB limit.");
+  var maxAllowedBytes = getGuestUploadMaxBytes_(mimeType);
+
+  if (fileSize > maxAllowedBytes) {
+    throw new Error(getGuestUploadSizeError_(mimeType));
   }
 
   if (!base64) {
@@ -315,9 +394,11 @@ function validateFileSignature_(bytes, mimeType) {
 
   function ascii(start, length) {
     var value = "";
+
     for (var i = start; i < start + length && i < bytes.length; i += 1) {
       value += String.fromCharCode(u(i));
     }
+
     return value;
   }
 
@@ -326,7 +407,8 @@ function validateFileSignature_(bytes, mimeType) {
   if (mimeType === "image/jpeg") {
     valid = u(0) === 0xff && u(1) === 0xd8 && u(2) === 0xff;
   } else if (mimeType === "image/png") {
-    valid = u(0) === 0x89 && ascii(1, 3) === "PNG" && u(4) === 0x0d && u(5) === 0x0a;
+    valid =
+      u(0) === 0x89 && ascii(1, 3) === "PNG" && u(4) === 0x0d && u(5) === 0x0a;
   } else if (mimeType === "image/webp") {
     valid = ascii(0, 4) === "RIFF" && ascii(8, 4) === "WEBP";
   } else if (mimeType === "video/webm") {
@@ -339,6 +421,11 @@ function validateFileSignature_(bytes, mimeType) {
     mimeType === "image/heic" ||
     mimeType === "image/heif"
   ) {
+    /*
+     * MP4/MOV/M4V/3GP/HEIC/HEIF are based on the
+     * ISO Base Media File Format and normally contain
+     * an ftyp box near the beginning.
+     */
     valid = ascii(4, 4) === "ftyp";
   }
 
