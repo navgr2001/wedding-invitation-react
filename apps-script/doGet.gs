@@ -3,7 +3,18 @@ var SHEET_NAME = "RSVP Responses"; // change if your tab name is different
 var HEADERS = ["Timestamp", "Name", "Attendance", "Guests", "Message"];
 
 var GUEST_UPLOAD_MAX_BYTES = 30 * 1024 * 1024;
-var GUEST_UPLOAD_ALLOWED_PREFIXES = ["image/", "video/"];
+var GUEST_UPLOAD_ALLOWED_TYPES = {
+  "image/jpeg": "jpeg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/heic": "heic",
+  "image/heif": "heif",
+  "video/mp4": "mp4",
+  "video/quicktime": "mov",
+  "video/webm": "webm",
+  "video/x-m4v": "m4v",
+  "video/3gpp": "3gp",
+};
 
 function getSheet_() {
   var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -18,6 +29,21 @@ function getSheet_() {
 
 function sanitize_(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function escapeHtml_(value) {
+  return sanitize_(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Prevent user-controlled cells from being interpreted as spreadsheet formulas.
+function safeSheetValue_(value, maxLength) {
+  var text = sanitize_(value).substring(0, maxLength || 1000);
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
 }
 
 function createJsonOutput_(payload) {
@@ -41,7 +67,7 @@ function createJsonpOutput_(callbackName, payload) {
 function createHtmlOutput_(message) {
   return HtmlService.createHtmlOutput(
     "<!doctype html><html><body>" +
-      sanitize_(message || "OK") +
+      escapeHtml_(message || "OK") +
       "</body></html>",
   );
 }
@@ -142,18 +168,25 @@ function isGuestMediaUploadRequest_(e) {
 
 function handleRsvpSubmission_(e) {
   var params = (e && e.parameter) || {};
-  var name = sanitize_(params.name);
+  var name = safeSheetValue_(params.name, 120);
   var attendance = sanitize_(params.attendance);
   var guestsRaw = sanitize_(params.guests);
-  var message = sanitize_(params.message);
+  var message = safeSheetValue_(params.message, 1000);
 
   if (!name || !attendance || !guestsRaw) {
     return createHtmlOutput_("Missing required RSVP fields.");
   }
 
+  if (
+    attendance !== "Yes, I'll be there" &&
+    attendance !== "Sorry, I can't make it"
+  ) {
+    return createHtmlOutput_("Invalid attendance selection.");
+  }
+
   var guests = Number(guestsRaw);
-  if (!isFinite(guests) || guests < 1) {
-    return createHtmlOutput_("Guest count must be at least 1.");
+  if (!isFinite(guests) || Math.floor(guests) !== guests || guests < 1 || guests > 20) {
+    return createHtmlOutput_("Guest count must be between 1 and 20.");
   }
 
   var sheet = getSheet_();
@@ -188,6 +221,12 @@ function handleGuestMediaUpload_(e) {
     throw new Error("The uploaded file is larger than the allowed 30 MB limit.");
   }
 
+  if (decodedBytes.length !== fileSize) {
+    throw new Error("The uploaded file size does not match the request.");
+  }
+
+  validateFileSignature_(decodedBytes, mimeType);
+
   var timestamp = Utilities.formatDate(
     new Date(),
     Session.getScriptTimeZone(),
@@ -210,7 +249,6 @@ function handleGuestMediaUpload_(e) {
   return createJsonOutput_({
     success: true,
     message: "Upload successful.",
-    fileId: driveFile.getId(),
   });
 }
 
@@ -249,12 +287,8 @@ function validateGuestUpload_(fileName, mimeType, fileSize, base64) {
     throw new Error("File type is missing.");
   }
 
-  var allowed = GUEST_UPLOAD_ALLOWED_PREFIXES.some(function (prefix) {
-    return mimeType.indexOf(prefix) === 0;
-  });
-
-  if (!allowed) {
-    throw new Error("Only photos and videos are allowed.");
+  if (!GUEST_UPLOAD_ALLOWED_TYPES[mimeType]) {
+    throw new Error("Only supported photos and videos are allowed.");
   }
 
   if (!fileSize || fileSize <= 0) {
@@ -270,6 +304,49 @@ function validateGuestUpload_(fileName, mimeType, fileSize, base64) {
   }
 }
 
+function validateFileSignature_(bytes, mimeType) {
+  if (!bytes || bytes.length < 12) {
+    throw new Error("The uploaded file is invalid or incomplete.");
+  }
+
+  function u(index) {
+    return bytes[index] < 0 ? bytes[index] + 256 : bytes[index];
+  }
+
+  function ascii(start, length) {
+    var value = "";
+    for (var i = start; i < start + length && i < bytes.length; i += 1) {
+      value += String.fromCharCode(u(i));
+    }
+    return value;
+  }
+
+  var valid = false;
+
+  if (mimeType === "image/jpeg") {
+    valid = u(0) === 0xff && u(1) === 0xd8 && u(2) === 0xff;
+  } else if (mimeType === "image/png") {
+    valid = u(0) === 0x89 && ascii(1, 3) === "PNG" && u(4) === 0x0d && u(5) === 0x0a;
+  } else if (mimeType === "image/webp") {
+    valid = ascii(0, 4) === "RIFF" && ascii(8, 4) === "WEBP";
+  } else if (mimeType === "video/webm") {
+    valid = u(0) === 0x1a && u(1) === 0x45 && u(2) === 0xdf && u(3) === 0xa3;
+  } else if (
+    mimeType === "video/mp4" ||
+    mimeType === "video/quicktime" ||
+    mimeType === "video/x-m4v" ||
+    mimeType === "video/3gpp" ||
+    mimeType === "image/heic" ||
+    mimeType === "image/heif"
+  ) {
+    valid = ascii(4, 4) === "ftyp";
+  }
+
+  if (!valid) {
+    throw new Error("The file contents do not match the declared file type.");
+  }
+}
+
 function sanitizeGuestName_(value) {
   return String(value || "")
     .trim()
@@ -281,7 +358,7 @@ function sanitizeGuestName_(value) {
 function sanitizeUploadFileName_(value) {
   return String(value || "")
     .trim()
-    .replace(/[\\/:*?"<>|]/g, "_")
+    .replace(/[\x00-\x1F\x7F\\/:*?"<>|]/g, "_")
     .replace(/\s+/g, "_")
     .substring(0, 150);
 }
