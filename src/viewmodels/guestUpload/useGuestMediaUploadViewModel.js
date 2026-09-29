@@ -254,10 +254,15 @@ export function useGuestMediaUploadViewModel({
             "Please retry the failed files.",
         });
       } else {
+        const firstFailure = selectedFilesRef.current.find(
+          (item) => item.status === "failed" && item.error,
+        );
+
         setMessage({
           type: "error",
-
-          text: "We couldn't upload the selected files. Please check your connection and try again.",
+          text:
+            firstFailure?.error ||
+            "We couldn't upload the selected files. Please try again.",
         });
       }
     } finally {
