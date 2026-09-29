@@ -189,7 +189,6 @@ function doPost(e) {
     ) {
       return createJsonOutput_({
         success: false,
-
         message: sanitize_(error && error.message) || "Upload failed.",
       });
     }
