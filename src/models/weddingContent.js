@@ -89,7 +89,7 @@ export const weddingContent = {
     items: [
       {
         side: "left",
-        time: "15.15 PM",
+        time: "15:15 PM",
         text: "Groom enters the Church location",
         icon: "assets/img/icons/church.png",
         iconAlt: "Church icon",
@@ -97,7 +97,7 @@ export const weddingContent = {
       },
       {
         side: "right",
-        time: "15.30 PM",
+        time: "15:30 PM",
         text: "Bride enters the Church location",
         icon: "assets/img/icons/church.png",
         iconAlt: "Church icon",
@@ -105,7 +105,7 @@ export const weddingContent = {
       },
       {
         side: "left",
-        time: "15.30 PM",
+        time: "15:30 PM",
         text: "Church ceremony",
         icon: "assets/img/icons/book.png",
         iconAlt: "Bible icon",
@@ -113,7 +113,7 @@ export const weddingContent = {
       },
       {
         side: "right",
-        time: "18.00 PM",
+        time: "18:00 PM",
         text: "Couple enters the hall",
         icon: "assets/img/icons/gem.png",
         iconAlt: "Diamond icon",
@@ -121,7 +121,7 @@ export const weddingContent = {
       },
       {
         side: "left",
-        time: "19.30 PM",
+        time: "19:30 PM",
         text: "Dinner",
         icon: "assets/img/icons/food.png",
         iconAlt: "Dinner icon",
@@ -129,7 +129,7 @@ export const weddingContent = {
       },
       {
         side: "right",
-        time: "21.00 PM",
+        time: "21:00 PM",
         text: "First Dance & Dance Floor Opens",
         icon: "assets/img/icons/musicnote.png",
         iconAlt: "Music icon",
@@ -137,7 +137,7 @@ export const weddingContent = {
       },
       {
         side: "left",
-        time: "11.00 PM",
+        time: "23:30 PM",
         text: "Departure",
         icon: "assets/img/icons/justmarried.png",
         iconAlt: "Departure icon",
