@@ -162,9 +162,16 @@ function isGuestMediaUploadRequest_(e) {
     return false;
   }
 
-  var content = sanitize_(e.postData.contents);
-
-  return content.charAt(0) === "{" && content.indexOf('"guestMediaUpload"') !== -1;
+  try {
+    var request = JSON.parse(e.postData.contents);
+    return Boolean(
+      request &&
+      (request.action === "guestMediaUploadInit" ||
+        request.action === "guestMediaUploadVerify")
+    );
+  } catch (error) {
+    return false;
+  }
 }
 
 function handleRsvpSubmission_(e) {
@@ -201,11 +208,15 @@ function handleRsvpSubmission_(e) {
 function handleGuestMediaUpload_(e) {
   var request = JSON.parse(e.postData.contents);
 
+  validateWeddingEventToken_(request.eventToken);
+
+  if (request.action === "guestMediaUploadVerify") {
+    return verifyGuestMediaUpload_(request);
+  }
+
   if (request.action !== "guestMediaUploadInit") {
     throw new Error("Invalid upload action.");
   }
-
-  validateWeddingEventToken_(request.eventToken);
 
   var fileName = sanitizeUploadFileName_(request.fileName);
   var mimeType = sanitize_(request.mimeType);
@@ -266,6 +277,33 @@ function handleGuestMediaUpload_(e) {
   return createJsonOutput_({
     success: true,
     uploadUrl: String(uploadUrl),
+    storedFileName: storedFileName,
+  });
+}
+
+function verifyGuestMediaUpload_(request) {
+  var storedFileName = sanitizeUploadFileName_(request.storedFileName);
+  var expectedSize = Number(request.fileSize || 0);
+
+  if (!storedFileName || !expectedSize || expectedSize <= 0) {
+    throw new Error("Invalid upload verification request.");
+  }
+
+  var files = getWeddingUploadFolder_().getFilesByName(storedFileName);
+
+  while (files.hasNext()) {
+    var file = files.next();
+    if (Number(file.getSize()) === expectedSize) {
+      return createJsonOutput_({
+        success: true,
+        uploaded: true,
+      });
+    }
+  }
+
+  return createJsonOutput_({
+    success: true,
+    uploaded: false,
   });
 }
 

@@ -326,7 +326,7 @@ function GuestUploadSection({ guestUpload }) {
             </span>
 
             <small>
-              Maximum {maxFileSizeMb} MB per file · up to {maxFiles} files at a
+              Photos up to {maxImageSizeMb} MB · videos up to {maxVideoSizeMb} MB · up to {maxFiles} files at a
               time
             </small>
           </div>
