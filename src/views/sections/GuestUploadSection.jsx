@@ -28,13 +28,7 @@ const CameraIcon = () => (
       strokeLinejoin="round"
       strokeWidth="1.7"
     />
-    <circle
-      cx="12"
-      cy="13"
-      r="3.2"
-      stroke="currentColor"
-      strokeWidth="1.7"
-    />
+    <circle cx="12" cy="13" r="3.2" stroke="currentColor" strokeWidth="1.7" />
   </svg>
 );
 
@@ -49,13 +43,7 @@ const GalleryIcon = () => (
       x="3"
       y="4.5"
     />
-    <circle
-      cx="8.5"
-      cy="9"
-      r="1.5"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
+    <circle cx="8.5" cy="9" r="1.5" stroke="currentColor" strokeWidth="1.5" />
     <path
       d="m5.5 17 4.2-4.2 2.7 2.6 2-2 4.1 3.6"
       stroke="currentColor"
@@ -207,7 +195,7 @@ function GuestUploadSection({ guestUpload }) {
               id="guestUploadName"
               maxLength={80}
               onChange={(event) => setGuestName(event.target.value)}
-              placeholder="e.g. Nimal & Family"
+              placeholder="e.g. Sam & Family"
               type="text"
               value={guestName}
             />
@@ -326,8 +314,8 @@ function GuestUploadSection({ guestUpload }) {
             </span>
 
             <small>
-              Photos up to {maxImageSizeMb} MB · videos up to {maxVideoSizeMb} MB · up to {maxFiles} files at a
-              time
+              Photos up to {maxImageSizeMb} MB · videos up to {maxVideoSizeMb}{" "}
+              MB · up to {maxFiles} files at a time
             </small>
           </div>
 
@@ -337,7 +325,8 @@ function GuestUploadSection({ guestUpload }) {
                 <div>
                   <strong>Selected memories</strong>
                   <span>
-                    {selectedFiles.length} {selectedFiles.length === 1 ? "file" : "files"}
+                    {selectedFiles.length}{" "}
+                    {selectedFiles.length === 1 ? "file" : "files"}
                   </span>
                 </div>
 
@@ -367,7 +356,10 @@ function GuestUploadSection({ guestUpload }) {
                           src={item.previewUrl}
                         />
                       ) : (
-                        <img alt="Selected wedding memory" src={item.previewUrl} />
+                        <img
+                          alt="Selected wedding memory"
+                          src={item.previewUrl}
+                        />
                       )}
 
                       {item.status === "uploaded" && (

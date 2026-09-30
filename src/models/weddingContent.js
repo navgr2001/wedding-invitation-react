@@ -75,7 +75,7 @@ export const weddingContent = {
         iconType: "sparkle",
         lines: [
           { text: "10th December, 2026", className: "wLine wLine--strong" },
-          { text: "18:30 PM onwards", className: "wLine" },
+          { text: "18:00 PM onwards", className: "wLine" },
           { text: "Melody Ballroom", className: "wLine wLine--light" },
           { text: "Hotel Ramrich, Ja -Ela", className: "wLine wLine--muted" },
         ],
