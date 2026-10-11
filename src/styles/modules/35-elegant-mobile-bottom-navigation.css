@@ -1,143 +1,279 @@
-/* Floating wedding navigation — phones, tablets and desktop. */
+/* =========================================================
+   ELEGANT FLOATING BOTTOM NAVIGATION
+   Desktop | Tablet | Android | iOS
+   ========================================================= */
 
 :root {
-  --bottom-nav-space: calc(90px + env(safe-area-inset-bottom, 0px));
+  --bottom-nav-primary: #bd553f;
+  --bottom-nav-primary-dark: #9f3e2b;
+  --bottom-nav-background: #fffaf7;
+  --bottom-nav-blush: #f6e8e3;
+  --bottom-nav-text: #8c6b61;
+
+  --bottom-nav-space: calc(105px + env(safe-area-inset-bottom, 0px));
 }
 
-/* Replace the legacy top navigation at every screen size. */
+/* =========================================================
+   HIDE EXISTING TOP NAVIGATION
+   ========================================================= */
+
 .topbar {
   display: none !important;
 }
 
-.bottomNav {
-  display: block;
-  position: fixed;
-  z-index: 1200;
-  inset: auto 0 0;
+/* =========================================================
+   MAIN NAVIGATION
+   ========================================================= */
 
-  padding: 8px max(12px, env(safe-area-inset-right, 0px))
-    calc(8px + env(safe-area-inset-bottom, 0px))
+.bottomNav {
+  position: fixed;
+
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 1200;
+
+  display: block;
+
+  padding: 10px max(12px, env(safe-area-inset-right, 0px))
+    calc(12px + env(safe-area-inset-bottom, 0px))
     max(12px, env(safe-area-inset-left, 0px));
 
   pointer-events: none;
 }
 
+/* =========================================================
+   NAVIGATION CONTAINER
+   ========================================================= */
+
 .bottomNav__inner {
   display: grid;
+
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  align-items: stretch;
 
-  width: min(100%, 540px);
-  min-height: 64px;
+  align-items: center;
+
+  width: min(100%, 600px);
+  min-height: 70px;
+
   margin: 0 auto;
-  padding: 5px;
+  padding: 7px 8px;
 
-  background: #fff8f2;
-  border: 1px solid rgba(157, 84, 57, 0.22);
-  border-radius: 23px;
+  background: var(--bottom-nav-background);
+
+  border: 1px solid rgba(189, 85, 63, 0.12);
+  border-radius: 22px;
 
   box-shadow:
-    0 9px 34px rgba(73, 36, 22, 0.17),
-    0 2px 9px rgba(73, 36, 22, 0.08);
+    0 12px 35px rgba(74, 37, 27, 0.12),
+    0 3px 12px rgba(74, 37, 27, 0.05);
 
   pointer-events: auto;
+
+  isolation: isolate;
 }
+
+/* =========================================================
+   NAVIGATION ITEMS
+   ========================================================= */
 
 .bottomNav__tab {
   appearance: none;
+  -webkit-appearance: none;
+
+  position: relative;
 
   display: flex;
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
-  gap: 3px;
 
+  gap: 5px;
+
+  width: 100%;
   min-width: 0;
-  min-height: 54px;
-  padding: 6px 2px;
+  min-height: 55px;
 
-  border: 0;
-  border-radius: 17px;
+  padding: 5px 2px;
+
+  border: none;
+  border-radius: 15px;
 
   background: transparent;
-  color: #82695c;
+
+  color: var(--bottom-nav-primary);
 
   cursor: pointer;
+
   font: inherit;
 
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 
   transition:
-    background-color 180ms ease,
-    color 180ms ease;
+    color 200ms ease,
+    transform 200ms ease,
+    background-color 200ms ease;
 }
 
+/* =========================================================
+   INACTIVE ICONS
+   ========================================================= */
+
 .bottomNav__icon {
+  position: relative;
+
   display: grid;
   place-items: center;
 
-  height: 24px;
-  width: 24px;
+  flex-shrink: 0;
+
+  width: 25px;
+  height: 25px;
+
+  color: var(--bottom-nav-primary);
+
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    transform 250ms ease,
+    box-shadow 250ms ease;
 }
 
 .bottomNav__icon svg {
   display: block;
+
   width: 23px;
   height: 23px;
 }
 
+/* =========================================================
+   INACTIVE LABELS
+   ========================================================= */
+
 .bottomNav__label {
   display: block;
 
+  max-width: 100%;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: var(--bottom-nav-text);
+
   font-family: var(--font-montserrat, sans-serif);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
 
-  white-space: nowrap;
   letter-spacing: 0.01em;
+
+  line-height: 1.3;
+
+  transition:
+    opacity 180ms ease,
+    visibility 180ms ease;
 }
 
-/* Active navigation item */
+/* =========================================================
+   ACTIVE ITEM - RAISED CIRCULAR ICON
+   ========================================================= */
+
 .bottomNav__tab--active {
-  background: #f1dfd2;
-  color: #9d482b;
+  background: transparent;
+  color: #fff;
 }
 
-/* Keyboard accessibility */
-.bottomNav__tab:focus-visible {
-  outline: 2px solid #9d482b;
-  outline-offset: -2px;
+.bottomNav__tab--active .bottomNav__icon {
+  width: 50px;
+  height: 50px;
+
+  margin-top: -20px;
+  margin-bottom: -5px;
+
+  border-radius: 50%;
+
+  background: var(--bottom-nav-primary);
+  color: #fff;
+
+  border: 5px solid var(--bottom-nav-blush);
+
+  box-shadow:
+    0 5px 13px rgba(155, 58, 37, 0.2),
+    0 2px 5px rgba(155, 58, 37, 0.1);
+
+  transform: translateY(-3px);
 }
 
-/* Hover for devices with mouse support */
-@media (hover: hover) {
+.bottomNav__tab--active .bottomNav__icon svg {
+  width: 22px;
+  height: 22px;
+
+  color: #fff;
+}
+
+/* Hide label visually on active item */
+.bottomNav__tab--active .bottomNav__label {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* =========================================================
+   DESKTOP HOVER
+   ========================================================= */
+
+@media (hover: hover) and (pointer: fine) {
   .bottomNav__tab:not(.bottomNav__tab--active):hover {
-    background: #f9ece3;
-    color: #9d482b;
+    background: rgba(189, 85, 63, 0.07);
+  }
+
+  .bottomNav__tab:not(.bottomNav__tab--active):hover .bottomNav__icon {
+    transform: translateY(-2px);
+    color: var(--bottom-nav-primary-dark);
+  }
+
+  .bottomNav__tab:not(.bottomNav__tab--active):hover .bottomNav__label {
+    color: var(--bottom-nav-primary-dark);
   }
 }
 
-/* Prevent the navigation from covering page content */
+/* =========================================================
+   KEYBOARD FOCUS
+   ========================================================= */
+
+.bottomNav__tab:focus-visible {
+  outline: 2px solid var(--bottom-nav-primary);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   PREVENT CONTENT FROM BEING COVERED
+   ========================================================= */
+
 body {
   padding-bottom: var(--bottom-nav-space);
 }
 
-/* Move floating controls above navigation */
+/* Keep floating buttons above navigation */
 .floatingControls {
   bottom: calc(var(--bottom-nav-space) + 8px);
 }
 
-/* Smooth scrolling section alignment */
+/* Section scroll alignment */
 [id="details"],
 [id="rsvp"],
 [id="gallery"],
 [id="guest-upload"] {
-  scroll-margin-top: 15px;
+  scroll-margin-top: 18px;
   scroll-margin-bottom: var(--bottom-nav-space);
 }
 
-/* Hide navigation during invitation intro */
+/* =========================================================
+   INVITATION INTRO
+   ========================================================= */
+
 html.invitationIntroLoading .bottomNav,
 body.isInvitationIntroActive .bottomNav {
   display: none !important;
@@ -146,58 +282,89 @@ body.isInvitationIntroActive .bottomNav {
 }
 
 /* =========================================================
-   DESKTOP AND LAPTOP
+   DESKTOP
    ========================================================= */
 
 @media (min-width: 901px) {
   :root {
-    --bottom-nav-space: 106px;
+    --bottom-nav-space: 115px;
   }
 
   .bottomNav {
-    padding-bottom: 18px;
+    padding-bottom: 20px;
   }
 
   .bottomNav__inner {
-    width: min(100%, 590px);
-    min-height: 70px;
+    width: min(100%, 620px);
+    min-height: 74px;
 
-    padding: 7px;
+    padding: 8px 12px;
     border-radius: 25px;
   }
 
   .bottomNav__tab {
-    min-height: 56px;
-    border-radius: 18px;
-  }
-
-  .bottomNav__icon svg {
-    width: 25px;
-    height: 25px;
+    min-height: 58px;
   }
 
   .bottomNav__label {
     font-size: 12px;
   }
+
+  .bottomNav__tab--active .bottomNav__icon {
+    width: 55px;
+    height: 55px;
+
+    margin-top: -23px;
+  }
 }
 
 /* =========================================================
-   VERY SMALL MOBILE DEVICES
+   TABLET
    ========================================================= */
 
-@media (max-width: 360px) {
-  .bottomNav {
-    padding-left: 7px;
-    padding-right: 7px;
-  }
-
+@media (min-width: 601px) and (max-width: 900px) {
   .bottomNav__inner {
-    padding: 4px 2px;
-    border-radius: 19px;
+    width: min(100%, 540px);
   }
 
   .bottomNav__tab {
-    border-radius: 15px;
+    min-height: 56px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  :root {
+    --bottom-nav-space: calc(95px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bottomNav {
+    padding: 8px max(10px, env(safe-area-inset-right, 0px))
+      calc(9px + env(safe-area-inset-bottom, 0px))
+      max(10px, env(safe-area-inset-left, 0px));
+  }
+
+  .bottomNav__inner {
+    width: 100%;
+    min-height: 66px;
+
+    padding: 6px 4px;
+    border-radius: 20px;
+  }
+
+  .bottomNav__tab {
+    min-height: 54px;
+
+    padding: 5px 1px;
+    gap: 4px;
+  }
+
+  .bottomNav__icon {
+    width: 23px;
+    height: 23px;
   }
 
   .bottomNav__icon svg {
@@ -206,7 +373,43 @@ body.isInvitationIntroActive .bottomNav {
   }
 
   .bottomNav__label {
+    font-size: 10px;
+  }
+
+  .bottomNav__tab--active .bottomNav__icon {
+    width: 47px;
+    height: 47px;
+
+    margin-top: -19px;
+
+    border-width: 4px;
+
+    transform: translateY(-2px);
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 360px) {
+  .bottomNav {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .bottomNav__inner {
+    padding: 5px 2px;
+    border-radius: 17px;
+  }
+
+  .bottomNav__label {
     font-size: 9px;
+  }
+
+  .bottomNav__tab--active .bottomNav__icon {
+    width: 43px;
+    height: 43px;
   }
 }
 
@@ -216,29 +419,39 @@ body.isInvitationIntroActive .bottomNav {
 
 @media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
   :root {
-    --bottom-nav-space: calc(75px + env(safe-area-inset-bottom, 0px));
+    --bottom-nav-space: calc(78px + env(safe-area-inset-bottom, 0px));
   }
 
   .bottomNav {
     padding-top: 4px;
-    padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(5px + env(safe-area-inset-bottom, 0px));
   }
 
   .bottomNav__inner {
     min-height: 56px;
+    padding: 4px;
   }
 
   .bottomNav__tab {
     min-height: 48px;
   }
+
+  .bottomNav__tab--active .bottomNav__icon {
+    width: 43px;
+    height: 43px;
+
+    margin-top: -12px;
+  }
 }
 
 /* =========================================================
-   ACCESSIBILITY
+   REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .bottomNav__tab {
+  .bottomNav__tab,
+  .bottomNav__icon,
+  .bottomNav__label {
     transition: none;
   }
 }
