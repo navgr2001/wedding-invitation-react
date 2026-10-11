@@ -1,21 +1,50 @@
 import { useState } from "react";
 
-function GallerySection({ gallery }) {
-  const [failedImages, setFailedImages] = useState(new Set());
+function GalleryPhoto({ photo, index }) {
+  const [sourceIndex, setSourceIndex] = useState(0);
 
-  const handleImageError = (src) => {
-    setFailedImages((currentFailedImages) => {
-      const nextFailedImages = new Set(currentFailedImages);
-      nextFailedImages.add(src);
+  const sources = [
+    ...new Set([photo.smallSrc, photo.src, photo.fullSrc].filter(Boolean)),
+  ];
 
-      return nextFailedImages;
-    });
-  };
+  const activeSource = sources[Math.min(sourceIndex, sources.length - 1)];
 
-  const visiblePhotos = gallery.photos.filter(
-    (photo) => !failedImages.has(photo.src),
+  const hasFailed = sourceIndex >= sources.length;
+
+  return (
+    <button
+      type="button"
+      aria-label={`Open photo ${index + 1}`}
+      className="gallery__item"
+      data-src={photo.fullSrc || photo.src}
+      onContextMenu={(event) => event.preventDefault()}
+    >
+      {hasFailed ? (
+        <span
+          className="gallery__fallback"
+          role="img"
+          aria-label="Photo unavailable"
+        >
+          Photo temporarily unavailable
+        </span>
+      ) : (
+        <img
+          src={activeSource}
+          alt={photo.alt}
+          loading={index < 6 ? "eager" : "lazy"}
+          fetchPriority={index < 2 ? "high" : "auto"}
+          decoding="async"
+          draggable={false}
+          onContextMenu={(event) => event.preventDefault()}
+          onDragStart={(event) => event.preventDefault()}
+          onError={() => setSourceIndex((current) => current + 1)}
+        />
+      )}
+    </button>
   );
+}
 
+function GallerySection({ gallery }) {
   return (
     <section
       className="section section--alt"
@@ -29,37 +58,9 @@ function GallerySection({ gallery }) {
           <p className="muted">{gallery.description}</p>
         </div>
 
-        <div
-          aria-label="Photo gallery"
-          className="gallery reveal"
-          id="galleryGrid"
-        >
-          {visiblePhotos.map((photo, index) => (
-            <button
-              type="button"
-              aria-label={`Open photo ${index + 1}`}
-              className="gallery__item"
-              data-src={photo.fullSrc || photo.src}
-              key={photo.src}
-              onContextMenu={(event) => event.preventDefault()}
-            >
-              <img
-                src={photo.src}
-                srcSet={
-                  photo.smallSrc
-                    ? `${photo.smallSrc} 480w, ${photo.src} 960w`
-                    : undefined
-                }
-                sizes="(max-width: 680px) 48vw, (max-width: 900px) 32vw, 24vw"
-                alt={photo.alt}
-                loading="lazy"
-                decoding="async"
-                draggable="false"
-                onContextMenu={(event) => event.preventDefault()}
-                onDragStart={(event) => event.preventDefault()}
-                onError={() => handleImageError(photo.src)}
-              />
-            </button>
+        <div aria-label="Photo gallery" className="gallery" id="galleryGrid">
+          {gallery.photos.map((photo, index) => (
+            <GalleryPhoto key={photo.src} photo={photo} index={index} />
           ))}
         </div>
       </div>
