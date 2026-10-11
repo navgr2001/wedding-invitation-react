@@ -4,7 +4,7 @@ export const weddingContent = {
       name: "Dewmini Rodrigo",
       role: "The Bride",
       family: "Daughter of Mr and Mrs. Rodrigo",
-      image: "assets/img/bride.jpeg",
+      image: "assets/img/bride-preshoot.webp",
       badgeIcon: "assets/img/icons/crownqueen.png",
       portraitAlt: "Bride portrait",
     },
@@ -12,7 +12,7 @@ export const weddingContent = {
       name: "Shalom Grero",
       role: "The Groom",
       family: "Son of Mr and Mrs. Grero",
-      image: "assets/img/groom.jpeg",
+      image: "assets/img/groom-preshoot.webp",
       badgeIcon: "assets/img/icons/crownking.png",
       portraitAlt: "Groom portrait",
     },
@@ -172,17 +172,68 @@ export const weddingContent = {
      * 480 version: small/mobile thumbnails
      * 960 version: tablet/desktop thumbnails
      * full version: lightbox only
-     *
-     * Original JPG files are kept untouched.
+     * Existing gallery photos are retained and mixed with the preshoot images.
+     * IMG_3132 (bride) and IMG_3134 (groom) are reserved for the Happy Couple profiles.
      */
-    photos: Array.from({ length: 20 }, (_, index) => index + 1)
-      .filter((number) => ![8, 19].includes(number))
-      .map((number) => ({
-        src: `/assets/img/gallery/optimized/${number}-960.webp`,
-        smallSrc: `/assets/img/gallery/optimized/${number}-480.webp`,
-        fullSrc: `/assets/img/gallery/optimized/${number}-full.webp`,
-        alt: `Shalom and Dewmini - moment ${number}`,
-      })),
+    photos: (() => {
+      const existingPhotos = Array.from({ length: 20 }, (_, index) => index + 1)
+        .filter((number) => ![8, 19].includes(number))
+        .map((number) => ({
+          src: `/assets/img/gallery/optimized/${number}-960.webp`,
+          smallSrc: `/assets/img/gallery/optimized/${number}-480.webp`,
+          fullSrc: `/assets/img/gallery/optimized/${number}-full.webp`,
+          alt: `Shalom and Dewmini - moment ${number}`,
+        }));
+
+      const preshootPhotos = [
+        "preshoot-IMG_3143",
+        "preshoot-IMG_3147",
+        "preshoot-IMG_3159",
+        "preshoot-IMG_3167",
+        "preshoot-IMG_3179",
+        "preshoot-IMG_3192",
+        "preshoot-IMG_3200",
+        "preshoot-IMG_3204",
+        "preshoot-IMG_3207",
+        "preshoot-IMG_3209",
+        "preshoot-IMG_3211",
+        "preshoot-IMG_3220",
+        "preshoot-IMG_3221",
+        "preshoot-IMG_3224",
+        "preshoot-IMG_3227",
+        "preshoot-IMG_3234",
+        "preshoot-IMG_3235",
+        "preshoot-IMG_3238",
+        "preshoot-IMG_3253",
+        "preshoot-IMG_3254",
+        "preshoot-IMG_3259",
+        "preshoot-IMG_3261",
+        "preshoot-IMG_3262",
+        "preshoot-IMG_3265",
+        "preshoot-IMG_3267",
+        "preshoot-IMG_3269",
+        "preshoot-IMG_3271",
+        "preshoot-IMG_3282"
+      ].map((filename) => ({
+        src: `/assets/img/gallery/optimized/${filename}-960.webp`,
+        smallSrc: `/assets/img/gallery/optimized/${filename}-480.webp`,
+        fullSrc: `/assets/img/gallery/optimized/${filename}-full.webp`,
+        alt: `Shalom and Dewmini - preshoot ${filename.replace("preshoot-", "")}`,
+      }));
+
+      // Spread the 28 preshoot photos evenly through the 18 existing gallery photos.
+      const mixedPhotos = [];
+      let preshootIndex = 0;
+      existingPhotos.forEach((photo, index) => {
+        mixedPhotos.push(photo);
+        const targetPreshootCount = Math.round(((index + 1) * preshootPhotos.length) / existingPhotos.length);
+        while (preshootIndex < targetPreshootCount) {
+          mixedPhotos.push(preshootPhotos[preshootIndex]);
+          preshootIndex += 1;
+        }
+      });
+      return mixedPhotos;
+    })(),
   },
 
   guestUpload: {
