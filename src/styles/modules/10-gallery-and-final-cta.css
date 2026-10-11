@@ -219,6 +219,94 @@
 }
 
 /* =========================================================
+   SEE MORE MOMENTS BUTTON
+   Only appears when additional photos are available.
+   ========================================================= */
+
+.galleryMore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  margin: 28px auto 0;
+  text-align: center;
+}
+
+.galleryMore__button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 11px 23px;
+  border: 1px solid rgba(157, 72, 43, 0.38);
+  border-radius: 999px;
+  background: #fffaf7;
+  color: #9d482b;
+  font-family: var(--font-montserrat, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  box-shadow: 0 7px 20px rgba(74, 37, 27, 0.08);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.galleryMore__button svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.galleryMore__button:focus-visible {
+  outline: 3px solid rgba(157, 72, 43, 0.35);
+  outline-offset: 3px;
+}
+
+.galleryMore__caption {
+  margin: 0;
+  color: #82695c;
+  font-family: var(--font-montserrat, sans-serif);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .galleryMore__button:hover {
+    background: #f7eae3;
+    box-shadow: 0 10px 24px rgba(74, 37, 27, 0.12);
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 600px) {
+  .galleryMore {
+    margin-top: 21px;
+    gap: 9px;
+  }
+  .galleryMore__button {
+    min-height: 44px;
+    padding: 10px 19px;
+    font-size: 12px;
+  }
+  .galleryMore__caption {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .galleryMore__button {
+    transition: none;
+  }
+}
+
+/* =========================================================
 
    FINAL CTA
 
@@ -653,5 +741,15 @@
 
   .finalCtaBtn {
     width: 100%;
+  }
+}
+
+/* Expanding and collapsing the gallery */
+.galleryMore__button--expanded svg {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .galleryMore__button--expanded svg {
+    transition: none;
   }
 }
