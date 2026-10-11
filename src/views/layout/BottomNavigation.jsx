@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const TABS = [
-  { id: "home", label: "Home" },
+  { id: "seatFinder", label: "Seat" },
   { id: "details", label: "Details" },
   { id: "rsvp", label: "RSVP" },
   { id: "gallery", label: "Gallery" },
@@ -20,10 +20,11 @@ function TabIcon({ id }) {
   };
 
   switch (id) {
-    case "home":
+    case "seatFinder":
       return (
         <svg {...props}>
-          <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
+          <circle cx="12" cy="6" r="2" />
+          <path d="M7 11h10v5H7zM5 16h14M7 16v5M17 16v5M5 13v3M19 13v3" />
         </svg>
       );
 
@@ -66,7 +67,7 @@ function TabIcon({ id }) {
 }
 
 export default function BottomNavigation() {
-  const [activeId, setActiveId] = useState("home");
+  const [activeId, setActiveId] = useState("seatFinder");
 
   useEffect(() => {
     let frameId = null;
@@ -78,9 +79,9 @@ export default function BottomNavigation() {
         frameId = null;
 
         const threshold = window.innerHeight * 0.35;
-        let current = "home";
+        let current = "seatFinder";
 
-        for (const tab of TABS.slice(1)) {
+        for (const tab of TABS) {
           const section = document.getElementById(tab.id);
 
           if (section && section.getBoundingClientRect().top <= threshold) {
@@ -122,16 +123,6 @@ export default function BottomNavigation() {
 
     const behavior = reducedMotion ? "auto" : "smooth";
 
-    if (id === "home") {
-      window.scrollTo({
-        top: 0,
-        behavior,
-      });
-
-      setActiveId("home");
-      return;
-    }
-
     const section = document.getElementById(id);
 
     if (!section) return;
@@ -161,7 +152,9 @@ export default function BottomNavigation() {
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => handleNavigation(tab.id)}
-              aria-label={tab.label}
+              aria-label={
+                tab.id === "seatFinder" ? "Find your seat" : tab.label
+              }
               aria-current={isActive ? "location" : undefined}
             >
               <span className="bottomNav__icon">
