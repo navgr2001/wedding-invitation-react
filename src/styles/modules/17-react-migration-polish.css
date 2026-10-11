@@ -23,12 +23,6 @@
   }
 }
 
-.heroBanner__videoEl,
-.personCard__imgInner img,
-.rsvpPhotoCard__img img,
-.gallery__item img {
-  transform: translateZ(0);
-}
 
 ::selection {
   background: rgba(190, 81, 3, 0.22);

@@ -168,7 +168,7 @@ function GuestUploadSection({ guestUpload }) {
           </p>
         </div>
 
-        <div className="guestUploadCard reveal">
+        <div className="guestUploadCard">
           <div className="guestUploadCard__intro">
             <span aria-hidden="true" className="guestUploadCard__icon">
               <CameraIcon />

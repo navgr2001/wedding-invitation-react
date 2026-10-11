@@ -19,12 +19,39 @@ function HeroSection({ hero }) {
       }
     };
 
-    window.addEventListener("wedding:invite-opened", startVideo, {
-      once: true,
-    });
+    let invitationOpened = false;
+    let visible = false;
+
+    const syncPlayback = () => {
+      if (invitationOpened && visible && !document.hidden) {
+        void startVideo();
+      } else {
+        video.pause();
+      }
+    };
+
+    const handleOpen = () => {
+      invitationOpened = true;
+      syncPlayback();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        syncPlayback();
+      },
+      { threshold: 0.05 },
+    );
+
+    observer.observe(video);
+    document.addEventListener("visibilitychange", syncPlayback);
+    window.addEventListener("wedding:invite-opened", handleOpen);
 
     return () => {
-      window.removeEventListener("wedding:invite-opened", startVideo);
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", syncPlayback);
+      window.removeEventListener("wedding:invite-opened", handleOpen);
+      video.pause();
     };
   }, []);
 
@@ -41,7 +68,7 @@ function HeroSection({ hero }) {
           loop
           muted
           playsInline
-          preload="auto"
+          preload="none"
           poster={hero.videoPoster}
           /*
            * Browser deterrents:

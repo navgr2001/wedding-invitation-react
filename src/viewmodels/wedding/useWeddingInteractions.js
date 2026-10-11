@@ -1772,7 +1772,7 @@ export function useWeddingInteractions() {
 
         const iconKeys = Object.keys(ICONS);
         const isSmall = window.matchMedia("(max-width: 720px)").matches;
-        const COUNT = isSmall ? 18 : 34;
+        const COUNT = isSmall ? 6 : 14;
 
         const icons = [];
         for (let i = 0; i < COUNT; i++) {
@@ -1806,27 +1806,8 @@ export function useWeddingInteractions() {
           icons.push(el);
         }
 
-        let ticking = false;
-        window.addEventListener(
-          "scroll",
-          () => {
-            if (ticking) return;
-            ticking = true;
-            requestAnimationFrame(() => {
-              const s = window.scrollY || 0;
-
-              for (let i = 0; i < icons.length; i++) {
-                const el = icons[i];
-                const depth = (i % 6) + 1;
-                const offset = (s / (120 * depth)) % 12;
-                el.style.transform = `translate3d(0, ${offset}px, 0) rotate(var(--r))`;
-              }
-
-              ticking = false;
-            });
-          },
-          { passive: true },
-        );
+        // Decorative icons remain static. Avoid layout/compositor work
+        // for every icon on every scroll event, especially on phones.
 
         function rand(min, max) {
           return Math.random() * (max - min) + min;

@@ -1,0 +1,47 @@
+/* Targeted compositor and mobile paint safeguards. */
+.bg-icon,
+.bg-icon.is-anim {
+  animation: none !important;
+  will-change: auto !important;
+  transform: rotate(var(--r, 0deg)) !important;
+}
+
+/* A transformed ancestor can cause large raster surfaces on mobile. */
+#guest-upload .guestUploadCard,
+#guest-upload .guestUploadCard.reveal,
+#guest-upload .guestUploadCard.isVisible {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+
+@media (max-width: 900px) {
+  #guest-upload,
+  #guest-upload .guestUploadSection__container {
+    isolation: auto !important;
+    contain: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  #guest-upload .guestUploadCard {
+    background: #fffdfa !important;
+    box-shadow: 0 4px 16px rgba(103, 51, 29, 0.06) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Avoid per-card GPU layers and costly backdrop sampling. */
+  .gallery__item img,
+  .personCard__imgInner img,
+  .rsvpPhotoCard__img img {
+    transform: none !important;
+    will-change: auto !important;
+  }
+  .finalCta__inner,
+  .finalCtaBtn--ghost {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
