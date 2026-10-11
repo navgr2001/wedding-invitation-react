@@ -1,0 +1,211 @@
+/* Elegant mobile and tablet bottom navigation */
+
+.bottomNav {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --mobile-bottom-nav-space: calc(86px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Replace the desktop header on mobile/tablet. */
+  html:not(.invitationIntroLoading) body:not(.isInvitationIntroActive) .topbar {
+    display: none !important;
+  }
+
+  html:not(.invitationIntroLoading)
+    body:not(.isInvitationIntroActive)
+    .bottomNav {
+    display: block;
+  }
+
+  .bottomNav {
+    position: fixed;
+    z-index: 1200;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 8px max(12px, env(safe-area-inset-right, 0px))
+      calc(8px + env(safe-area-inset-bottom, 0px))
+      max(12px, env(safe-area-inset-left, 0px));
+
+    pointer-events: none;
+  }
+
+  .bottomNav__inner {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: stretch;
+
+    width: min(100%, 540px);
+    min-height: 64px;
+    margin: 0 auto;
+    padding: 5px;
+
+    background: #fff8f2;
+    border: 1px solid rgba(157, 84, 57, 0.22);
+    border-radius: 23px;
+
+    box-shadow:
+      0 9px 34px rgba(73, 36, 22, 0.17),
+      0 2px 9px rgba(73, 36, 22, 0.08);
+
+    pointer-events: auto;
+  }
+
+  .bottomNav__tab {
+    appearance: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+
+    min-width: 0;
+    min-height: 54px;
+    padding: 6px 2px;
+
+    border: 0;
+    border-radius: 17px;
+    background: transparent;
+    color: #82695c;
+
+    cursor: pointer;
+    font: inherit;
+
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .bottomNav__icon {
+    display: grid;
+    place-items: center;
+    height: 24px;
+    width: 24px;
+  }
+
+  .bottomNav__icon svg {
+    display: block;
+    width: 23px;
+    height: 23px;
+  }
+
+  .bottomNav__label {
+    display: block;
+
+    font-family: var(--font-montserrat, sans-serif);
+    font-size: clamp(9px, 2.3vw, 11px);
+    font-weight: 600;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+
+  /* Selected navigation item */
+  .bottomNav__tab--active {
+    background: #f1dfd2;
+    color: #9d482b;
+  }
+
+  .bottomNav__tab:focus-visible {
+    outline: 2px solid #9d482b;
+    outline-offset: -2px;
+  }
+
+  @media (hover: hover) {
+    .bottomNav__tab:not(.bottomNav__tab--active):hover {
+      background: #f9ece3;
+      color: #9d482b;
+    }
+  }
+
+  /* Prevent the bottom bar from covering page content */
+  body {
+    padding-bottom: var(--mobile-bottom-nav-space);
+  }
+
+  .floatingControls {
+    bottom: calc(var(--mobile-bottom-nav-space) + 8px);
+  }
+
+  [id="details"],
+  [id="rsvp"],
+  [id="gallery"],
+  [id="guest-upload"] {
+    scroll-margin-top: 15px;
+    scroll-margin-bottom: var(--mobile-bottom-nav-space);
+  }
+
+  /* Hide navigation during the opening invitation */
+  html.invitationIntroLoading .bottomNav,
+  body.isInvitationIntroActive .bottomNav {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 360px) {
+  .bottomNav {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .bottomNav__inner {
+    padding: 4px 2px;
+    border-radius: 19px;
+  }
+
+  .bottomNav__tab {
+    border-radius: 15px;
+  }
+
+  .bottomNav__icon svg {
+    height: 21px;
+    width: 21px;
+  }
+
+  .bottomNav__label {
+    font-size: 9px;
+  }
+}
+
+/* Landscape orientation */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --mobile-bottom-nav-space: calc(75px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bottomNav {
+    padding-top: 4px;
+    padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bottomNav__inner {
+    min-height: 56px;
+  }
+
+  .bottomNav__tab {
+    min-height: 48px;
+  }
+}
+
+/* Desktop navigation remains unchanged */
+@media (min-width: 901px) {
+  .bottomNav {
+    display: none !important;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .bottomNav__tab {
+    transition: none;
+  }
+}
