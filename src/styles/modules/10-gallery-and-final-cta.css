@@ -1,18 +1,23 @@
 /* =========================================================
+
    MOMENTS BEFORE FOREVER - RESPONSIVE MASONRY GALLERY
+
    ========================================================= */
 
 .gallery {
   width: 100%;
 
   column-count: 4;
+
   column-gap: 12px;
 
   margin: 0 auto;
 }
 
 /* =========================================================
+
    Gallery item
+
    ========================================================= */
 
 .gallery__item {
@@ -21,10 +26,13 @@
   display: inline-block;
 
   break-inside: avoid;
+
   -webkit-column-break-inside: avoid;
+
   page-break-inside: avoid;
 
   margin: 0 0 12px;
+
   padding: 0;
 
   position: relative;
@@ -32,6 +40,7 @@
   vertical-align: top;
 
   border: 1px solid rgba(190, 81, 3, 0.14);
+
   border-radius: 12px;
 
   overflow: hidden;
@@ -51,6 +60,7 @@
 }
 
 /* Desktop hover */
+
 @media (hover: hover) and (pointer: fine) {
   .gallery__item:hover {
     transform: translateY(-3px);
@@ -62,27 +72,34 @@
 }
 
 /* =========================================================
+
    Gallery image
+
    ========================================================= */
 
 .gallery__item img {
   display: block;
 
   width: 100%;
+
   max-width: 100%;
+
   height: auto;
 
   object-fit: contain;
+
   object-position: center;
 
   border-radius: inherit;
 }
 
 /* Very subtle overlay */
+
 .gallery__item::after {
   content: "";
 
   position: absolute;
+
   inset: 0;
 
   border-radius: inherit;
@@ -90,6 +107,7 @@
   background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 75%,
+
     rgba(0, 0, 0, 0.035) 100%
   );
 
@@ -97,27 +115,36 @@
 }
 
 /* Keyboard accessibility */
+
 .gallery__item:focus-visible {
   outline: 3px solid rgba(190, 81, 3, 0.35);
+
   outline-offset: 3px;
 }
 
 /* =========================================================
+
    GALLERY IMAGE FALLBACK
+
    ========================================================= */
 
 /*
+
  * Keeps the gallery slot visible when an image cannot
+
  * be loaded, instead of allowing the layout to collapse.
+
  */
 
 .gallery__fallback {
   display: flex;
 
   width: 100%;
+
   min-height: 140px;
 
   align-items: center;
+
   justify-content: center;
 
   padding: 16px;
@@ -125,9 +152,11 @@
   color: #745d50;
 
   font-family: var(--font-montserrat);
+
   font-size: 13px;
 
   line-height: 1.5;
+
   text-align: center;
 
   background: rgba(255, 250, 244, 0.9);
@@ -136,43 +165,12 @@
 }
 
 /* =========================================================
-   LARGE TABLETS / SMALL LAPTOPS
+   TABLETS (601px - 1024px): 4 COLUMNS
    ========================================================= */
 
-@media (max-width: 1100px) {
+@media (min-width: 601px) and (max-width: 1024px) {
   .gallery {
     column-count: 4;
-    column-gap: 11px;
-  }
-
-  .gallery__item {
-    margin-bottom: 11px;
-  }
-}
-
-/* =========================================================
-   TABLETS
-   ========================================================= */
-
-@media (max-width: 900px) {
-  .gallery {
-    column-count: 3;
-    column-gap: 12px;
-  }
-
-  .gallery__item {
-    margin-bottom: 12px;
-    border-radius: 11px;
-  }
-}
-
-/* =========================================================
-   SMALL TABLETS / LARGE PHONES
-   ========================================================= */
-
-@media (max-width: 680px) {
-  .gallery {
-    column-count: 2;
     column-gap: 10px;
   }
 
@@ -183,47 +181,47 @@
 }
 
 /* =========================================================
-   NORMAL MOBILE PHONES
+   MOBILE (up to 600px): 3 COLUMNS
    ========================================================= */
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
   .gallery {
-    column-count: 2;
-    column-gap: 8px;
+    column-count: 3;
+    column-gap: 7px;
   }
 
   .gallery__item {
-    margin-bottom: 8px;
-    border-radius: 9px;
+    margin-bottom: 7px;
+    border-radius: 8px;
   }
 
   .gallery__fallback {
-    min-height: 110px;
-
-    padding: 10px;
-
-    font-size: 12px;
+    min-height: 75px;
+    padding: 6px;
+    font-size: 10px;
   }
 }
 
 /* =========================================================
-   VERY SMALL MOBILE PHONES
+   VERY SMALL MOBILE: KEEP 3 COLUMNS
    ========================================================= */
 
-@media (max-width: 340px) {
+@media (max-width: 360px) {
   .gallery {
-    column-count: 1;
-    column-gap: 0;
+    column-count: 3;
+    column-gap: 5px;
   }
 
   .gallery__item {
-    margin-bottom: 10px;
-    border-radius: 10px;
+    margin-bottom: 5px;
+    border-radius: 6px;
   }
 }
 
 /* =========================================================
+
    FINAL CTA
+
    ========================================================= */
 
 .finalCta {
@@ -234,13 +232,17 @@
   padding: clamp(64px, 8vh, 96px) 0;
 
   display: grid;
+
   place-items: center;
 
   text-align: center;
 
   /*
+
    * The photograph is rendered through ::after
+
    * so blur does not affect the CTA content.
+
    */
 
   background-image: none;
@@ -251,7 +253,9 @@
 }
 
 /* =========================================================
+
    FINAL CTA BACKGROUND IMAGE
+
    ========================================================= */
 
 .finalCta::after {
@@ -262,11 +266,15 @@
   inset: -8px;
 
   background-image: url("/assets/img/rsvp_cta/19-optimized.webp");
+
   background-size: cover;
+
   background-position: center;
+
   background-repeat: no-repeat;
 
   filter: blur(0.5px);
+
   -webkit-filter: blur(0.5px);
 
   transform: scale(1.01);
@@ -277,25 +285,31 @@
 }
 
 /* =========================================================
+
    FINAL CTA OVERLAY
+
    ========================================================= */
 
 .finalCta::before {
   content: "";
 
   position: absolute;
+
   inset: 0;
 
   background:
     radial-gradient(
       900px 420px at 50% 20%,
+
       rgba(255, 255, 255, 0.045),
       rgba(255, 255, 255, 0) 60%
     ),
     linear-gradient(
       180deg,
       rgba(58, 33, 12, 0.68) 0%,
+
       rgba(58, 33, 12, 0.55) 46%,
+
       rgba(58, 33, 12, 0.7) 100%
     );
 
@@ -305,11 +319,14 @@
 }
 
 /* =========================================================
+
    FINAL CTA CONTENT
+
    ========================================================= */
 
 .finalCta__inner {
   position: relative;
+
   z-index: 1;
 
   width: min(980px, 92%);
@@ -318,7 +335,9 @@
 }
 
 /* =========================================================
+
    ICONS
+
    ========================================================= */
 
 .finalCta__icons {
@@ -336,7 +355,9 @@
 }
 
 /* =========================================================
+
    HEADING
+
    ========================================================= */
 
 .finalCta__title {
@@ -358,7 +379,9 @@
 }
 
 /* =========================================================
+
    DESCRIPTION
+
    ========================================================= */
 
 .finalCta__desc {
@@ -380,7 +403,9 @@
 }
 
 /* =========================================================
+
    CTA ACTIONS
+
    ========================================================= */
 
 .finalCta__actions {
@@ -396,7 +421,9 @@
 }
 
 /* =========================================================
+
    BUTTONS
+
    ========================================================= */
 
 .finalCtaBtn {
@@ -430,6 +457,7 @@
 }
 
 /* Primary button */
+
 .finalCtaBtn--primary {
   background: rgba(255, 250, 244, 0.96);
 
@@ -441,6 +469,7 @@
 }
 
 /* Secondary button */
+
 .finalCtaBtn--ghost {
   background: rgba(255, 255, 255, 0.1);
 
@@ -449,10 +478,12 @@
   border-color: rgba(255, 255, 255, 0.72);
 
   backdrop-filter: blur(2px);
+
   -webkit-backdrop-filter: blur(2px);
 }
 
 /* Hover */
+
 @media (hover: hover) and (pointer: fine) {
   .finalCtaBtn:hover {
     transform: translateY(-2px);
@@ -468,7 +499,9 @@
 }
 
 /* =========================================================
+
    TABLET
+
    ========================================================= */
 
 @media (max-width: 900px) {
@@ -482,6 +515,7 @@
 
   .finalCta::after {
     filter: blur(0.5px);
+
     -webkit-filter: blur(0.5px);
 
     transform: scale(1.01);
@@ -501,7 +535,9 @@
 }
 
 /* =========================================================
+
    MOBILE
+
    ========================================================= */
 
 @media (max-width: 600px) {
@@ -515,6 +551,7 @@
 
   .finalCta::after {
     filter: blur(0.5px);
+
     -webkit-filter: blur(0.5px);
 
     transform: scale(1.01);
@@ -524,13 +561,16 @@
     background:
       radial-gradient(
         620px 340px at 50% 18%,
+
         rgba(255, 255, 255, 0.035),
         rgba(255, 255, 255, 0) 62%
       ),
       linear-gradient(
         180deg,
         rgba(58, 33, 12, 0.66) 0%,
+
         rgba(58, 33, 12, 0.53) 46%,
+
         rgba(58, 33, 12, 0.68) 100%
       );
   }
@@ -583,7 +623,9 @@
 }
 
 /* =========================================================
+
    VERY SMALL MOBILE
+
    ========================================================= */
 
 @media (max-width: 360px) {
@@ -593,6 +635,7 @@
 
   .finalCta::after {
     filter: blur(0.5px);
+
     -webkit-filter: blur(0.5px);
 
     transform: scale(1.01);
