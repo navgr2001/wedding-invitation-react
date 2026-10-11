@@ -1,0 +1,68 @@
+/* =========================================================
+   MOBILE RENDERING STABILITY
+   Android / iOS / Tablet
+   ========================================================= */
+
+@media (max-width: 900px) {
+  /* Reduce unnecessary GPU layers from floating icons */
+
+  .bg-icon,
+  .bg-icon.is-anim {
+    animation: none !important;
+    transform: rotate(var(--r, 0deg));
+    will-change: auto;
+    filter: none;
+  }
+
+  /* Avoid separate GPU layers for every image */
+
+  .gallery__item img,
+  .personCard__imgInner img,
+  .rsvpPhotoCard__img img {
+    transform: none;
+    will-change: auto;
+  }
+
+  /* Remove expensive background blur sampling */
+
+  .guestUploadCard,
+  .rsvpFormCard,
+  .rsvpPhotoCard,
+  .personCard,
+  .weddingCard,
+  .noteCard {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Stable opaque guest-upload background */
+
+  .guestUploadCard {
+    background: #fffdfa;
+  }
+
+  /* Keep bottom navigation lightweight */
+
+  .bottomNav__inner {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: #fff8f2;
+  }
+
+  /* Remove unnecessary mobile CTA image blur */
+
+  .finalCta::after {
+    -webkit-filter: none;
+    filter: none;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-icon.is-anim {
+    animation: none !important;
+  }
+}
