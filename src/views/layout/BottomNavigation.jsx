@@ -67,7 +67,7 @@ function TabIcon({ id }) {
 }
 
 export default function BottomNavigation() {
-  const [activeId, setActiveId] = useState("seatFinder");
+  const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
     let frameId = null;
@@ -79,13 +79,21 @@ export default function BottomNavigation() {
         frameId = null;
 
         const threshold = window.innerHeight * 0.35;
-        let current = "seatFinder";
 
+        // No active tab by default
+        let current = null;
+
+        // Detect the section currently being viewed
         for (const tab of TABS) {
           const section = document.getElementById(tab.id);
 
-          if (section && section.getBoundingClientRect().top <= threshold) {
+          if (!section) continue;
+
+          const rect = section.getBoundingClientRect();
+
+          if (rect.top <= threshold && rect.bottom > threshold) {
             current = tab.id;
+            break;
           }
         }
 
