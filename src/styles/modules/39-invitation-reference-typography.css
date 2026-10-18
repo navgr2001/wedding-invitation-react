@@ -157,15 +157,15 @@
 
 /* Curved handwritten first line */
 
+/* Shalom - straight */
 .inviteIntro .inviteNames__line--first {
-  transform: rotate(-5deg);
+  transform: none;
   transform-origin: center;
 }
 
-/* Curved handwritten second line */
-
+/* Dewmini - straight */
 .inviteIntro .inviteNames__line--second {
-  transform: rotate(-4deg) translateX(0.08em);
+  transform: none;
   transform-origin: center;
 }
 
@@ -322,7 +322,7 @@
   }
 
   .inviteIntro .inviteNames {
-    font-size: clamp(2.15rem, 11.7vw, 3.6rem);
+    font-size: clamp(2.45rem, 13vw, 4rem);
   }
 }
 
@@ -350,7 +350,7 @@
   }
 
   .inviteIntro .inviteNames {
-    font-size: clamp(1.65rem, 9.5vh, 4rem);
+    font-size: clamp(1.65rem, 10dvh, 4rem);
   }
 
   .inviteIntro .inviteMeta__date {
