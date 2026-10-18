@@ -1,0 +1,527 @@
+/* =========================================================
+   INVITATION REFERENCE TYPOGRAPHY AND POSITIONING
+   ========================================================= */
+
+.inviteIntro {
+  --invite-lettering: #a74925;
+}
+
+/* Position text above the couple instead of vertically
+   centering it across the entire invitation */
+
+.inviteIntro .inviteContent {
+  justify-content: flex-start !important;
+
+  width: var(--invite-content-width);
+
+  padding-top: clamp(78px, 12.2dvh, 190px) !important;
+  padding-bottom: 22px !important;
+
+  gap: clamp(7px, 1.15dvh, 15px) !important;
+}
+
+/* =========================================================
+   SAVE THE DATE - TRUE LETTER CURVE
+   ========================================================= */
+
+.inviteIntro .inviteKicker {
+  margin: 0;
+
+  color: #71351e;
+
+  font-family: "Cormorant Garamond", Georgia, serif;
+
+  font-size: clamp(1.05rem, 2.3vw, 1.95rem);
+  font-weight: 700;
+
+  line-height: 1.08 !important;
+  letter-spacing: 0;
+
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  flex-shrink: 0;
+}
+
+.inviteIntro .inviteKicker__curve {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.inviteIntro .inviteKicker__letter {
+  display: inline-block;
+
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+
+  margin-inline: 0.11em;
+
+  transform-origin: center bottom;
+}
+
+.inviteIntro .inviteKicker__space {
+  display: inline-block;
+  width: 0.52em;
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(1) {
+  transform: translateY(0.34em) rotate(-10deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(2) {
+  transform: translateY(0.22em) rotate(-8deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(3) {
+  transform: translateY(0.11em) rotate(-5deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(4) {
+  transform: translateY(0.02em) rotate(-2deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(6) {
+  transform: translateY(-0.09em) rotate(0deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(7) {
+  transform: translateY(-0.15em) rotate(1deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(8) {
+  transform: translateY(-0.09em) rotate(2deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(10) {
+  transform: translateY(0.02em) rotate(2deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(11) {
+  transform: translateY(0.11em) rotate(5deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(12) {
+  transform: translateY(0.22em) rotate(8deg);
+}
+
+.inviteIntro .inviteKicker__letter:nth-child(13) {
+  transform: translateY(0.34em) rotate(10deg);
+}
+
+/* =========================================================
+   SHALOM & DEWMINI
+   ========================================================= */
+
+.inviteIntro .inviteNames {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 100%;
+
+  gap: 0;
+  padding: 0.04em 0 0.07em;
+
+  color: var(--invite-lettering);
+
+  font-family: "Allura", "Petit Formal Script", cursive;
+
+  font-size: clamp(3.6rem, 6.8vw, 6.75rem);
+  font-weight: 400;
+
+  font-style: normal;
+  letter-spacing: -0.025em;
+
+  line-height: 0.94 !important;
+
+  flex-shrink: 0;
+}
+
+.inviteIntro .inviteNames__line {
+  display: block;
+
+  width: auto;
+  max-width: 100%;
+
+  font: inherit;
+  line-height: 0.92;
+
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Curved handwritten first line */
+
+.inviteIntro .inviteNames__line--first {
+  transform: rotate(-5deg);
+  transform-origin: center;
+}
+
+/* Curved handwritten second line */
+
+.inviteIntro .inviteNames__line--second {
+  transform: rotate(-4deg) translateX(0.08em);
+  transform-origin: center;
+}
+
+.inviteIntro .inviteNames__amp {
+  display: inline;
+
+  margin: 0;
+
+  font: inherit;
+  font-size: 0.82em;
+
+  line-height: inherit;
+  color: inherit;
+}
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+.inviteIntro .inviteMeta {
+  flex-shrink: 0;
+  gap: 0.26em;
+}
+
+.inviteIntro .inviteMeta__date {
+  display: flex;
+
+  width: auto;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.55em;
+
+  color: #78341e;
+
+  font-family: "Cormorant Garamond", Georgia, serif;
+
+  font-size: clamp(1.35rem, 2.65vw, 2.35rem);
+  font-weight: 600;
+
+  line-height: 1.12;
+  letter-spacing: 0.13em;
+
+  white-space: nowrap;
+  text-transform: none;
+}
+
+/* Decorative date dots */
+
+.inviteIntro .inviteMeta__date::before,
+.inviteIntro .inviteMeta__date::after {
+  content: "•";
+
+  color: var(--invite-lettering);
+  font-size: 0.7em;
+}
+
+/* =========================================================
+   VIEW INVITATION BUTTON
+   ========================================================= */
+
+.inviteIntro .inviteBtn,
+.inviteIntro .inviteBtn:hover {
+  border: 2px solid #fff !important;
+}
+
+/* =========================================================
+   TABLET PORTRAIT
+   ========================================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
+  .inviteIntro .inviteContent {
+    padding-top: clamp(90px, 12dvh, 165px) !important;
+
+    gap: clamp(8px, 1.1dvh, 14px) !important;
+  }
+
+  .inviteIntro .inviteKicker {
+    font-size: clamp(1.05rem, 2.7vw, 1.65rem);
+  }
+
+  .inviteIntro .inviteKicker__letter {
+    margin-inline: 0.1em;
+  }
+
+  .inviteIntro .inviteNames {
+    font-size: clamp(4.3rem, 9vw, 6.7rem);
+  }
+
+  .inviteIntro .inviteMeta__date {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+  }
+}
+
+/* =========================================================
+   MOBILE PORTRAIT
+   ========================================================= */
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .inviteIntro .inviteContent {
+    width: min(90vw, 420px);
+
+    padding: clamp(75px, 12dvh, 135px) 5px 12px !important;
+
+    gap: clamp(8px, 1.1dvh, 12px) !important;
+  }
+
+  .inviteIntro .inviteKicker {
+    font-size: clamp(0.98rem, 4vw, 1.5rem);
+  }
+
+  .inviteIntro .inviteKicker__letter {
+    margin-inline: 0.085em;
+  }
+
+  .inviteIntro .inviteKicker__space {
+    width: 0.42em;
+  }
+
+  .inviteIntro .inviteNames {
+    font-size: clamp(3.25rem, 12.1vw, 5.2rem);
+
+    letter-spacing: -0.03em;
+    line-height: 0.9 !important;
+  }
+
+  .inviteIntro .inviteMeta__date {
+    font-size: clamp(1.25rem, 4.5vw, 1.85rem);
+    letter-spacing: 0.11em;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 360px) and (orientation: portrait) {
+  .inviteIntro .inviteContent {
+    width: 94vw;
+    padding-top: 11dvh !important;
+  }
+
+  .inviteIntro .inviteKicker {
+    font-size: clamp(0.85rem, 3.8vw, 1.05rem);
+  }
+
+  .inviteIntro .inviteKicker__letter {
+    margin-inline: 0.07em;
+  }
+
+  .inviteIntro .inviteKicker__space {
+    width: 0.34em;
+  }
+
+  .inviteIntro .inviteNames {
+    font-size: clamp(2.85rem, 11.7vw, 3.9rem);
+  }
+}
+
+/* =========================================================
+   LANDSCAPE DEVICES
+   ========================================================= */
+
+@media (orientation: landscape) and (max-height: 720px) {
+  .inviteIntro .inviteContent {
+    padding: clamp(16px, 7dvh, 54px) 10px 8px !important;
+
+    gap: clamp(2px, 0.75dvh, 7px) !important;
+  }
+
+  .inviteIntro .inviteKicker {
+    font-size: clamp(0.65rem, 2.7vh, 1rem);
+  }
+
+  .inviteIntro .inviteKicker__letter {
+    margin-inline: 0.08em;
+  }
+
+  .inviteIntro .inviteKicker__space {
+    width: 0.38em;
+  }
+
+  .inviteIntro .inviteNames {
+    font-size: clamp(1.65rem, 9.5vh, 4rem);
+  }
+
+  .inviteIntro .inviteMeta__date {
+    font-size: clamp(0.95rem, 3.5vh, 1.4rem);
+  }
+}
+
+/* =========================================================
+   VERY SHORT SCREENS
+   ========================================================= */
+
+@media (max-height: 560px) and (orientation: portrait) {
+  .inviteIntro .inviteContent {
+    padding-top: 8dvh !important;
+    gap: 3px !important;
+  }
+
+  .inviteIntro .inviteKicker {
+    font-size: 0.85rem;
+  }
+
+  .inviteIntro .inviteKicker__letter {
+    margin-inline: 0.07em;
+  }
+
+  .inviteIntro .inviteKicker__space {
+    width: 0.34em;
+  }
+
+  .inviteIntro .inviteNames {
+    font-size: clamp(2rem, 9vh, 3.4rem);
+  }
+
+  .inviteIntro .inviteMeta__date {
+    font-size: 1rem;
+  }
+}
+
+/* =========================================================
+   REFERENCE LAYOUT — ALL DEVICES
+   The cover artwork has a 2:3 portrait composition.
+   Position the four overlaid elements independently so the
+   button does not push the names and date into the portraits.
+   ========================================================= */
+
+.inviteIntro .inviteContent {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 4;
+  display: block !important;
+  width: min(100%, 66.6667dvh) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  pointer-events: none;
+}
+
+/* Keep each animated element centred even while its entrance
+   animation controls `transform`. The separate translate
+   property does not conflict with animation transforms. */
+.inviteIntro .inviteKicker,
+.inviteIntro .inviteNames,
+.inviteIntro .inviteMeta,
+.inviteIntro .inviteBtn {
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  translate: -50% 0;
+  margin: 0 !important;
+  pointer-events: auto;
+}
+
+/* Headline above the artwork's decorative heart and rules. */
+.inviteIntro .inviteKicker {
+  top: 11% !important;
+  width: max-content;
+  max-width: 94%;
+  font-size: clamp(0.76rem, min(2.5vw, 3.5dvh), 1.65rem);
+}
+
+/* Couple names occupy the empty space above the portraits. */
+.inviteIntro .inviteNames {
+  top: 19.5% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  font-size: clamp(2rem, min(10vw, 8.5dvh), 6rem);
+  gap: 0 !important;
+  padding: 0 !important;
+  line-height: 0.9 !important;
+}
+
+.inviteIntro .inviteNames__line {
+  max-width: 96%;
+}
+
+/* Date stays beneath both names, rather than on the faces. */
+.inviteIntro .inviteMeta {
+  top: 35.7% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 0 !important;
+}
+
+.inviteIntro .inviteMeta__date {
+  font-size: clamp(1rem, min(4vw, 4dvh), 2.25rem);
+}
+
+/* The original venue text remains in JSX, but is not shown on
+   the illustrated invitation cover, matching the reference. */
+.inviteIntro .inviteMeta > span:not(.inviteMeta__date) {
+  display: none !important;
+}
+
+/* Button is intentionally separated from the upper text block. */
+.inviteIntro .inviteBtn {
+  top: 71.2% !important;
+  min-width: clamp(165px, 21vw, 226px);
+  max-width: 90%;
+  white-space: nowrap;
+  border: 2px solid white !important;
+}
+
+@media (max-width: 600px) {
+  .inviteIntro .inviteContent {
+    width: 100% !important;
+  }
+
+  .inviteIntro .inviteKicker {
+    font-size: clamp(0.8rem, 3.6vw, 1.28rem);
+  }
+
+  .inviteIntro .inviteNames {
+    font-size: clamp(2.35rem, 11.5vw, 4.9rem);
+  }
+
+  .inviteIntro .inviteMeta__date {
+    font-size: clamp(1.1rem, 4.5vw, 1.9rem);
+  }
+}
+
+@media (max-width: 360px) {
+  .inviteIntro .inviteKicker {
+    font-size: clamp(0.72rem, 3.4vw, 0.95rem);
+  }
+
+  .inviteIntro .inviteNames {
+    font-size: clamp(2rem, 10.5vw, 3.2rem);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 720px) {
+  .inviteIntro .inviteContent {
+    width: min(100%, 66.6667dvh) !important;
+  }
+
+  .inviteIntro .inviteKicker {
+    font-size: clamp(0.56rem, 3dvh, 1.05rem);
+  }
+
+  .inviteIntro .inviteNames {
+    font-size: clamp(1.4rem, 8.4dvh, 3.5rem);
+  }
+
+  .inviteIntro .inviteMeta__date {
+    font-size: clamp(0.85rem, 3.8dvh, 1.4rem);
+  }
+
+  .inviteIntro .inviteBtn {
+    min-width: 0;
+    padding: 9px 18px;
+    font-size: clamp(0.53rem, 1.8dvh, 0.68rem);
+  }
+}

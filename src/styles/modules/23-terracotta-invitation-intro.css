@@ -3,7 +3,7 @@
    ========================================================= */
 
 .inviteIntro {
-  --invite-artwork: url("/assets/img/invite/terracotta-invitation-desktop.webp");
+  --invite-artwork: url("/assets/img/invite/wedding-invitation-desktop.webp");
 
   --invite-artwork-size: cover;
   --invite-artwork-position: center;
@@ -473,7 +473,7 @@
  */
 @media (min-width: 1025px) and (orientation: landscape) {
   .inviteIntro {
-    --invite-artwork: url("/assets/img/invite/terracotta-invitation-mobile.webp");
+    --invite-artwork: url("/assets/img/invite/wedding-invitation-mobile.webp");
 
     --invite-artwork-size: auto 100%;
     --invite-artwork-position: center center;
@@ -603,7 +603,7 @@
 
 @media (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
   .inviteIntro {
-    --invite-artwork: url("/assets/img/invite/terracotta-invitation-tablet.webp");
+    --invite-artwork: url("/assets/img/invite/wedding-invitation-tablet.webp");
 
     --invite-artwork-size: cover;
     --invite-artwork-position: center;
@@ -625,7 +625,7 @@
 
 @media (max-width: 600px) {
   .inviteIntro {
-    --invite-artwork: url("/assets/img/invite/terracotta-invitation-mobile.webp");
+    --invite-artwork: url("/assets/img/invite/wedding-invitation-mobile.webp");
 
     --invite-artwork-size: cover;
     --invite-artwork-position: center;
@@ -757,7 +757,7 @@
 
 @media (orientation: landscape) and (max-height: 720px) and (max-width: 1024px) {
   .inviteIntro {
-    --invite-artwork: url("/assets/img/invite/terracotta-invitation-mobile.webp");
+    --invite-artwork: url("/assets/img/invite/wedding-invitation-mobile.webp");
 
     --invite-artwork-size: auto 100%;
     --invite-artwork-position: center;
