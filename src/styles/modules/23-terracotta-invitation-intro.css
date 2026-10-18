@@ -473,7 +473,7 @@
  */
 @media (min-width: 1025px) and (orientation: landscape) {
   .inviteIntro {
-    --invite-artwork: url("/assets/img/invite/wedding-invitation-mobile.webp");
+    --invite-artwork: url("/assets/img/invite/wedding-invitation-desktop.webp");
 
     --invite-artwork-size: auto 100%;
     --invite-artwork-position: center center;

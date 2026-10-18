@@ -287,7 +287,7 @@
   }
 
   .inviteIntro .inviteNames {
-    font-size: clamp(3.7rem, 13.1vw, 6.2rem);
+    font-size: clamp(2.6rem, 12.7vw, 5.4rem);
 
     letter-spacing: -0.03em;
     line-height: 0.9 !important;
@@ -322,7 +322,7 @@
   }
 
   .inviteIntro .inviteNames {
-    font-size: clamp(2.85rem, 11.7vw, 3.9rem);
+    font-size: clamp(2.15rem, 11.7vw, 3.6rem);
   }
 }
 
