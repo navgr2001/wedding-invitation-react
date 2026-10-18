@@ -131,7 +131,7 @@
 
   font-family: "Allura", "Petit Formal Script", cursive;
 
-  font-size: clamp(3.6rem, 6.8vw, 6.75rem);
+  font-size: clamp(2.25rem, min(11.2vw, 9.5dvh), 6.75rem);
   font-weight: 400;
 
   font-style: normal;
@@ -287,7 +287,7 @@
   }
 
   .inviteIntro .inviteNames {
-    font-size: clamp(3.25rem, 12.1vw, 5.2rem);
+    font-size: clamp(3.7rem, 13.1vw, 6.2rem);
 
     letter-spacing: -0.03em;
     line-height: 0.9 !important;
