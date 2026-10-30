@@ -1,23 +1,24 @@
 /* =========================================================
-   File: src/styles/modules/37-guest-upload-mobile-paint-fix.css
+   File:
+   src/styles/modules/37-guest-upload-mobile-paint-fix.css
 
    MOBILE & TABLET RENDERING STABILITY
    ---------------------------------------------------------
-   Goals:
-   - Prevent mobile graphical rendering corruption.
-   - Preserve original website animations.
-   - Disable potentially problematic reveal transitions.
-   - Preserve button and carousel transitions.
+   Purpose:
+   - Prevent intermittent graphical corruption.
+   - Preserve CSS keyframe animations.
+   - Disable problematic mobile CSS transitions.
+   - Preserve responsive layouts.
    - Keep guest upload functionality unchanged.
-   - Preserve existing responsive layouts and colors.
+   - Avoid unnecessary GPU compositing layers.
 
    IMPORTANT:
-   Keep this stylesheet imported LAST in style.css.
+   This stylesheet must be imported LAST.
    ========================================================= */
 
 @media (max-width: 900px) {
   /* =======================================================
-     01. PAGE-LEVEL COMPOSITING STABILITY
+     01. PAGE-LEVEL RENDERING STABILITY
      ======================================================= */
 
   html,
@@ -41,31 +42,28 @@
   }
 
   /* =======================================================
-     02. SCROLL-REVEAL TRANSITION STABILITY
+     02. MOBILE TRANSITION SAFEGUARD
+     -------------------------------------------------------
+     Your successful diagnostic showed that disabling
+     transitions removed the graphical corruption.
 
-     Diagnostic C:
-     Disable reveal transitions while preserving
-     other website animations and transitions.
+     CSS keyframe animations remain enabled.
+
+     This intentionally disables CSS transitions across
+     the mobile/tablet website until the individual
+     problematic transition is identified.
      ======================================================= */
 
-  .reveal,
-  .reveal.isVisible,
-  .reveal.is-visible {
-    opacity: 1 !important;
-
-    transform: none !important;
-    -webkit-transform: none !important;
-
-    filter: none !important;
-    -webkit-filter: none !important;
-
-    transition: none !important;
-
-    will-change: auto !important;
+  *,
+  *::before,
+  *::after {
+    transition-property: none !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
   }
 
   /* =======================================================
-     03. GUEST UPLOAD SECTION
+     03. SHARE YOUR MOMENTS SECTION
      ======================================================= */
 
   #guest-upload {
@@ -91,7 +89,7 @@
     will-change: auto !important;
   }
 
-  /* Remove only section-level decorative pseudo-elements. */
+  /* Remove section-level decorative backgrounds. */
 
   #guest-upload::before,
   #guest-upload::after {
@@ -100,12 +98,28 @@
   }
 
   /* =======================================================
-     04. GUEST UPLOAD CONTAINERS
+     04. UPLOAD SECTION CONTAINER
      ======================================================= */
 
-  #guest-upload .guestUploadSection__container,
-  #guest-upload .guestUploadHeader,
-  #guest-upload .guestUploadCard {
+  #guest-upload .guestUploadSection__container {
+    transform: none !important;
+    -webkit-transform: none !important;
+
+    filter: none !important;
+    -webkit-filter: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    contain: none !important;
+    will-change: auto !important;
+  }
+
+  /* =======================================================
+     05. UPLOAD HEADER
+     ======================================================= */
+
+  #guest-upload .guestUploadHeader {
     opacity: 1 !important;
 
     transform: none !important;
@@ -117,8 +131,6 @@
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 
-    perspective: none !important;
-
     contain: none !important;
     content-visibility: visible !important;
 
@@ -126,29 +138,36 @@
   }
 
   /* =======================================================
-     05. UPLOAD HEADER AND CARD TRANSITION STABILITY
-     ======================================================= */
-
-  #guest-upload .guestUploadHeader,
-  #guest-upload .guestUploadCard {
-    transition: none !important;
-  }
-
-  /* =======================================================
-     06. UPLOAD CARD APPEARANCE
+     06. UPLOAD CARD
      ======================================================= */
 
   #guest-upload .guestUploadCard {
     position: relative;
 
+    opacity: 1 !important;
+
     background: #fffdfa !important;
     background-image: none !important;
+
+    transform: none !important;
+    -webkit-transform: none !important;
+
+    filter: none !important;
+    -webkit-filter: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    contain: none !important;
+    content-visibility: visible !important;
+
+    will-change: auto !important;
 
     box-shadow: 0 4px 16px rgba(103, 51, 29, 0.06) !important;
   }
 
   /* =======================================================
-     07. PREVENT EXPENSIVE BACKDROP COMPOSITING
+     07. AVOID EXPENSIVE UPLOAD CARD EFFECTS
      ======================================================= */
 
   #guest-upload .guestUploadCard *,
@@ -202,7 +221,7 @@
   }
 
   /* =======================================================
-     11. MEDIA PREVIEW
+     11. IMAGE AND VIDEO PREVIEWS
      ======================================================= */
 
   #guest-upload .guestUploadPreview__media img,
@@ -212,5 +231,24 @@
 
     transform: none !important;
     -webkit-transform: none !important;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ---------------------------------------------------------
+   Honor the user's reduced-motion preference.
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+
+    scroll-behavior: auto !important;
   }
 }
