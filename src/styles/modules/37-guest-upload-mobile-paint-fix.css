@@ -1,17 +1,68 @@
 /* =========================================================
-   Guest upload: stable mobile/tablet painting
-   Android Chrome / WebView / mobile Safari
-   Keep this stylesheet imported LAST.
+   File: src/styles/modules/37-guest-upload-mobile-paint-fix.css
+
+   MOBILE & TABLET RENDERING STABILITY
+   ---------------------------------------------------------
+   Purpose:
+   - Prevent graphical corruption on mobile/tablet.
+   - Avoid problematic GPU compositing layers.
+   - Keep the Share Your Moments section visible.
+   - Preserve upload form functionality.
+   - Maintain existing colors and responsive layout.
+
+   IMPORTANT:
+   Import this stylesheet LAST in style.css.
+
+   Applies to devices with viewport width <= 900px.
    ========================================================= */
 
 @media (max-width: 900px) {
-  #guest-upload {
-    position: relative;
-    isolation: auto !important;
-    overflow: visible !important;
+  /* =======================================================
+     01. PAGE-LEVEL RENDERING STABILITY
+     ======================================================= */
 
-    background: #fdf1e9 !important;
-    background-image: none !important;
+  html,
+  body,
+  #root,
+  #home {
+    transform: none !important;
+    -webkit-transform: none !important;
+
+    perspective: none !important;
+    -webkit-perspective: none !important;
+
+    filter: none !important;
+    -webkit-filter: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    will-change: auto !important;
+    contain: none !important;
+  }
+
+  /* =======================================================
+     02. DECORATIVE BACKGROUND ELEMENTS
+     ======================================================= */
+
+  .bg-icon,
+  .bg-icon.is-anim {
+    display: none !important;
+
+    animation: none !important;
+    transform: none !important;
+
+    filter: none !important;
+    will-change: auto !important;
+  }
+
+  /* =======================================================
+     03. SCROLL REVEAL STABILITY
+     ======================================================= */
+
+  .reveal,
+  .reveal.isVisible {
+    opacity: 1 !important;
 
     transform: none !important;
     -webkit-transform: none !important;
@@ -19,19 +70,79 @@
     filter: none !important;
     -webkit-filter: none !important;
 
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    animation: none !important;
+    transition: none !important;
 
-    perspective: none !important;
-    contain: none !important;
-    content-visibility: visible !important;
     will-change: auto !important;
   }
+
+  /* =======================================================
+     04. MOBILE CSS MOTION SAFEGUARD
+     -------------------------------------------------------
+     This global safeguard was part of the successful test.
+
+     It temporarily disables CSS animations and transitions
+     on mobile/tablet devices to prevent rendering corruption.
+
+     Native image/video previews and JavaScript functionality
+     are not intentionally disabled by this rule.
+     ======================================================= */
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+
+    scroll-behavior: auto !important;
+  }
+
+  /* =======================================================
+     05. SHARE YOUR MOMENTS SECTION
+     ======================================================= */
+
+  #guest-upload {
+    position: relative;
+
+    isolation: auto !important;
+    overflow: visible !important;
+
+    background-color: #fdf1e9 !important;
+    background-image: none !important;
+
+    opacity: 1 !important;
+
+    transform: none !important;
+    -webkit-transform: none !important;
+
+    filter: none !important;
+    -webkit-filter: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    perspective: none !important;
+
+    contain: none !important;
+    content-visibility: visible !important;
+
+    will-change: auto !important;
+  }
+
+  /* Disable section-level decorative pseudo-elements. */
 
   #guest-upload::before,
   #guest-upload::after {
     content: none !important;
+    display: none !important;
   }
+
+  /* =======================================================
+     06. UPLOAD SECTION CONTAINERS
+     ======================================================= */
 
   #guest-upload .guestUploadSection__container,
   #guest-upload .guestUploadHeader,
@@ -44,19 +155,25 @@
     filter: none !important;
     -webkit-filter: none !important;
 
-    -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 
     perspective: none !important;
+
     contain: none !important;
     content-visibility: visible !important;
-    will-change: auto !important;
 
     animation: none !important;
+    will-change: auto !important;
   }
+
+  /* =======================================================
+     07. UPLOAD CARD
+     ======================================================= */
 
   #guest-upload .guestUploadCard {
     position: relative;
+
     overflow: visible;
 
     background: #fffdfa !important;
@@ -65,19 +182,25 @@
     box-shadow: 0 4px 16px rgba(103, 51, 29, 0.06) !important;
   }
 
-  /* Avoid unnecessary compositing layers */
+  /* =======================================================
+     08. PREVENT UNNECESSARY COMPOSITING
+     ======================================================= */
 
   #guest-upload .guestUploadCard *,
   #guest-upload .guestUploadCard *::before,
   #guest-upload .guestUploadCard *::after {
-    -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 
-    -webkit-filter: none !important;
     filter: none !important;
+    -webkit-filter: none !important;
 
     will-change: auto !important;
   }
+
+  /* =======================================================
+     09. UPLOAD ACTIONS AND DROPZONE
+     ======================================================= */
 
   #guest-upload .guestUploadAction,
   #guest-upload .guestUploadSubmitBtn,
@@ -90,36 +213,49 @@
     transition-property: background-color, border-color, color !important;
   }
 
-  /* Stable action backgrounds */
+  /* Standard upload action */
 
   #guest-upload .guestUploadAction {
     background: #fffdfa !important;
   }
 
+  /* Record video action */
+
   #guest-upload .guestUploadAction--record {
     background: #faf1eb !important;
   }
+
+  /* Drag and drop area */
 
   #guest-upload .guestUploadDropzone {
     background: #fff8f4 !important;
   }
 
+  /* =======================================================
+     10. INPUTS AND FILE PREVIEWS
+     ======================================================= */
+
   #guest-upload .guestUploadField input,
   #guest-upload .guestUploadPreview {
-    background: #fff !important;
+    background: #ffffff !important;
   }
 
-  /* Upload button */
+  /* =======================================================
+     11. UPLOAD BUTTON
+     ======================================================= */
 
   #guest-upload .guestUploadSubmitBtn {
     background: #a8441e !important;
+    background-image: none !important;
   }
 
   #guest-upload .guestUploadSubmitBtn:disabled {
     background: #a8441e !important;
   }
 
-  /* Keep native media previews working */
+  /* =======================================================
+     12. IMAGE AND VIDEO PREVIEW STABILITY
+     ======================================================= */
 
   #guest-upload .guestUploadPreview__media img,
   #guest-upload .guestUploadPreview__media video {
@@ -127,56 +263,5 @@
 
     transform: none !important;
     -webkit-transform: none !important;
-  }
-
-  html,
-  body,
-  #root,
-  #home {
-    transform: none !important;
-    perspective: none !important;
-    filter: none !important;
-
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-
-    will-change: auto !important;
-    contain: none !important;
-  }
-
-  /* Disable page-level decorative layers. */
-  .bg-icon,
-  .bg-icon.is-anim {
-    display: none !important;
-  }
-
-  /* Remove CSS scroll-reveal effects. */
-  .reveal,
-  .reveal.isVisible {
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-
-    animation: none !important;
-    transition: none !important;
-    will-change: auto !important;
-  }
-
-  /* Temporarily eliminate CSS motion across the page. */
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0s !important;
-    animation-delay: 0s !important;
-    transition-duration: 0s !important;
-    scroll-behavior: auto !important;
-  }
-
-  /* Keep the upload section fully visible. */
-  #guest-upload,
-  #guest-upload .guestUploadCard {
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
   }
 }
