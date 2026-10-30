@@ -4,17 +4,16 @@
 
    MOBILE & TABLET RENDERING STABILITY
    ---------------------------------------------------------
-   Purpose:
-   - Reduce mobile graphical rendering corruption.
+   Goals:
+   - Reduce intermittent mobile rendering corruption.
    - Preserve CSS keyframe animations.
-   - Preserve button and carousel transitions.
-   - Prevent problematic scroll-reveal transitions.
-   - Avoid transform-based timeline transitions.
-   - Preserve guest upload functionality.
-   - Preserve existing responsive layouts.
+   - Prevent risky compositor transitions.
+   - Preserve basic color interaction transitions.
+   - Keep upload functionality unchanged.
+   - Preserve the existing responsive design.
 
    IMPORTANT:
-   This stylesheet must be imported LAST.
+   Import this stylesheet LAST.
 
    ========================================================= */
 
@@ -39,16 +38,47 @@
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 
-    will-change: auto !important;
     contain: none !important;
+    will-change: auto !important;
   }
 
   /* =======================================================
-     02. SCROLL-REVEAL TRANSITION STABILITY
+     02. SAFE MOBILE TRANSITIONS
      -------------------------------------------------------
-     Disable transform-based scroll reveals on mobile.
+     Prevent transition-driven compositing problems.
 
-     Other animations and transitions remain enabled.
+     Only allow simple color transitions.
+
+     This disables CSS transitions for properties such as:
+     - transform
+     - opacity
+     - filter
+     - backdrop-filter
+     - box-shadow
+     - width / height
+
+     CSS @keyframes animations remain enabled.
+
+     ======================================================= */
+
+  *,
+  *::before,
+  *::after {
+    transition-property:
+      color, background-color, border-color, text-decoration-color !important;
+
+    transition-duration: 150ms !important;
+    transition-delay: 0ms !important;
+
+    transition-timing-function: ease !important;
+  }
+
+  /* =======================================================
+     03. SCROLL-REVEAL STABILITY
+     -------------------------------------------------------
+     Keep scroll-reveal content visible on mobile.
+
+     Desktop reveal animations remain unchanged.
      ======================================================= */
 
   .reveal,
@@ -63,17 +93,16 @@
     -webkit-filter: none !important;
 
     transition: none !important;
-
     will-change: auto !important;
   }
 
   /* =======================================================
-     03. TIMELINE TRANSITION STABILITY
+     04. TIMELINE CARD STABILITY
      -------------------------------------------------------
-     Preserve opacity fade-in animations.
+     Remove transform-based timeline transitions.
 
-     Disable transform movement which may create
-     additional compositing layers on mobile.
+     Cards stay visible when activated by the existing
+     timeline logic.
      ======================================================= */
 
   .tlCard,
@@ -82,21 +111,19 @@
     transform: none !important;
     -webkit-transform: none !important;
 
-    transition-property: opacity !important;
-    transition-duration: 650ms !important;
-    transition-timing-function: ease !important;
-
+    transition: none !important;
     will-change: auto !important;
   }
 
   .tlCard.tlCard--visible {
-    opacity: 1;
+    opacity: 1 !important;
+
     transform: none !important;
     -webkit-transform: none !important;
   }
 
   /* =======================================================
-     04. SHARE YOUR MOMENTS SECTION
+     05. SHARE YOUR MOMENTS SECTION
      ======================================================= */
 
   #guest-upload {
@@ -122,7 +149,9 @@
     will-change: auto !important;
   }
 
-  /* Remove section-level decorative backgrounds. */
+  /* =======================================================
+     06. SECTION DECORATIVE LAYERS
+     ======================================================= */
 
   #guest-upload::before,
   #guest-upload::after {
@@ -131,7 +160,7 @@
   }
 
   /* =======================================================
-     05. UPLOAD SECTION CONTAINER
+     07. UPLOAD SECTION CONTAINER
      ======================================================= */
 
   #guest-upload .guestUploadSection__container {
@@ -149,7 +178,7 @@
   }
 
   /* =======================================================
-     06. UPLOAD HEADER
+     08. UPLOAD HEADER
      ======================================================= */
 
   #guest-upload .guestUploadHeader {
@@ -168,12 +197,11 @@
     content-visibility: visible !important;
 
     transition: none !important;
-
     will-change: auto !important;
   }
 
   /* =======================================================
-     07. UPLOAD CARD
+     09. UPLOAD CARD
      ======================================================= */
 
   #guest-upload .guestUploadCard {
@@ -197,14 +225,13 @@
     content-visibility: visible !important;
 
     transition: none !important;
-
     will-change: auto !important;
 
     box-shadow: 0 4px 16px rgba(103, 51, 29, 0.06) !important;
   }
 
   /* =======================================================
-     08. AVOID EXPENSIVE UPLOAD CARD EFFECTS
+     10. REMOVE EXPENSIVE CARD EFFECTS
      ======================================================= */
 
   #guest-upload .guestUploadCard *,
@@ -220,7 +247,7 @@
   }
 
   /* =======================================================
-     09. UPLOAD ACTIONS
+     11. UPLOAD ACTIONS
      ======================================================= */
 
   #guest-upload .guestUploadAction {
@@ -236,7 +263,7 @@
   }
 
   /* =======================================================
-     10. INPUTS AND PREVIEWS
+     12. FORM INPUTS AND PREVIEWS
      ======================================================= */
 
   #guest-upload .guestUploadField input,
@@ -245,7 +272,7 @@
   }
 
   /* =======================================================
-     11. UPLOAD BUTTON
+     13. UPLOAD BUTTON
      ======================================================= */
 
   #guest-upload .guestUploadSubmitBtn {
@@ -258,7 +285,7 @@
   }
 
   /* =======================================================
-     12. IMAGE AND VIDEO PREVIEWS
+     14. IMAGE / VIDEO PREVIEW
      ======================================================= */
 
   #guest-upload .guestUploadPreview__media img,
@@ -272,9 +299,8 @@
 }
 
 /* =========================================================
-   ACCESSIBILITY
-   ---------------------------------------------------------
-   Respect the user's reduced-motion preference.
+   15. ACCESSIBILITY
+   Respect reduced-motion preferences.
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -285,6 +311,7 @@
     animation-iteration-count: 1 !important;
 
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
 
     scroll-behavior: auto !important;
   }
