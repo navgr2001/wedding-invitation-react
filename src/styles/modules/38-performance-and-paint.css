@@ -1,10 +1,10 @@
 /* Targeted compositor and mobile paint safeguards. */
-.bg-icon,
+/* .bg-icon,
 .bg-icon.is-anim {
   animation: none !important;
   will-change: auto !important;
   transform: rotate(var(--r, 0deg)) !important;
-}
+} */
 
 /* A transformed ancestor can cause large raster surfaces on mobile. */
 #guest-upload .guestUploadCard,

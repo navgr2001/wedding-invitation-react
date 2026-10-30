@@ -3,22 +3,22 @@
 
    MOBILE & TABLET RENDERING STABILITY
    ---------------------------------------------------------
-   Purpose:
-   - Prevent graphical corruption on mobile/tablet.
-   - Avoid problematic GPU compositing layers.
-   - Keep the Share Your Moments section visible.
-   - Preserve upload form functionality.
-   - Maintain existing colors and responsive layout.
+   Goals:
+   - Prevent mobile graphical rendering corruption.
+   - Preserve original website animations.
+   - Preserve scroll-reveal transitions.
+   - Preserve button hover and interaction effects.
+   - Keep upload functionality unchanged.
+   - Avoid unnecessary GPU compositing.
 
    IMPORTANT:
-   Import this stylesheet LAST in style.css.
+   Keep this stylesheet imported LAST.
 
-   Applies to devices with viewport width <= 900px.
    ========================================================= */
 
 @media (max-width: 900px) {
   /* =======================================================
-     01. PAGE-LEVEL RENDERING STABILITY
+     01. PAGE-LEVEL COMPOSITING STABILITY
      ======================================================= */
 
   html,
@@ -42,78 +42,16 @@
   }
 
   /* =======================================================
-     02. DECORATIVE BACKGROUND ELEMENTS
-     ======================================================= */
-
-  .bg-icon,
-  .bg-icon.is-anim {
-    display: none !important;
-
-    animation: none !important;
-    transform: none !important;
-
-    filter: none !important;
-    will-change: auto !important;
-  }
-
-  /* =======================================================
-     03. SCROLL REVEAL STABILITY
-     ======================================================= */
-
-  .reveal,
-  .reveal.isVisible {
-    opacity: 1 !important;
-
-    transform: none !important;
-    -webkit-transform: none !important;
-
-    filter: none !important;
-    -webkit-filter: none !important;
-
-    animation: none !important;
-    transition: none !important;
-
-    will-change: auto !important;
-  }
-
-  /* =======================================================
-     04. MOBILE CSS MOTION SAFEGUARD
-     -------------------------------------------------------
-     This global safeguard was part of the successful test.
-
-     It temporarily disables CSS animations and transitions
-     on mobile/tablet devices to prevent rendering corruption.
-
-     Native image/video previews and JavaScript functionality
-     are not intentionally disabled by this rule.
-     ======================================================= */
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0s !important;
-    animation-delay: 0s !important;
-
-    transition-duration: 0s !important;
-    transition-delay: 0s !important;
-
-    scroll-behavior: auto !important;
-  }
-
-  /* =======================================================
-     05. SHARE YOUR MOMENTS SECTION
+     02. GUEST UPLOAD SECTION
      ======================================================= */
 
   #guest-upload {
     position: relative;
 
-    isolation: auto !important;
-    overflow: visible !important;
-
     background-color: #fdf1e9 !important;
     background-image: none !important;
 
-    opacity: 1 !important;
+    opacity: 1;
 
     transform: none !important;
     -webkit-transform: none !important;
@@ -132,7 +70,7 @@
     will-change: auto !important;
   }
 
-  /* Disable section-level decorative pseudo-elements. */
+  /* Remove section-level decorative pseudo-elements. */
 
   #guest-upload::before,
   #guest-upload::after {
@@ -141,13 +79,11 @@
   }
 
   /* =======================================================
-     06. UPLOAD SECTION CONTAINERS
+     03. UPLOAD CONTAINER
      ======================================================= */
 
-  #guest-upload .guestUploadSection__container,
-  #guest-upload .guestUploadHeader,
-  #guest-upload .guestUploadCard {
-    opacity: 1 !important;
+  #guest-upload .guestUploadSection__container {
+    position: relative;
 
     transform: none !important;
     -webkit-transform: none !important;
@@ -158,81 +94,56 @@
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 
-    perspective: none !important;
-
-    contain: none !important;
-    content-visibility: visible !important;
-
-    animation: none !important;
     will-change: auto !important;
   }
 
   /* =======================================================
-     07. UPLOAD CARD
+     04. UPLOAD CARD
      ======================================================= */
 
   #guest-upload .guestUploadCard {
     position: relative;
 
-    overflow: visible;
+    opacity: 1 !important;
 
     background: #fffdfa !important;
     background-image: none !important;
+
+    transform: none !important;
+    -webkit-transform: none !important;
+
+    filter: none !important;
+    -webkit-filter: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    contain: none !important;
+    content-visibility: visible !important;
+
+    will-change: auto !important;
 
     box-shadow: 0 4px 16px rgba(103, 51, 29, 0.06) !important;
   }
 
   /* =======================================================
-     08. PREVENT UNNECESSARY COMPOSITING
+     05. UPLOAD ACTION BUTTON BACKGROUNDS
      ======================================================= */
-
-  #guest-upload .guestUploadCard *,
-  #guest-upload .guestUploadCard *::before,
-  #guest-upload .guestUploadCard *::after {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-
-    filter: none !important;
-    -webkit-filter: none !important;
-
-    will-change: auto !important;
-  }
-
-  /* =======================================================
-     09. UPLOAD ACTIONS AND DROPZONE
-     ======================================================= */
-
-  #guest-upload .guestUploadAction,
-  #guest-upload .guestUploadSubmitBtn,
-  #guest-upload .guestUploadDropzone {
-    transform: none !important;
-    -webkit-transform: none !important;
-
-    animation: none !important;
-
-    transition-property: background-color, border-color, color !important;
-  }
-
-  /* Standard upload action */
 
   #guest-upload .guestUploadAction {
     background: #fffdfa !important;
   }
 
-  /* Record video action */
-
   #guest-upload .guestUploadAction--record {
     background: #faf1eb !important;
   }
-
-  /* Drag and drop area */
 
   #guest-upload .guestUploadDropzone {
     background: #fff8f4 !important;
   }
 
   /* =======================================================
-     10. INPUTS AND FILE PREVIEWS
+     06. INPUTS AND PREVIEWS
      ======================================================= */
 
   #guest-upload .guestUploadField input,
@@ -241,7 +152,7 @@
   }
 
   /* =======================================================
-     11. UPLOAD BUTTON
+     07. UPLOAD BUTTON
      ======================================================= */
 
   #guest-upload .guestUploadSubmitBtn {
@@ -254,14 +165,42 @@
   }
 
   /* =======================================================
-     12. IMAGE AND VIDEO PREVIEW STABILITY
+     08. MEDIA PREVIEW
      ======================================================= */
 
   #guest-upload .guestUploadPreview__media img,
   #guest-upload .guestUploadPreview__media video {
     display: block;
+    max-width: 100%;
+  }
 
-    transform: none !important;
-    -webkit-transform: none !important;
+  /* =======================================================
+     09. ANIMATION SUPPORT
+     -------------------------------------------------------
+     Do NOT globally override animation-duration,
+     transition-duration, or scroll-behavior.
+
+     Original animations from other stylesheets
+     should remain in control.
+
+     Scroll-reveal animations are also preserved.
+     ======================================================= */
+}
+
+/* =========================================================
+   ACCESSIBILITY
+
+   Respect users who explicitly request reduced motion.
+   This does not affect normal animation preferences.
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

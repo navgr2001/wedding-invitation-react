@@ -6,13 +6,13 @@
 @media (max-width: 900px) {
   /* Reduce unnecessary GPU layers from floating icons */
 
-  .bg-icon,
+  /* .bg-icon,
   .bg-icon.is-anim {
     animation: none !important;
     transform: rotate(var(--r, 0deg));
     will-change: auto;
     filter: none;
-  }
+  } */
 
   /* Avoid separate GPU layers for every image */
 
