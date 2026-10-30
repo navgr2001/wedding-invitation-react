@@ -5,15 +5,17 @@
    MOBILE & TABLET RENDERING STABILITY
    ---------------------------------------------------------
    Purpose:
-   - Prevent intermittent graphical corruption.
+   - Reduce mobile graphical rendering corruption.
    - Preserve CSS keyframe animations.
-   - Disable problematic mobile CSS transitions.
-   - Preserve responsive layouts.
-   - Keep guest upload functionality unchanged.
-   - Avoid unnecessary GPU compositing layers.
+   - Preserve button and carousel transitions.
+   - Prevent problematic scroll-reveal transitions.
+   - Avoid transform-based timeline transitions.
+   - Preserve guest upload functionality.
+   - Preserve existing responsive layouts.
 
    IMPORTANT:
    This stylesheet must be imported LAST.
+
    ========================================================= */
 
 @media (max-width: 900px) {
@@ -42,28 +44,59 @@
   }
 
   /* =======================================================
-     02. MOBILE TRANSITION SAFEGUARD
+     02. SCROLL-REVEAL TRANSITION STABILITY
      -------------------------------------------------------
-     Your successful diagnostic showed that disabling
-     transitions removed the graphical corruption.
+     Disable transform-based scroll reveals on mobile.
 
-     CSS keyframe animations remain enabled.
-
-     This intentionally disables CSS transitions across
-     the mobile/tablet website until the individual
-     problematic transition is identified.
+     Other animations and transitions remain enabled.
      ======================================================= */
 
-  *,
-  *::before,
-  *::after {
-    transition-property: none !important;
-    transition-duration: 0s !important;
-    transition-delay: 0s !important;
+  .reveal,
+  .reveal.isVisible,
+  .reveal.is-visible {
+    opacity: 1 !important;
+
+    transform: none !important;
+    -webkit-transform: none !important;
+
+    filter: none !important;
+    -webkit-filter: none !important;
+
+    transition: none !important;
+
+    will-change: auto !important;
   }
 
   /* =======================================================
-     03. SHARE YOUR MOMENTS SECTION
+     03. TIMELINE TRANSITION STABILITY
+     -------------------------------------------------------
+     Preserve opacity fade-in animations.
+
+     Disable transform movement which may create
+     additional compositing layers on mobile.
+     ======================================================= */
+
+  .tlCard,
+  .tlItem--left .tlCard,
+  .tlItem--right .tlCard {
+    transform: none !important;
+    -webkit-transform: none !important;
+
+    transition-property: opacity !important;
+    transition-duration: 650ms !important;
+    transition-timing-function: ease !important;
+
+    will-change: auto !important;
+  }
+
+  .tlCard.tlCard--visible {
+    opacity: 1;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+
+  /* =======================================================
+     04. SHARE YOUR MOMENTS SECTION
      ======================================================= */
 
   #guest-upload {
@@ -98,7 +131,7 @@
   }
 
   /* =======================================================
-     04. UPLOAD SECTION CONTAINER
+     05. UPLOAD SECTION CONTAINER
      ======================================================= */
 
   #guest-upload .guestUploadSection__container {
@@ -116,7 +149,7 @@
   }
 
   /* =======================================================
-     05. UPLOAD HEADER
+     06. UPLOAD HEADER
      ======================================================= */
 
   #guest-upload .guestUploadHeader {
@@ -134,11 +167,13 @@
     contain: none !important;
     content-visibility: visible !important;
 
+    transition: none !important;
+
     will-change: auto !important;
   }
 
   /* =======================================================
-     06. UPLOAD CARD
+     07. UPLOAD CARD
      ======================================================= */
 
   #guest-upload .guestUploadCard {
@@ -161,13 +196,15 @@
     contain: none !important;
     content-visibility: visible !important;
 
+    transition: none !important;
+
     will-change: auto !important;
 
     box-shadow: 0 4px 16px rgba(103, 51, 29, 0.06) !important;
   }
 
   /* =======================================================
-     07. AVOID EXPENSIVE UPLOAD CARD EFFECTS
+     08. AVOID EXPENSIVE UPLOAD CARD EFFECTS
      ======================================================= */
 
   #guest-upload .guestUploadCard *,
@@ -183,7 +220,7 @@
   }
 
   /* =======================================================
-     08. UPLOAD ACTIONS
+     09. UPLOAD ACTIONS
      ======================================================= */
 
   #guest-upload .guestUploadAction {
@@ -199,7 +236,7 @@
   }
 
   /* =======================================================
-     09. INPUTS AND PREVIEWS
+     10. INPUTS AND PREVIEWS
      ======================================================= */
 
   #guest-upload .guestUploadField input,
@@ -208,7 +245,7 @@
   }
 
   /* =======================================================
-     10. UPLOAD BUTTON
+     11. UPLOAD BUTTON
      ======================================================= */
 
   #guest-upload .guestUploadSubmitBtn {
@@ -221,7 +258,7 @@
   }
 
   /* =======================================================
-     11. IMAGE AND VIDEO PREVIEWS
+     12. IMAGE AND VIDEO PREVIEWS
      ======================================================= */
 
   #guest-upload .guestUploadPreview__media img,
@@ -237,7 +274,7 @@
 /* =========================================================
    ACCESSIBILITY
    ---------------------------------------------------------
-   Honor the user's reduced-motion preference.
+   Respect the user's reduced-motion preference.
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
