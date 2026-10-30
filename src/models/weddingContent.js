@@ -206,7 +206,7 @@ export const weddingContent = {
         "preshoot-IMG-3221",
         "preshoot-IMG-3253",
         "preshoot-IMG-3271",
-        "preshoot-IMG-3282",
+        // "preshoot-IMG-3282",
       ].map((filename) => ({
         src: `/assets/img/gallery/optimized/${filename}-960.webp`,
         smallSrc: `/assets/img/gallery/optimized/${filename}-480.webp`,
