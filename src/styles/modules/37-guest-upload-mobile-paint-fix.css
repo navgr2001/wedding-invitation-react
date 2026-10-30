@@ -1,51 +1,71 @@
 /* =========================================================
-   GUEST UPLOAD - MOBILE PAINT STABILITY
-   Android / iOS / Tablet
+   Guest upload: stable mobile/tablet painting
+   Android Chrome / WebView / mobile Safari
+   Keep this stylesheet imported LAST.
    ========================================================= */
 
 @media (max-width: 900px) {
-  /* Remove unnecessary isolated rendering context */
-
-  #home > #guest-upload {
+  #guest-upload {
+    position: relative;
     isolation: auto !important;
     overflow: visible !important;
 
     background: #fdf1e9 !important;
     background-image: none !important;
 
-    filter: none !important;
-    -webkit-filter: none !important;
-
     transform: none !important;
     -webkit-transform: none !important;
 
-    perspective: none !important;
-    contain: none !important;
-    content-visibility: visible !important;
-    will-change: auto !important;
-  }
-
-  /* Simplify the main upload card */
-
-  #guest-upload .guestUploadCard {
-    background: #fffdfa !important;
-    background-image: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
 
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
 
-    filter: none !important;
-    transform: none !important;
     perspective: none !important;
+    contain: none !important;
+    content-visibility: visible !important;
+    will-change: auto !important;
+  }
 
+  #guest-upload::before,
+  #guest-upload::after {
+    content: none !important;
+  }
+
+  #guest-upload .guestUploadSection__container,
+  #guest-upload .guestUploadHeader,
+  #guest-upload .guestUploadCard {
+    opacity: 1 !important;
+
+    transform: none !important;
+    -webkit-transform: none !important;
+
+    filter: none !important;
+    -webkit-filter: none !important;
+
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+
+    perspective: none !important;
     contain: none !important;
     content-visibility: visible !important;
     will-change: auto !important;
 
-    box-shadow: 0 5px 18px rgba(103, 51, 29, 0.07) !important;
+    animation: none !important;
   }
 
-  /* Avoid expensive filters in nested content */
+  #guest-upload .guestUploadCard {
+    position: relative;
+    overflow: visible;
+
+    background: #fffdfa !important;
+    background-image: none !important;
+
+    box-shadow: 0 4px 16px rgba(103, 51, 29, 0.06) !important;
+  }
+
+  /* Avoid unnecessary compositing layers */
 
   #guest-upload .guestUploadCard *,
   #guest-upload .guestUploadCard *::before,
@@ -53,13 +73,11 @@
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
 
-    filter: none !important;
     -webkit-filter: none !important;
+    filter: none !important;
 
     will-change: auto !important;
   }
-
-  /* Avoid creating new compositing layers on interaction */
 
   #guest-upload .guestUploadAction,
   #guest-upload .guestUploadSubmitBtn,
@@ -67,13 +85,47 @@
     transform: none !important;
     -webkit-transform: none !important;
 
+    animation: none !important;
+
     transition-property: background-color, border-color, color !important;
   }
 
-  /* Stable opaque action backgrounds */
+  /* Stable action backgrounds */
 
-  #guest-upload .guestUploadAction,
+  #guest-upload .guestUploadAction {
+    background: #fffdfa !important;
+  }
+
+  #guest-upload .guestUploadAction--record {
+    background: #faf1eb !important;
+  }
+
   #guest-upload .guestUploadDropzone {
-    background-color: #fffdfa;
+    background: #fff8f4 !important;
+  }
+
+  #guest-upload .guestUploadField input,
+  #guest-upload .guestUploadPreview {
+    background: #fff !important;
+  }
+
+  /* Upload button */
+
+  #guest-upload .guestUploadSubmitBtn {
+    background: #a8441e !important;
+  }
+
+  #guest-upload .guestUploadSubmitBtn:disabled {
+    background: #a8441e !important;
+  }
+
+  /* Keep native media previews working */
+
+  #guest-upload .guestUploadPreview__media img,
+  #guest-upload .guestUploadPreview__media video {
+    display: block;
+
+    transform: none !important;
+    -webkit-transform: none !important;
   }
 }
