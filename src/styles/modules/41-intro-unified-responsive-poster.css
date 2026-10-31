@@ -1,0 +1,189 @@
+/* ============================================================
+   INTRO POSTER: ONE CONSISTENT RESPONSIVE COMPOSITION
+   This stylesheet is the LAST intro-specific override.
+   The reference illustration is 1024 x 1536 (2:3).
+   All typography is sized relative to the same fitted poster.
+   Existing text reveal, leaves sway and exit animations remain.
+   ============================================================ */
+.inviteIntro {
+  --poster-width: min(100vw, 66.666667dvh);
+  --invite-artwork: url("/assets/img/invite/wedding-invitation-desktop.webp");
+  --invite-artwork-size: 100% 100%;
+  --invite-artwork-position: center center;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.inviteIntro .inviteScene {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #b65b36;
+}
+
+/* Do not create desktop-only side panels over the reference. */
+.inviteIntro .inviteScene::before,
+.inviteIntro .inviteScene::after {
+  content: none !important;
+}
+
+.inviteIntro .invitePoster {
+  position: relative;
+  width: var(--poster-width);
+  height: calc(var(--poster-width) * 1.5);
+  flex: 0 0 auto;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.inviteIntro .invitePoster > .inviteScene__artwork,
+.inviteIntro .invitePoster > .inviteScene__motion,
+.inviteIntro .invitePoster > .inviteScene__shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.inviteIntro .invitePoster > .inviteScene__artwork,
+.inviteIntro .invitePoster > .inviteScene__motion {
+  background-image: url("/assets/img/invite/wedding-invitation-desktop.webp");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.inviteIntro .invitePoster > .inviteScene__motion--topLeaves {
+  -webkit-mask-image: radial-gradient(
+    ellipse 65% 24% at 22% 2%,
+    #000 0%,
+    #000 48%,
+    rgba(0, 0, 0, 0.7) 68%,
+    transparent 94%
+  );
+  mask-image: radial-gradient(
+    ellipse 65% 24% at 22% 2%,
+    #000 0%,
+    #000 48%,
+    rgba(0, 0, 0, 0.7) 68%,
+    transparent 94%
+  );
+}
+
+.inviteIntro .invitePoster > .inviteScene__motion--leftBranches {
+  -webkit-mask-image: radial-gradient(
+    ellipse 36% 50% at 4% 65%,
+    #000 0%,
+    #000 48%,
+    rgba(0, 0, 0, 0.68) 68%,
+    transparent 94%
+  );
+  mask-image: radial-gradient(
+    ellipse 36% 50% at 4% 65%,
+    #000 0%,
+    #000 48%,
+    rgba(0, 0, 0, 0.68) 68%,
+    transparent 94%
+  );
+}
+
+.inviteIntro .invitePoster > .inviteScene__motion--rightFlowers {
+  -webkit-mask-image: radial-gradient(
+    ellipse 42% 42% at 89% 71%,
+    #000 0%,
+    #000 47%,
+    rgba(0, 0, 0, 0.66) 67%,
+    transparent 93%
+  );
+  mask-image: radial-gradient(
+    ellipse 42% 42% at 89% 71%,
+    #000 0%,
+    #000 47%,
+    rgba(0, 0, 0, 0.66) 67%,
+    transparent 93%
+  );
+}
+
+.inviteIntro .invitePoster > .inviteContent {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none;
+}
+
+.inviteIntro .inviteContent > .inviteKicker,
+.inviteIntro .inviteContent > .inviteNames,
+.inviteIntro .inviteContent > .inviteMeta,
+.inviteIntro .inviteContent > .inviteBtn {
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  translate: -50% 0;
+  margin: 0 !important;
+  pointer-events: auto;
+}
+
+.inviteIntro .inviteContent > .inviteKicker {
+  top: 11% !important;
+  width: max-content;
+  max-width: 96%;
+  font-size: calc(var(--poster-width) * 0.033) !important;
+}
+
+.inviteIntro .inviteKicker__letter {
+  margin-inline: 0.085em;
+}
+
+.inviteIntro .inviteKicker__space {
+  width: 0.42em;
+}
+
+.inviteIntro .inviteContent > .inviteNames {
+  top: 19.5% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  font-size: calc(var(--poster-width) * 0.102) !important;
+  line-height: 0.9 !important;
+}
+
+.inviteIntro .inviteNames__line {
+  max-width: 96%;
+}
+
+.inviteIntro .inviteContent > .inviteMeta {
+  top: 35.7% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 0 !important;
+}
+
+.inviteIntro .inviteMeta__date {
+  font-size: calc(var(--poster-width) * 0.037) !important;
+}
+
+.inviteIntro .inviteContent > .inviteBtn {
+  top: 72.2% !important;
+  min-width: calc(var(--poster-width) * 0.29) !important;
+  max-width: 90% !important;
+  padding: calc(var(--poster-width) * 0.014) calc(var(--poster-width) * 0.028) !important;
+  font-size: calc(var(--poster-width) * 0.0205) !important;
+  line-height: 1.2 !important;
+  white-space: nowrap;
+  border: 2px solid #fff !important;
+}
+
+/* Short and very wide screens retain the full poster, never crop it.
+   The remaining surrounding space is intentionally terracotta. */
