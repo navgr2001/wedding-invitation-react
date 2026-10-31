@@ -368,7 +368,7 @@
   .inviteIntro .inviteContent > .inviteNames {
     top: 19.5% !important;
 
-    font-size: 12.5vw !important;
+    font-size: 13.5vw !important;
 
     line-height: 0.9 !important;
   }
@@ -594,11 +594,11 @@
   }
 
   .inviteIntro .inviteContent > .inviteNames {
-    font-size: clamp(30px, 9vh, 70px) !important;
+    font-size: clamp(25px, 8vh, 60px) !important;
   }
 
   .inviteIntro .inviteMeta__date {
-    font-size: clamp(25px, 3.5vh, 30px) !important;
+    font-size: clamp(11px, 2.5vh, 22px) !important;
   }
 
   .inviteIntro .inviteContent > .inviteBtn {
