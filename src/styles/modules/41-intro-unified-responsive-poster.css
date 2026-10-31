@@ -5,16 +5,16 @@
    RESPONSIVE WEDDING INVITATION INTRO
 
    DESKTOP:
-   Preserve original 2:3 composition.
+   Original 2:3 poster composition.
 
    MOBILE:
-   Preserve existing full-screen cover appearance.
+   Existing full-screen cover layout.
+   Couple names increased to 12.5vw.
 
    TABLET:
-   Display the complete reference composition at 2:3.
-   Scale all elements proportionally.
+   Original 2:3 reference composition.
 
-   Existing animations and transitions are preserved.
+   Existing animations and transitions remain unchanged.
    ============================================================ */
 
 /* ============================================================
@@ -301,7 +301,12 @@
 }
 
 /* ============================================================
-   12. MOBILE — PRESERVE EXISTING COVER LAYOUT
+   12. MOBILE — FULL-SCREEN COVER
+   ------------------------------------------------------------
+   UPDATED:
+   Couple names increased from 10.2vw to 12.5vw.
+
+   All other mobile properties remain unchanged.
    ============================================================ */
 
 @media screen and (max-width: 640px) {
@@ -358,10 +363,13 @@
     font-size: clamp(12px, 3.3vw, 25px) !important;
   }
 
+  /* UPDATED — LARGER COUPLE NAMES */
+
   .inviteIntro .inviteContent > .inviteNames {
     top: 19.5% !important;
 
-    font-size: 10.2vw !important;
+    font-size: 12.5vw !important;
+
     line-height: 0.9 !important;
   }
 
@@ -386,13 +394,7 @@
 }
 
 /* ============================================================
-   13. TABLET — REFERENCE COMPOSITION
-   ------------------------------------------------------------
-   Only this section changes tablet behavior.
-
-   The invitation maintains its original aspect ratio.
-   Names, date and button scale with the poster.
-   No image stretching or cropping.
+   13. TABLET — ORIGINAL REFERENCE COMPOSITION
    ============================================================ */
 
 @media screen and (min-width: 641px) and (max-width: 1024px) {
@@ -558,8 +560,6 @@
 
 /* ============================================================
    14. TABLET LANDSCAPE
-   ------------------------------------------------------------
-   Maintain the same reference composition when rotated.
    ============================================================ */
 
 @media screen and (min-width: 641px) and (max-width: 1024px) and (orientation: landscape) {
@@ -579,8 +579,6 @@
 
 /* ============================================================
    15. MOBILE LANDSCAPE
-   ------------------------------------------------------------
-   Preserve existing mobile cover behavior.
    ============================================================ */
 
 @media screen and (max-width: 640px) and (orientation: landscape) {
