@@ -594,11 +594,11 @@
   }
 
   .inviteIntro .inviteContent > .inviteNames {
-    font-size: clamp(25px, 8vh, 60px) !important;
+    font-size: clamp(30px, 9vh, 70px) !important;
   }
 
   .inviteIntro .inviteMeta__date {
-    font-size: clamp(11px, 2.5vh, 22px) !important;
+    font-size: clamp(25px, 3.5vh, 30px) !important;
   }
 
   .inviteIntro .inviteContent > .inviteBtn {
