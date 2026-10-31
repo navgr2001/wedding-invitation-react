@@ -1,0 +1,59 @@
+/* =========================================================
+   NAVEEN WEDDING INVITATION
+   MOBILE FOOTER / BOTTOM NAVIGATION FIX
+
+   Purpose:
+   - Keep "Made with love" visible.
+   - Keep copyright visible.
+   - Prevent fixed navigation from covering footer.
+   - Support mobile, tablet and safe areas.
+   - Preserve all animations and transitions.
+   ========================================================= */
+
+@media (max-width: 900px) {
+  /* Avoid unnecessary space outside the footer */
+  body {
+    padding-bottom: 0;
+  }
+
+  /* Reserve bottom navigation clearance
+     within the footer itself */
+  .weddingFooter {
+    box-sizing: border-box;
+
+    padding-bottom: calc(36px + var(--bottom-nav-space, 105px));
+  }
+
+  /* Keep footer information in normal flow */
+  .weddingFooter__container {
+    position: relative;
+  }
+
+  .weddingFooter__bottom {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Ensure both lines remain visible */
+  .weddingFooter__love,
+  .weddingFooter__copy {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    text-align: center;
+  }
+}
+
+/* Smaller mobile screens */
+@media (max-width: 420px) {
+  .weddingFooter {
+    padding-bottom: calc(28px + var(--bottom-nav-space, 95px));
+  }
+}
+
+/* Short landscape screens */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+  .weddingFooter {
+    padding-bottom: calc(24px + var(--bottom-nav-space, 78px));
+  }
+}

@@ -72,6 +72,7 @@ function Footer({ footer }) {
 
         <div className="weddingFooter__bottom">
           <p className="weddingFooter__love">Made with love</p>
+
           <p className="weddingFooter__copy">
             © 2026 Shalom &amp; Dewmini&apos;s Wedding
           </p>
