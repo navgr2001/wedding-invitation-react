@@ -1772,7 +1772,9 @@ export function useWeddingInteractions() {
 
         const iconKeys = Object.keys(ICONS);
         const isSmall = window.matchMedia("(max-width: 720px)").matches;
-        const COUNT = isSmall ? 6 : 14;
+        // Preserve floating SVG animations on every device.
+        // Limit the number of simultaneously animated elements on smaller screens.
+        const COUNT = window.matchMedia("(max-width: 900px)").matches ? 6 : 14;
 
         const icons = [];
         for (let i = 0; i < COUNT; i++) {

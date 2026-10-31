@@ -19,7 +19,6 @@
   .gallery__item img,
   .personCard__imgInner img,
   .rsvpPhotoCard__img img {
-    transform: none;
     will-change: auto;
   }
 
