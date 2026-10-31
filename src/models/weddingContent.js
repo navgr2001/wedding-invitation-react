@@ -113,7 +113,7 @@ export const weddingContent = {
       },
       {
         side: "right",
-        time: "18:00 PM",
+        time: "18:40 PM",
         text: "Couple enters the hall",
         icon: "assets/img/icons/gem.png",
         iconAlt: "Diamond icon",
@@ -121,7 +121,7 @@ export const weddingContent = {
       },
       {
         side: "left",
-        time: "19:30 PM",
+        time: "20:40 PM",
         text: "Dinner",
         icon: "assets/img/icons/food.png",
         iconAlt: "Dinner icon",
@@ -129,8 +129,8 @@ export const weddingContent = {
       },
       {
         side: "right",
-        time: "21:00 PM",
-        text: "First Dance & Dance Floor Opens",
+        time: "21:30 PM",
+        text: "Dance Floor Opens",
         icon: "assets/img/icons/musicnote.png",
         iconAlt: "Music icon",
         iconLabel: "Music",
