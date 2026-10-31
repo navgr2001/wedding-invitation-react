@@ -1,28 +1,56 @@
-/* Mobile paint containment while preserving every designed animation and transition. */
+/* ============================================================
+   SHARE YOUR MOMENTS — MOBILE PAINT/COMPOSITING SAFEGUARDS
+   Targets the orange-button ghosting recorded on Android Chrome.
+
+   IMPORTANT: No animations, transitions, keyframes, scroll reveals,
+   or background icon movement are switched off by this stylesheet.
+   ============================================================ */
 @media (max-width: 900px) {
-  /* Isolate paint invalidation without suppressing the section's scroll reveal,
-     animated headings, button transitions, floating SVGs or other interactions. */
   #guest-upload {
+    position: relative;
     isolation: isolate;
+    background-color: #fdf1e9;
     background-attachment: scroll;
   }
 
+  /* The card is static, so contain its internal re-paints instead of
+     promoting the entire section to a large accelerated texture. */
   #guest-upload .guestUploadCard {
+    position: relative;
+    z-index: 0;
     isolation: isolate;
-    background-color: #fffdfa;
-  }
-
-  /* Limit expensive backdrop sampling on the form's large content surface.
-     This has no effect on animation-duration, transition, or transforms. */
-  #guest-upload .guestUploadCard {
+    contain: layout paint;
+    background: #fffdfa;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    will-change: auto;
   }
 
-  /* Do not apply will-change to large stationary areas; browsers will promote
-     genuinely animated elements automatically when appropriate. */
-  #guest-upload .guestUploadSection__container,
-  #guest-upload .guestUploadCard {
-    will-change: auto;
+  /* These form regions contain the duplicated orange rectangle visible
+     in the screen recording. Containment prevents their internal paint
+     damage from being reused outside their own visual bounds. */
+  #guest-upload .guestUploadActions,
+  #guest-upload .guestUploadDropzone,
+  #guest-upload .guestUploadSelection {
+    position: relative;
+    isolation: isolate;
+  }
+
+  #guest-upload .guestUploadSubmitBtn {
+    position: relative;
+    isolation: isolate;
+    contain: paint;
+    background-color: #a8441e;
+    /* Do not transform, animate or force GPU promotion of this button. */
+  }
+
+  #guest-upload .guestUploadAction {
+    position: relative;
+    isolation: isolate;
+    /* Existing 160ms hover/focus transforms remain untouched. */
+  }
+
+  #guest-upload .guestUploadPrivacy {
+    position: relative;
   }
 }
