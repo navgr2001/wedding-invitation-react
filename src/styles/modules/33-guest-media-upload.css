@@ -708,8 +708,10 @@
 }
 
 .guestUploadSubmitBtn:disabled {
-  opacity: 0.45;
-
+  /* Solid disabled colour avoids repainting a semi-transparent
+     full-width surface over text on mobile Chromium. */
+  opacity: 1;
+  background-color: #d6a38f;
   cursor: not-allowed;
 }
 

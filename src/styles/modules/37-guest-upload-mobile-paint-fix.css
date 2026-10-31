@@ -1,56 +1,45 @@
-/* ============================================================
-   SHARE YOUR MOMENTS — MOBILE PAINT/COMPOSITING SAFEGUARDS
-   Targets the orange-button ghosting recorded on Android Chrome.
-
-   IMPORTANT: No animations, transitions, keyframes, scroll reveals,
-   or background icon movement are switched off by this stylesheet.
-   ============================================================ */
+/* Share Your Moments: isolate layout without forcing composited paint layers.
+   Previous contain:paint/isolation on nested interactive elements increased
+   the chance of stale tiles on mobile Chromium during scroll. */
 @media (max-width: 900px) {
   #guest-upload {
     position: relative;
-    isolation: isolate;
     background-color: #fdf1e9;
-    background-attachment: scroll;
   }
 
-  /* The card is static, so contain its internal re-paints instead of
-     promoting the entire section to a large accelerated texture. */
   #guest-upload .guestUploadCard {
     position: relative;
-    z-index: 0;
-    isolation: isolate;
-    contain: layout paint;
-    background: #fffdfa;
+    background-color: #fffdfa;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    will-change: auto;
-  }
-
-  /* These form regions contain the duplicated orange rectangle visible
-     in the screen recording. Containment prevents their internal paint
-     damage from being reused outside their own visual bounds. */
-  #guest-upload .guestUploadActions,
-  #guest-upload .guestUploadDropzone,
-  #guest-upload .guestUploadSelection {
-    position: relative;
-    isolation: isolate;
+    /* No contain:paint, translateZ, filter or opacity layer. */
   }
 
   #guest-upload .guestUploadSubmitBtn {
     position: relative;
-    isolation: isolate;
-    contain: paint;
+    display: flex;
+    width: 100%;
     background-color: #a8441e;
-    /* Do not transform, animate or force GPU promotion of this button. */
+    opacity: 1;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
   }
 
-  #guest-upload .guestUploadAction {
-    position: relative;
-    isolation: isolate;
-    /* Existing 160ms hover/focus transforms remain untouched. */
+  /* Disabled-state transparency makes the orange CTA a composited group.
+     Use a matching solid pastel instead so it paints as ordinary content. */
+  #guest-upload .guestUploadSubmitBtn:disabled {
+    opacity: 1;
+    background-color: #d6a38f;
+    color: #fff;
   }
 
-  #guest-upload .guestUploadPrivacy {
-    position: relative;
+  #guest-upload .guestUploadActions,
+  #guest-upload .guestUploadDropzone,
+  #guest-upload .guestUploadSelection {
+    position: static;
   }
+
+  /* All original keyframes, reveals, transforms and hover transitions
+     remain in their original style modules. */
 }
