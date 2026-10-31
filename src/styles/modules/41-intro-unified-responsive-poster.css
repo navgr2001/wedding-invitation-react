@@ -378,7 +378,7 @@
   }
 
   .inviteIntro .inviteMeta__date {
-    font-size: clamp(14px, 3.7vw, 30px) !important;
+    font-size: clamp(18px, 4vw, 40px) !important;
   }
 
   .inviteIntro .inviteContent > .inviteBtn {
