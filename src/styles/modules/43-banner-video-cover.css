@@ -2,19 +2,33 @@
    FILE:
    src/styles/modules/43-banner-video-cover.css
 
-   RESPONSIVE WEDDING BANNER VIDEO
+   RESPONSIVE WEDDING BANNER — NO CROPPING
+
+   - Display the entire video on every screen
+   - Preserve the video's original aspect ratio
+   - No cropping or stretching
+   - Support desktop, tablet and mobile
+   - Fill unused space with matching background styling
+   - Preserve existing content and animations
    ============================================================ */
 
-/* 01. Hero section */
+/* ============================================================
+   01. HERO CONTAINER
+   ============================================================ */
 
 .heroBanner {
   position: relative;
+
   width: 100%;
+
   overflow: hidden;
+
   isolation: isolate;
 }
 
-/* 02. Video background container */
+/* ============================================================
+   02. VIDEO BACKGROUND WRAPPERS
+   ============================================================ */
 
 .heroBanner__media,
 .heroBanner__videoWrap,
@@ -24,18 +38,24 @@
 .heroBanner__bgMedia,
 .heroBanner__videoBox {
   position: absolute;
+
   inset: 0;
 
   width: 100%;
   height: 100%;
 
   overflow: hidden;
+
+  background-color: #3b2b28;
 }
 
-/* 03. Responsive video */
+/* ============================================================
+   03. VIDEO — FULLY VISIBLE
+   ============================================================ */
 
 .heroBanner__videoEl {
   position: absolute !important;
+
   inset: 0 !important;
 
   display: block !important;
@@ -43,62 +63,76 @@
   width: 100% !important;
   height: 100% !important;
 
-  min-width: 100% !important;
-  min-height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
 
-  max-width: none !important;
-  max-height: none !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 
   margin: 0 !important;
   padding: 0 !important;
 
   border: 0 !important;
 
-  object-fit: cover !important;
+  object-fit: contain !important;
   object-position: center center !important;
 
-  background: transparent !important;
+  background-color: transparent !important;
 }
 
-/* 04. Poster */
+/* ============================================================
+   04. POSTER
+   ============================================================ */
 
 .heroBanner__videoEl[poster] {
-  object-fit: cover !important;
+  object-fit: contain !important;
   object-position: center center !important;
 }
 
-/* 05. Desktop */
+/* ============================================================
+   05. DESKTOP
+   ============================================================ */
 
 @media (min-width: 1025px) {
   .heroBanner__videoEl {
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center center !important;
   }
 }
 
-/* 06. Tablet */
+/* ============================================================
+   06. TABLET
+   ============================================================ */
 
 @media (min-width: 641px) and (max-width: 1024px) {
   .heroBanner__videoEl {
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center center !important;
   }
 }
 
-/* 07. Mobile */
+/* ============================================================
+   07. MOBILE
+   ============================================================ */
 
 @media (max-width: 640px) {
   .heroBanner__videoEl {
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center center !important;
   }
 }
 
-/* 08. Landscape */
+/* ============================================================
+   08. LANDSCAPE
+   ============================================================ */
 
 @media (max-width: 1024px) and (orientation: landscape) {
   .heroBanner__videoEl {
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center center !important;
   }
 }
+
+/* ============================================================
+   END — RESPONSIVE NO-CROP VIDEO
+   ============================================================ */
