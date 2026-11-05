@@ -76,7 +76,15 @@ function HeroSection({ hero }) {
           onContextMenu={(event) => event.preventDefault()}
           onDragStart={(event) => event.preventDefault()}
         >
-          <source src={hero.video} type="video/mp4" />
+          {/* Mobile devices */}
+          <source
+            src="/assets/video/bannervideo1.mp4"
+            type="video/mp4"
+            media="(max-width: 640px)"
+          />
+
+          {/* Desktop and tablet devices */}
+          <source src="/assets/video/bannervideo.mp4" type="video/mp4" />
         </video>
 
         <div className="heroBanner__scrim"></div>
