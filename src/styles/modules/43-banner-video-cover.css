@@ -2,34 +2,80 @@
    FILE:
    src/styles/modules/43-banner-video-cover.css
 
-   WEDDING HERO BANNER — RESPONSIVE VIDEO COVER
+   HERO BANNER VIDEO — REMOVE TOP/BOTTOM BLACK BORDERS
    ------------------------------------------------------------
    PURPOSE:
-   - Display bannervideo.mp4 using object-fit: cover
-   - Remove letterboxing caused by CSS sizing
-   - Preserve the video's original aspect ratio
-   - Center the video on every screen size
-   - Keep the JPG poster consistent with the video
-   - Preserve existing banner height and layout
-   - Preserve existing animations and functionality
-   - Avoid changes to unrelated website sections
+   - Remove black bars from top and bottom of banner video
+   - Make video fully cover hero area on every device
+   - Keep original hero content unchanged
+   - Preserve existing text/buttons/animations
+   - Support mobile, tablet and desktop
 
    IMPORTANT:
    Import this stylesheet LAST.
    ============================================================ */
 
 /* ============================================================
-   01. VIDEO ELEMENT
+   01. HERO SECTION BASE
    ------------------------------------------------------------
-   Fill the existing video container without distortion.
+   Make sure the hero itself clips overflow and provides
+   a proper positioning context.
+   ============================================================ */
+
+.heroBanner,
+.hero,
+.heroSection {
+  position: relative !important;
+  overflow: hidden !important;
+  background: transparent !important;
+}
+
+/* ============================================================
+   02. HERO MEDIA WRAPPERS
+   ------------------------------------------------------------
+   These selectors are intentionally broad so the fix works
+   even if the project uses slightly different wrapper names.
+   ============================================================ */
+
+.heroBanner__media,
+.heroBanner__videoWrap,
+.heroBanner__videoContainer,
+.heroBanner__mediaLayer,
+.heroBanner__background,
+.heroBanner__bgMedia,
+.heroBanner__videoBox {
+  position: absolute !important;
+  inset: 0 !important;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  min-width: 100% !important;
+  min-height: 100% !important;
+
+  overflow: hidden !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+}
+
+/* If the immediate parent of the video exists but uses another class,
+   this ensures the video can still position correctly. */
+.heroBanner__videoEl {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+/* ============================================================
+   03. VIDEO ELEMENT
+   ------------------------------------------------------------
+   Force the video to fill the hero area without distortion.
    ============================================================ */
 
 .heroBanner__videoEl {
   display: block !important;
-
-  position: absolute !important;
-
-  inset: 0 !important;
 
   width: 100% !important;
   height: 100% !important;
@@ -44,73 +90,137 @@
   padding: 0 !important;
 
   border: 0 !important;
+  outline: 0 !important;
 
   object-fit: cover !important;
   object-position: center center !important;
 
-  background-color: transparent !important;
+  background: transparent !important;
 }
 
-/* ============================================================
-   02. POSTER IMAGE
-   ------------------------------------------------------------
-   The browser's poster uses the same video element box.
-   Object-fit: cover also applies while the poster displays.
-   ============================================================ */
-
+/* Poster frame should behave exactly like the video */
 .heroBanner__videoEl[poster] {
   object-fit: cover !important;
-
   object-position: center center !important;
 }
 
 /* ============================================================
-   03. DESKTOP
+   04. REMOVE POSSIBLE BLACK BACKGROUNDS
+   ------------------------------------------------------------
+   Some wrappers may have default black backgrounds. Clear them.
+   ============================================================ */
+
+.heroBanner video,
+.heroBanner__media video,
+.heroBanner__videoWrap video,
+.heroBanner__videoContainer video,
+.heroBanner__mediaLayer video,
+.heroBanner__background video,
+.heroBanner__bgMedia video,
+.heroBanner__videoBox video {
+  background: transparent !important;
+}
+
+/* ============================================================
+   05. DESKTOP
    ============================================================ */
 
 @media screen and (min-width: 1025px) {
+  .heroBanner,
+  .hero,
+  .heroSection {
+    overflow: hidden !important;
+  }
+
   .heroBanner__videoEl {
     width: 100% !important;
     height: 100% !important;
 
     object-fit: cover !important;
-
     object-position: center center !important;
   }
 }
 
 /* ============================================================
-   04. TABLET
+   06. TABLET
    ============================================================ */
 
 @media screen and (min-width: 641px) and (max-width: 1024px) {
+  .heroBanner,
+  .hero,
+  .heroSection {
+    overflow: hidden !important;
+  }
+
+  .heroBanner__media,
+  .heroBanner__videoWrap,
+  .heroBanner__videoContainer,
+  .heroBanner__mediaLayer,
+  .heroBanner__background,
+  .heroBanner__bgMedia,
+  .heroBanner__videoBox {
+    position: absolute !important;
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    overflow: hidden !important;
+  }
+
   .heroBanner__videoEl {
     width: 100% !important;
     height: 100% !important;
 
-    object-fit: cover !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
 
+    object-fit: cover !important;
     object-position: center center !important;
   }
 }
 
 /* ============================================================
-   05. MOBILE
+   07. MOBILE
    ============================================================ */
 
 @media screen and (max-width: 640px) {
+  .heroBanner,
+  .hero,
+  .heroSection {
+    overflow: hidden !important;
+  }
+
+  .heroBanner__media,
+  .heroBanner__videoWrap,
+  .heroBanner__videoContainer,
+  .heroBanner__mediaLayer,
+  .heroBanner__background,
+  .heroBanner__bgMedia,
+  .heroBanner__videoBox {
+    position: absolute !important;
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    overflow: hidden !important;
+  }
+
   .heroBanner__videoEl {
     width: 100% !important;
     height: 100% !important;
 
-    object-fit: cover !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
 
+    object-fit: cover !important;
     object-position: center center !important;
   }
 }
 
 /* ============================================================
-   06. LANDSCAPE MOBILE AND TABLET
+   08. LANDSCAPE MOBILE / TABLET
    ============================================================ */
 
 @media screen and (max-width: 1024px) and (orientation: landscape) {
@@ -119,11 +229,23 @@
     height: 100% !important;
 
     object-fit: cover !important;
-
     object-position: center center !important;
   }
 }
 
 /* ============================================================
-   END — HERO BANNER VIDEO COVER
+   09. SAFETY RESET FOR INLINE VIDEO BEHAVIOR
+   ============================================================ */
+
+.heroBanner__videoEl::-webkit-media-controls {
+  display: none !important;
+}
+
+.heroBanner__videoEl::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none !important;
+}
+
+/* ============================================================
+   END — HERO BANNER VIDEO COVER FIX
    ============================================================ */
