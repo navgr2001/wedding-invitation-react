@@ -70,12 +70,6 @@ function HeroSection({ hero }) {
           playsInline
           preload="none"
           poster={hero.videoPoster}
-          /*
-           * Browser deterrents:
-           * - no download option
-           * - no remote playback
-           * - no picture-in-picture
-           */
           controlsList="nodownload noremoteplayback"
           disablePictureInPicture
           disableRemotePlayback
