@@ -22,7 +22,7 @@ export const weddingContent = {
     title: "Shalom & Dewmini",
     eventDay: "Thursday",
     eventDate: "December 10, 2026",
-    video: "assets/video/bannervideo1.mp4",
+    video: "assets/video/bannervideo.mp4",
     videoPoster: "assets/video/bannervideoimg.png",
     notificationIcon: "assets/img/icons/notification.png",
   },

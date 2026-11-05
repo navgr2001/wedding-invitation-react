@@ -2,18 +2,22 @@
    FILE:
    src/styles/modules/43-banner-video-cover.css
 
-   RESPONSIVE WEDDING BANNER — NO CROPPING
-
-   - Display the entire video on every screen
-   - Preserve the video's original aspect ratio
-   - No cropping or stretching
+   WEDDING BANNER — RESPONSIVE 1:1 SQUARE VIDEO
+   ------------------------------------------------------------
+   REQUIREMENTS:
+   - Preserve the complete square video
+   - Never crop the video
+   - Never stretch or distort the video
    - Support desktop, tablet and mobile
-   - Fill unused space with matching background styling
-   - Preserve existing content and animations
+   - Support portrait and landscape orientations
+   - Preserve existing hero content and animations
+   - Use poster background for unused space
+
+   VIDEO ASPECT RATIO: 1 / 1
    ============================================================ */
 
 /* ============================================================
-   01. HERO CONTAINER
+   01. HERO SECTION
    ============================================================ */
 
 .heroBanner {
@@ -27,7 +31,9 @@
 }
 
 /* ============================================================
-   02. VIDEO BACKGROUND WRAPPERS
+   02. VIDEO BACKGROUND CONTAINERS
+   ------------------------------------------------------------
+   Keep the existing hero dimensions unchanged.
    ============================================================ */
 
 .heroBanner__media,
@@ -47,27 +53,43 @@
   overflow: hidden;
 
   background-color: #3b2b28;
+
+  background-image: url("/assets/video/banner-poster.jpg");
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-repeat: no-repeat;
 }
 
 /* ============================================================
-   03. VIDEO — FULLY VISIBLE
+   03. SQUARE VIDEO — NO CROPPING
+   ------------------------------------------------------------
+   The video scales proportionally to fit inside its parent.
    ============================================================ */
 
 .heroBanner__videoEl {
   position: absolute !important;
 
-  inset: 0 !important;
+  top: 50% !important;
+  left: 50% !important;
+
+  right: auto !important;
+  bottom: auto !important;
 
   display: block !important;
 
-  width: 100% !important;
-  height: 100% !important;
+  width: min(100%, 100dvh) !important;
+  height: min(100%, 100dvh) !important;
+
+  max-width: 100% !important;
+  max-height: 100% !important;
 
   min-width: 0 !important;
   min-height: 0 !important;
 
-  max-width: 100% !important;
-  max-height: 100% !important;
+  aspect-ratio: 1 / 1 !important;
 
   margin: 0 !important;
   padding: 0 !important;
@@ -75,17 +97,21 @@
   border: 0 !important;
 
   object-fit: contain !important;
+
   object-position: center center !important;
+
+  transform: translate(-50%, -50%) !important;
 
   background-color: transparent !important;
 }
 
 /* ============================================================
-   04. POSTER
+   04. VIDEO POSTER
    ============================================================ */
 
 .heroBanner__videoEl[poster] {
   object-fit: contain !important;
+
   object-position: center center !important;
 }
 
@@ -93,10 +119,15 @@
    05. DESKTOP
    ============================================================ */
 
-@media (min-width: 1025px) {
+@media screen and (min-width: 1025px) {
   .heroBanner__videoEl {
+    width: min(100%, 100dvh) !important;
+
+    height: min(100%, 100dvh) !important;
+
+    aspect-ratio: 1 / 1 !important;
+
     object-fit: contain !important;
-    object-position: center center !important;
   }
 }
 
@@ -104,10 +135,15 @@
    06. TABLET
    ============================================================ */
 
-@media (min-width: 641px) and (max-width: 1024px) {
+@media screen and (min-width: 641px) and (max-width: 1024px) {
   .heroBanner__videoEl {
+    width: min(100%, 100dvh) !important;
+
+    height: min(100%, 100dvh) !important;
+
+    aspect-ratio: 1 / 1 !important;
+
     object-fit: contain !important;
-    object-position: center center !important;
   }
 }
 
@@ -115,10 +151,15 @@
    07. MOBILE
    ============================================================ */
 
-@media (max-width: 640px) {
+@media screen and (max-width: 640px) {
   .heroBanner__videoEl {
+    width: min(100%, 100dvh) !important;
+
+    height: min(100%, 100dvh) !important;
+
+    aspect-ratio: 1 / 1 !important;
+
     object-fit: contain !important;
-    object-position: center center !important;
   }
 }
 
@@ -126,13 +167,18 @@
    08. LANDSCAPE
    ============================================================ */
 
-@media (max-width: 1024px) and (orientation: landscape) {
+@media screen and (orientation: landscape) {
   .heroBanner__videoEl {
+    width: min(100%, 100dvh) !important;
+
+    height: min(100%, 100dvh) !important;
+
+    aspect-ratio: 1 / 1 !important;
+
     object-fit: contain !important;
-    object-position: center center !important;
   }
 }
 
 /* ============================================================
-   END — RESPONSIVE NO-CROP VIDEO
+   END — RESPONSIVE SQUARE VIDEO
    ============================================================ */
