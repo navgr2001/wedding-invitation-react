@@ -73,6 +73,31 @@ function createHtmlOutput_(message) {
   );
 }
 
+// Normalize guest names for duplicate RSVP checking.
+function normalizeRsvpName_(value) {
+  return sanitize_(value).normalize("NFKC").replace(/\s+/g, " ").toLowerCase();
+}
+
+// Send RSVP submission result to the website.
+function createRsvpResult_(status, message) {
+  var payload = JSON.stringify({
+    type: "wedding-rsvp-result",
+    status: status,
+    message: message,
+  }).replace(/</g, "\\u003c");
+
+  return HtmlService.createHtmlOutput(
+    "<!doctype html><html><body>" +
+      "<script>" +
+      "window.parent.postMessage(" +
+      payload +
+      ", '*');" +
+      "</script>" +
+      "</body></html>",
+  );
+}
+
+// Fetch wedding wishes for display.
 function listWords_() {
   var sheet = getSheet_();
   var values = sheet.getDataRange().getDisplayValues();
@@ -108,6 +133,7 @@ function listWords_() {
     });
 }
 
+// GET endpoint for wedding wishes.
 function doGet(e) {
   try {
     var params = (e && e.parameter) || {};
@@ -136,6 +162,7 @@ function doGet(e) {
   }
 }
 
+// Main POST endpoint.
 function doPost(e) {
   try {
     if (isGuestMediaUploadRequest_(e)) {
@@ -151,12 +178,11 @@ function doPost(e) {
       });
     }
 
-    return createHtmlOutput_(
-      "Submission failed: " + sanitize_(error && error.message),
-    );
+    return createRsvpResult_("error", "Submission failed. Please try again.");
   }
 }
 
+// Detect photo/video upload requests.
 function isGuestMediaUploadRequest_(e) {
   if (!e || !e.postData || !e.postData.contents) {
     return false;
@@ -167,43 +193,111 @@ function isGuestMediaUploadRequest_(e) {
     return Boolean(
       request &&
       (request.action === "guestMediaUploadInit" ||
-        request.action === "guestMediaUploadVerify")
+        request.action === "guestMediaUploadVerify"),
     );
   } catch (error) {
     return false;
   }
 }
 
+// ========================================
+// RSVP SUBMISSION WITH DUPLICATE PREVENTION
+// ========================================
+
 function handleRsvpSubmission_(e) {
   var params = (e && e.parameter) || {};
-  var name = safeSheetValue_(params.name, 120);
+
+  var rawName = sanitize_(params.name);
+  var name = safeSheetValue_(rawName, 120);
   var attendance = sanitize_(params.attendance);
   var guestsRaw = sanitize_(params.guests);
   var message = safeSheetValue_(params.message, 1000);
 
-  if (!name || !attendance || !guestsRaw) {
-    return createHtmlOutput_("Missing required RSVP fields.");
+  // Validate required fields.
+  if (!rawName || !attendance || !guestsRaw) {
+    return createRsvpResult_("error", "Missing required RSVP fields.");
   }
 
+  if (rawName.length > 120) {
+    return createRsvpResult_("error", "Name is too long.");
+  }
+
+  // Validate attendance.
   if (
     attendance !== "Yes, I'll be there" &&
     attendance !== "Sorry, I can't make it"
   ) {
-    return createHtmlOutput_("Invalid attendance selection.");
+    return createRsvpResult_("error", "Invalid attendance selection.");
   }
 
+  // Validate guest count.
   var guests = Number(guestsRaw);
-  if (!isFinite(guests) || Math.floor(guests) !== guests || guests < 1 || guests > 20) {
-    return createHtmlOutput_("Guest count must be between 1 and 20.");
+
+  if (
+    !isFinite(guests) ||
+    Math.floor(guests) !== guests ||
+    guests < 1 ||
+    guests > 20
+  ) {
+    return createRsvpResult_("error", "Guest count must be between 1 and 20.");
   }
 
-  var sheet = getSheet_();
-  sheet.appendRow([new Date(), name, attendance, guests, message]);
+  // Lock prevents simultaneous duplicate submissions.
+  var lock = LockService.getScriptLock();
 
-  SpreadsheetApp.flush();
+  if (!lock.tryLock(30000)) {
+    return createRsvpResult_("error", "The system is busy. Please try again.");
+  }
 
-  return createHtmlOutput_("RSVP saved successfully.");
+  try {
+    var sheet = getSheet_();
+    var lastRow = sheet.getLastRow();
+    var normalizedName = normalizeRsvpName_(rawName);
+
+    // Check all previously submitted names.
+    if (lastRow > 1) {
+      var existingNames = sheet
+        .getRange(2, 2, lastRow - 1, 1)
+        .getDisplayValues();
+
+      var duplicate = existingNames.some(function (row) {
+        return normalizeRsvpName_(row[0]) === normalizedName;
+      });
+
+      // Reject an existing guest name.
+      if (duplicate) {
+        return createRsvpResult_(
+          "duplicate",
+          "An RSVP has already been submitted under this name. You cannot submit another response.",
+        );
+      }
+    }
+
+    // Only first-time names are inserted.
+    sheet.appendRow([new Date(), name, attendance, guests, message]);
+
+    // Ensure data is committed before releasing the lock.
+    SpreadsheetApp.flush();
+
+    return createRsvpResult_(
+      "success",
+      "Your RSVP has been saved successfully.",
+    );
+  } catch (error) {
+    console.error("RSVP submission error: " + error);
+
+    return createRsvpResult_(
+      "error",
+      "Unable to save your RSVP. Please try again.",
+    );
+  } finally {
+    lock.releaseLock();
+  }
 }
+
+// ========================================
+// GUEST PHOTO AND VIDEO UPLOAD
+// ========================================
 
 function handleGuestMediaUpload_(e) {
   var request = JSON.parse(e.postData.contents);
@@ -235,11 +329,12 @@ function handleGuestMediaUpload_(e) {
     Session.getScriptTimeZone(),
     "yyyyMMdd_HHmmss",
   );
+
   var storedFileName = timestamp + "_" + guestName + "_" + fileName;
 
-  // Create a Google Drive resumable-upload session. The large media file never
-  // passes through Apps Script; the guest's browser sends the original binary
-  // directly to Drive, avoiding Base64 overhead and Apps Script body limits.
+  // Create a Google Drive resumable-upload session.
+  // The large media file never passes through Apps Script.
+  // The browser sends the original binary directly to Drive.
   var metadata = {
     name: storedFileName,
     parents: [folder.getId()],
@@ -281,8 +376,10 @@ function handleGuestMediaUpload_(e) {
   });
 }
 
+// Verify uploaded media file.
 function verifyGuestMediaUpload_(request) {
   var storedFileName = sanitizeUploadFileName_(request.storedFileName);
+
   var expectedSize = Number(request.fileSize || 0);
 
   if (!storedFileName || !expectedSize || expectedSize <= 0) {
@@ -293,6 +390,7 @@ function verifyGuestMediaUpload_(request) {
 
   while (files.hasNext()) {
     var file = files.next();
+
     if (Number(file.getSize()) === expectedSize) {
       return createJsonOutput_({
         success: true,
@@ -307,6 +405,7 @@ function verifyGuestMediaUpload_(request) {
   });
 }
 
+// Validate wedding upload token.
 function validateWeddingEventToken_(receivedToken) {
   var expectedToken = PropertiesService.getScriptProperties().getProperty(
     "WEDDING_EVENT_TOKEN",
@@ -321,6 +420,7 @@ function validateWeddingEventToken_(receivedToken) {
   }
 }
 
+// Get Google Drive upload folder.
 function getWeddingUploadFolder_() {
   var folderId = PropertiesService.getScriptProperties().getProperty(
     "WEDDING_UPLOAD_FOLDER_ID",
@@ -333,6 +433,7 @@ function getWeddingUploadFolder_() {
   return DriveApp.getFolderById(folderId);
 }
 
+// Validate uploaded photo or video.
 function validateGuestUpload_(fileName, mimeType, fileSize, fileHeaderBase64) {
   if (!fileName) {
     throw new Error("File name is missing.");
@@ -368,6 +469,7 @@ function validateGuestUpload_(fileName, mimeType, fileSize, fileHeaderBase64) {
   }
 
   var headerBytes;
+
   try {
     headerBytes = Utilities.base64Decode(fileHeaderBase64);
   } catch (error) {
@@ -379,6 +481,7 @@ function validateGuestUpload_(fileName, mimeType, fileSize, fileHeaderBase64) {
   }
 }
 
+// Validate uploaded file signature.
 function validateFileSignature_(bytes, mimeType) {
   if (!bytes || bytes.length < 12) {
     throw new Error("The uploaded file is invalid or incomplete.");
@@ -390,9 +493,11 @@ function validateFileSignature_(bytes, mimeType) {
 
   function ascii(start, length) {
     var value = "";
+
     for (var i = start; i < start + length && i < bytes.length; i += 1) {
       value += String.fromCharCode(u(i));
     }
+
     return value;
   }
 
@@ -401,7 +506,8 @@ function validateFileSignature_(bytes, mimeType) {
   if (mimeType === "image/jpeg") {
     valid = u(0) === 0xff && u(1) === 0xd8 && u(2) === 0xff;
   } else if (mimeType === "image/png") {
-    valid = u(0) === 0x89 && ascii(1, 3) === "PNG" && u(4) === 0x0d && u(5) === 0x0a;
+    valid =
+      u(0) === 0x89 && ascii(1, 3) === "PNG" && u(4) === 0x0d && u(5) === 0x0a;
   } else if (mimeType === "image/webp") {
     valid = ascii(0, 4) === "RIFF" && ascii(8, 4) === "WEBP";
   } else if (mimeType === "video/webm") {
@@ -422,6 +528,7 @@ function validateFileSignature_(bytes, mimeType) {
   }
 }
 
+// Sanitize guest name for uploaded media filename.
 function sanitizeGuestName_(value) {
   return String(value || "")
     .trim()
@@ -430,6 +537,7 @@ function sanitizeGuestName_(value) {
     .substring(0, 60);
 }
 
+// Sanitize uploaded file name.
 function sanitizeUploadFileName_(value) {
   return String(value || "")
     .trim()
@@ -438,6 +546,7 @@ function sanitizeUploadFileName_(value) {
     .substring(0, 150);
 }
 
+// Test Google Drive upload folder.
 function testWeddingUploadFolder_() {
   var folder = getWeddingUploadFolder_();
   Logger.log(folder.getName());

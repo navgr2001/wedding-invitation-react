@@ -355,12 +355,147 @@ export function useWeddingInteractions() {
         const form = qs("#rsvpForm");
         const iframe = qs("#rsvp_hidden_iframe");
         const success = qs("#rsvpSuccess");
+
         if (!form || !iframe || !success) return;
 
         let submitted = false;
+        let requestId = "";
+        let statusTimer = null;
+        let statusAttempts = 0;
+
+        const submitButton = form.querySelector("button[type='submit']");
+
+        let requestInput = form.querySelector('input[name="requestId"]');
+
+        if (!requestInput) {
+          requestInput = document.createElement("input");
+          requestInput.type = "hidden";
+          requestInput.name = "requestId";
+          form.appendChild(requestInput);
+        }
 
         if (hasConfiguredAppsScript()) {
-          form.action = buildAppsScriptUrl({ action: "submit" });
+          form.action = buildAppsScriptUrl({
+            action: "submit",
+          });
+        }
+
+        function setSubmitting(value) {
+          if (!submitButton) return;
+
+          submitButton.disabled = value;
+          submitButton.textContent = value
+            ? "Sending..."
+            : "Send RSVP with Love";
+
+          submitButton.style.opacity = value ? "0.7" : "1";
+        }
+
+        function clearStatusTimer() {
+          if (statusTimer) {
+            window.clearTimeout(statusTimer);
+            statusTimer = null;
+          }
+        }
+
+        function finishSubmission(result) {
+          if (!submitted) return;
+
+          clearStatusTimer();
+
+          submitted = false;
+          setSubmitting(false);
+
+          if (result.status === "success") {
+            success.hidden = false;
+            form.reset();
+
+            // Clear controlled React name field if present.
+            const nameInput = form.querySelector('input[name="name"]');
+
+            if (nameInput) {
+              const nativeSetter = Object.getOwnPropertyDescriptor(
+                HTMLInputElement.prototype,
+                "value",
+              )?.set;
+
+              if (nativeSetter) {
+                nativeSetter.call(nameInput, "");
+                nameInput.dispatchEvent(new Event("input", { bubbles: true }));
+              }
+            }
+
+            if (typeof window.__refreshWordsCarousel === "function") {
+              window.__refreshWordsCarousel({ poll: true });
+            }
+          } else {
+            success.hidden = true;
+
+            window.alert(result.message || "Your RSVP could not be submitted.");
+          }
+
+          requestId = "";
+        }
+
+        function checkSubmissionStatus() {
+          if (!submitted || !requestId) return;
+
+          statusAttempts += 1;
+
+          const currentRequestId = requestId;
+
+          const callbackName =
+            "__rsvpStatus_" +
+            Date.now() +
+            "_" +
+            Math.floor(Math.random() * 100000);
+
+          const url = buildAppsScriptUrl({
+            action: "rsvpStatus",
+            requestId: currentRequestId,
+            callback: callbackName,
+          });
+
+          loadScriptJsonp(url, callbackName, 10000)
+            .then((result) => {
+              if (!submitted || requestId !== currentRequestId) {
+                return;
+              }
+
+              if (
+                result.status === "success" ||
+                result.status === "duplicate" ||
+                result.status === "error"
+              ) {
+                finishSubmission(result);
+                return;
+              }
+
+              scheduleNextCheck();
+            })
+            .catch(() => {
+              if (submitted && requestId === currentRequestId) {
+                scheduleNextCheck();
+              }
+            });
+        }
+
+        function scheduleNextCheck() {
+          if (!submitted) return;
+
+          if (statusAttempts >= 12) {
+            finishSubmission({
+              status: "error",
+              message:
+                "We could not confirm your RSVP result. " +
+                "Please check with the couple before submitting again.",
+            });
+            return;
+          }
+
+          clearStatusTimer();
+
+          statusTimer = window.setTimeout(checkSubmissionStatus, 1500);
         }
 
         on(form, "submit", (event) => {
@@ -370,37 +505,35 @@ export function useWeddingInteractions() {
             return;
           }
 
-          submitted = true;
-          success.hidden = true;
-
-          const btn = form.querySelector("button[type='submit']");
-          if (btn) {
-            btn.disabled = true;
-            btn.textContent = "Sending...";
-            btn.style.opacity = "0.9";
+          if (submitted) {
+            event.preventDefault();
+            return;
           }
+
+          requestId =
+            "rsvp_" +
+            Date.now() +
+            "_" +
+            Math.random().toString(36).slice(2, 12);
+
+          requestInput.value = requestId;
+          submitted = true;
+          statusAttempts = 0;
+
+          success.hidden = true;
+          setSubmitting(true);
+
+          statusTimer = window.setTimeout(checkSubmissionStatus, 1500);
         });
 
+        // The iframe loading does NOT mean the RSVP succeeded.
+        // Always verify the result through the status endpoint.
         on(iframe, "load", () => {
           if (!submitted) return;
 
-          window.setTimeout(() => {
-            success.hidden = false;
-            form.reset();
+          clearStatusTimer();
 
-            const btn = form.querySelector("button[type='submit']");
-            if (btn) {
-              btn.disabled = false;
-              btn.textContent = "Send RSVP with Love";
-              btn.style.opacity = "1";
-            }
-
-            submitted = false;
-
-            if (typeof window.__refreshWordsCarousel === "function") {
-              window.__refreshWordsCarousel({ poll: true });
-            }
-          }, 600);
+          statusTimer = window.setTimeout(checkSubmissionStatus, 300);
         });
       }
 
