@@ -485,7 +485,15 @@ export function useWeddingInteractions() {
             });
             let response = null;
             try {
-              response = await loadScriptJsonp(statusUrl, callbackName, 5000);
+              if (useNetlifyTransport) {
+                const res = await fetch(
+                  `/.netlify/functions/rsvp?requestId=${encodeURIComponent(currentId)}`,
+                  { cache: "no-store" },
+                );
+                response = await res.json();
+              } else {
+                response = await loadScriptJsonp(statusUrl, callbackName, 5000);
+              }
             } catch {
               // Older Apps Script deployments have no status endpoint.
             }
@@ -499,7 +507,7 @@ export function useWeddingInteractions() {
             // The sheet check works even if postMessage is blocked by browsers
             // or the previous Apps Script version has not yet been redeployed.
             try {
-              if (await checkSheet(currentId)) {
+              if (!useNetlifyTransport && await checkSheet(currentId)) {
                 if (submitted && requestId === currentId) {
                   finish({ status: "success" });
                 }
@@ -531,6 +539,42 @@ export function useWeddingInteractions() {
             scheduleCheck(300);
           }
         });
+
+        // Netlify provides a same-origin JSON endpoint in production. Unlike
+        // cross-origin iframe messages, the actual POST result can be read.
+        // Vite's default local server does not run Netlify Functions; retain
+        // the original iframe/status fallback there.
+        const useNetlifyTransport =
+          !["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
+
+        async function submitViaNetlify(currentId) {
+          const controller = new AbortController();
+          const timeout = window.setTimeout(() => controller.abort(), 14500);
+          try {
+            const body = Object.fromEntries(new FormData(form).entries());
+            const response = await fetch("/.netlify/functions/rsvp", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(body),
+              signal: controller.signal,
+            });
+            const payload = await response.json();
+            if (!submitted || requestId !== currentId) return;
+            if (payload.requestId === currentId &&
+                ["success", "duplicate", "error"].includes(payload.status)) {
+              finish(payload);
+              return;
+            }
+            // A pending outcome is not a failure; the backend may still
+            // be writing. The status poll uses the same request ID.
+            scheduleCheck(300);
+          } catch {
+            // A fetch failure cannot tell us whether the Google Sheet wrote.
+            if (submitted && requestId === currentId) scheduleCheck(300);
+          } finally {
+            window.clearTimeout(timeout);
+          }
+        }
 
         on(form, "submit", (event) => {
           if (submitted) {
@@ -568,8 +612,13 @@ export function useWeddingInteractions() {
           success.hidden = true;
           setSubmitting(true);
           showStatus("Saving your RSVP securely...", "#555555");
-          scheduleCheck(1200);
-          // Native POST to Google Apps Script: no CORS preflight required.
+          if (useNetlifyTransport) {
+            event.preventDefault();
+            submitViaNetlify(requestId);
+          } else {
+            scheduleCheck(1200);
+            // Local Vite: native POST to Google Apps Script through an iframe.
+          }
         });
 
         on(iframe, "load", () => {

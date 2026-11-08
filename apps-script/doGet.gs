@@ -80,7 +80,10 @@ function normalizeRsvpName_(value) {
 
 // Respond to the submitting iframe and identify the exact request.
 // The browser checks event.source against its own iframe.
-function createRsvpResult_(status, message, requestId) {
+function createRsvpResult_(status, message, requestId, jsonTransport) {
+  if (jsonTransport) {
+    return createJsonOutput_({status: status, message: message, requestId: sanitize_(requestId)});
+  }
   var payload = JSON.stringify({
     type: "wedding-rsvp-result",
     requestId: sanitize_(requestId),
@@ -213,7 +216,7 @@ function doPost(e) {
       });
     }
 
-    return createRsvpResult_("error", "Submission failed. Please try again.");
+    return createRsvpResult_("error", "Submission failed. Please try again.", (e && e.parameter && e.parameter.transport) === "json");
   }
 }
 
@@ -249,7 +252,7 @@ function handleRsvpSubmission_(e) {
   var rawMessage = String(params.message == null ? "" : params.message);
 
   function result(status, message) {
-    return createRsvpResult_(status, message, requestId);
+    return createRsvpResult_(status, message, requestId, params.transport === "json");
   }
 
   if (!isValidRsvpRequestId_(requestId)) {
