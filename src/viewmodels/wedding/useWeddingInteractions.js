@@ -361,158 +361,156 @@ export function useWeddingInteractions() {
         const form = qs("#rsvpForm");
         const iframe = qs("#rsvp_hidden_iframe");
         const success = qs("#rsvpSuccess");
-
         if (!form || !iframe || !success) return;
 
+        const submitButton = form.querySelector('button[type="submit"]');
         let submitted = false;
         let requestId = "";
-        let statusTimer = null;
-        let statusAttempts = 0;
-
-        const submitButton = form.querySelector("button[type='submit']");
+        let timer = null;
+        let checking = false;
+        let deadline = 0;
 
         let requestInput = form.querySelector('input[name="requestId"]');
-
         if (!requestInput) {
           requestInput = document.createElement("input");
           requestInput.type = "hidden";
           requestInput.name = "requestId";
           form.appendChild(requestInput);
         }
-
         if (hasConfiguredAppsScript()) {
-          form.action = buildAppsScriptUrl({
-            action: "submit",
-          });
+          form.action = buildAppsScriptUrl({ action: "submit" });
         }
 
         function setSubmitting(value) {
           if (!submitButton) return;
-
           submitButton.disabled = value;
           submitButton.textContent = value
             ? "Sending..."
             : "Send RSVP with Love";
-
           submitButton.style.opacity = value ? "0.7" : "1";
         }
 
-        function clearStatusTimer() {
-          if (statusTimer) {
-            window.clearTimeout(statusTimer);
-            statusTimer = null;
-          }
+        function clearTimer() {
+          if (timer !== null) window.clearTimeout(timer);
+          timer = null;
         }
 
-        function finishSubmission(result) {
-          if (!submitted) return;
-
-          clearStatusTimer();
-
+        function finish(result) {
+          if (!submitted || !result) return;
+          clearTimer();
           submitted = false;
+          checking = false;
           setSubmitting(false);
 
           if (result.status === "success") {
             success.hidden = false;
             form.reset();
             window.dispatchEvent(new Event("wedding:rsvp-success"));
-
-            // Clear controlled React name field if present.
-            const nameInput = form.querySelector('input[name="name"]');
-
-            if (nameInput) {
-              const nativeSetter = Object.getOwnPropertyDescriptor(
-                HTMLInputElement.prototype,
-                "value",
-              )?.set;
-
-              if (nativeSetter) {
-                nativeSetter.call(nameInput, "");
-                nameInput.dispatchEvent(new Event("input", { bubbles: true }));
-              }
-            }
-
             if (typeof window.__refreshWordsCarousel === "function") {
               window.__refreshWordsCarousel({ poll: true });
             }
-          } else {
+          } else if (result.status === "duplicate") {
             success.hidden = true;
-
-            window.alert(result.message || "Your RSVP could not be submitted.");
+            window.alert(
+              result.message || "An RSVP already exists for this name.",
+            );
+          } else if (result.status === "error") {
+            success.hidden = true;
+            window.alert(result.message || "Your RSVP was not accepted.");
+          } else {
+            // Confirmation unknown: the POST may have been committed.
+            // Don't label it a failure, and don't silently retry it.
+            success.hidden = true;
+            window.alert(
+              "Your RSVP may already have been saved, but we couldn't confirm it. " +
+                "Please check with the couple before submitting again.",
+            );
           }
-
           requestId = "";
         }
 
-        function checkSubmissionStatus() {
-          if (!submitted || !requestId) return;
+        function scheduleCheck(delayMs = 1500) {
+          if (!submitted) return;
+          clearTimer();
+          if (Date.now() >= deadline) {
+            finish({ status: "unconfirmed" });
+            return;
+          }
+          timer = window.setTimeout(checkStatus, delayMs);
+        }
 
-          statusAttempts += 1;
-
-          const currentRequestId = requestId;
-
+        function checkStatus() {
+          if (!submitted || !requestId || checking) return;
+          if (Date.now() >= deadline) {
+            finish({ status: "unconfirmed" });
+            return;
+          }
+          checking = true;
+          const currentId = requestId;
           const callbackName =
             "__rsvpStatus_" +
             Date.now() +
             "_" +
             Math.floor(Math.random() * 100000);
-
           const url = buildAppsScriptUrl({
             action: "rsvpStatus",
-            requestId: currentRequestId,
+            requestId: currentId,
             callback: callbackName,
           });
-
-          loadScriptJsonp(url, callbackName, 10000)
-            .then((result) => {
-              if (!submitted || requestId !== currentRequestId) {
-                return;
-              }
-
+          loadScriptJsonp(url, callbackName, 6000)
+            .then((response) => {
+              checking = false;
+              if (!submitted || requestId !== currentId) return;
               if (
-                result.status === "success" ||
-                result.status === "duplicate" ||
-                result.status === "error"
+                response?.requestId === currentId &&
+                response.status === "success"
               ) {
-                finishSubmission(result);
-                return;
+                finish(response);
+              } else if (
+                response?.requestId === currentId &&
+                (response.status === "duplicate" || response.status === "error")
+              ) {
+                finish(response);
+              } else {
+                scheduleCheck();
               }
-
-              scheduleNextCheck();
             })
             .catch(() => {
-              if (submitted && requestId === currentRequestId) {
-                scheduleNextCheck();
-              }
+              checking = false;
+              if (submitted && requestId === currentId) scheduleCheck();
             });
         }
 
-        function scheduleNextCheck() {
-          if (!submitted) return;
-
-          if (statusAttempts >= 12) {
-            finishSubmission({
-              status: "error",
-              message:
-                "We could not confirm your RSVP result. " +
-                "Please check with the couple before submitting again.",
-            });
-            return;
+        // The HtmlService response is the primary confirmation. The message
+        // must originate from OUR submit iframe and match OUR request ID.
+        on(window, "message", (event) => {
+          if (!submitted || event.source !== iframe.contentWindow) return;
+          const data = event.data;
+          if (!data || data.type !== "wedding-rsvp-result") return;
+          if (data.requestId !== requestId) return;
+          if (
+            data.status === "success" ||
+            data.status === "duplicate" ||
+            data.status === "error"
+          ) {
+            finish(data);
+          } else if (data.status === "pending") {
+            scheduleCheck(500);
           }
-
-          clearStatusTimer();
-
-          statusTimer = window.setTimeout(checkSubmissionStatus, 1500);
-        }
+        });
 
         on(form, "submit", (event) => {
-          const rawName = form.elements.namedItem("name")?.value ?? "";
+          if (submitted) {
+            event.preventDefault();
+            return;
+          }
+          const name = form.elements.namedItem("name")?.value ?? "";
           const guestCount = Number(form.elements.namedItem("guests")?.value);
           const message = form.elements.namedItem("message")?.value ?? "";
-          if (!isValidGuestName(rawName)) {
+          if (!isValidGuestName(name)) {
             event.preventDefault();
             window.alert(
-              "Name must be 1–50 characters, using only letters, numbers, spaces and &.",
+              "Name must be 1–50 characters; only & and . are allowed as special characters.",
             );
             return;
           }
@@ -538,35 +536,23 @@ export function useWeddingInteractions() {
             return;
           }
 
-          if (submitted) {
-            event.preventDefault();
-            return;
-          }
-
           requestId =
             "rsvp_" +
             Date.now() +
             "_" +
             Math.random().toString(36).slice(2, 12);
-
           requestInput.value = requestId;
           submitted = true;
-          statusAttempts = 0;
-
+          checking = false;
+          deadline = Date.now() + 30000;
           success.hidden = true;
           setSubmitting(true);
-
-          statusTimer = window.setTimeout(checkSubmissionStatus, 1500);
+          scheduleCheck(2500);
+          // Do not preventDefault: HTML form POSTs into the hidden iframe.
         });
 
-        // The iframe loading does NOT mean the RSVP succeeded.
-        // Always verify the result through the status endpoint.
         on(iframe, "load", () => {
-          if (!submitted) return;
-
-          clearStatusTimer();
-
-          statusTimer = window.setTimeout(checkSubmissionStatus, 300);
+          if (submitted && !checking) scheduleCheck(500);
         });
       }
 

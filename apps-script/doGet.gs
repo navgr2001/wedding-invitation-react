@@ -78,23 +78,63 @@ function normalizeRsvpName_(value) {
   return sanitize_(value).normalize("NFKC").replace(/\s+/g, " ").toLowerCase();
 }
 
-// Send RSVP submission result to the website.
-function createRsvpResult_(status, message) {
+// Respond to the submitting iframe and identify the exact request.
+// The browser checks event.source against its own iframe.
+function createRsvpResult_(status, message, requestId) {
   var payload = JSON.stringify({
     type: "wedding-rsvp-result",
+    requestId: sanitize_(requestId),
     status: status,
     message: message,
   }).replace(/</g, "\\u003c");
 
   return HtmlService.createHtmlOutput(
-    "<!doctype html><html><body>" +
-      "<script>" +
+    "<!doctype html><html><body><script>" +
       "window.parent.postMessage(" +
       payload +
       ", '*');" +
-      "</script>" +
-      "</body></html>",
+      "</script></body></html>",
   );
+}
+
+// The sixth column is a stable idempotency key. Existing five-column
+// spreadsheets and all original five columns remain untouched.
+function ensureRsvpRequestIdHeader_(sheet) {
+  if (!sanitize_(sheet.getRange(1, 6).getDisplayValue())) {
+    sheet.getRange(1, 6).setValue("Request ID");
+  }
+}
+
+function isValidRsvpRequestId_(value) {
+  return /^rsvp_[0-9]{10,17}_[a-z0-9]{6,20}$/.test(sanitize_(value));
+}
+
+function getRsvpStatus_(params) {
+  var requestId = sanitize_(params.requestId);
+  if (!isValidRsvpRequestId_(requestId)) {
+    return {
+      status: "error",
+      requestId: requestId,
+      message: "Invalid request ID.",
+    };
+  }
+
+  var sheet = getSheet_();
+  var lastRow = sheet.getLastRow();
+  if (lastRow > 1) {
+    var ids = sheet.getRange(2, 6, lastRow - 1, 1).getDisplayValues();
+    for (var i = ids.length - 1; i >= 0; i--) {
+      if (sanitize_(ids[i][0]) === requestId) {
+        return {
+          status: "success",
+          requestId: requestId,
+          message: "Your RSVP has been saved successfully.",
+        };
+      }
+    }
+  }
+  // Not found does not mean failure: POST may still be running.
+  return { status: "pending", requestId: requestId };
 }
 
 // Fetch wedding wishes for display.
@@ -133,32 +173,33 @@ function listWords_() {
     });
 }
 
-// GET endpoint for wedding wishes.
+// JSONP RSVP status is used only if iframe postMessage is delayed or blocked.
 function doGet(e) {
+  var params = (e && e.parameter) || {};
   try {
-    var params = (e && e.parameter) || {};
-    var payload = {
-      ok: true,
-      items: listWords_(),
-    };
-
-    if (params.callback) {
-      return createJsonpOutput_(params.callback, payload);
+    if (params.action === "rsvpStatus") {
+      var status = getRsvpStatus_(params);
+      return params.callback
+        ? createJsonpOutput_(params.callback, status)
+        : createJsonOutput_(status);
     }
 
-    return createJsonOutput_(payload);
+    var payload = { ok: true, items: listWords_() };
+    return params.callback
+      ? createJsonpOutput_(params.callback, payload)
+      : createJsonOutput_(payload);
   } catch (error) {
-    var errPayload = {
-      ok: false,
-      error: sanitize_(error && error.message),
-      items: [],
-    };
-
-    if (e && e.parameter && e.parameter.callback) {
-      return createJsonpOutput_(e.parameter.callback, errPayload);
-    }
-
-    return createJsonOutput_(errPayload);
+    var response =
+      params.action === "rsvpStatus"
+        ? {
+            status: "unavailable",
+            requestId: sanitize_(params.requestId),
+            message: "Confirmation service temporarily unavailable.",
+          }
+        : { ok: false, error: sanitize_(error && error.message), items: [] };
+    return params.callback
+      ? createJsonpOutput_(params.callback, response)
+      : createJsonOutput_(response);
   }
 }
 
@@ -206,103 +247,101 @@ function isGuestMediaUploadRequest_(e) {
 
 function handleRsvpSubmission_(e) {
   var params = (e && e.parameter) || {};
-
+  var requestId = sanitize_(params.requestId);
   var enteredName = String(params.name == null ? "" : params.name);
   var rawName = sanitize_(enteredName);
   var attendance = sanitize_(params.attendance);
   var guestsRaw = sanitize_(params.guests);
   var rawMessage = String(params.message == null ? "" : params.message);
 
-  // Validate required fields.
-  if (!rawName || !attendance || !guestsRaw) {
-    return createRsvpResult_("error", "Missing required RSVP fields.");
+  function result(status, message) {
+    return createRsvpResult_(status, message, requestId);
   }
 
+  if (!isValidRsvpRequestId_(requestId)) {
+    return result("error", "Invalid RSVP request. Please refresh the page.");
+  }
+  if (!rawName || !attendance || !guestsRaw) {
+    return result("error", "Missing required RSVP fields.");
+  }
   if (enteredName.length > 50 || !/^[\p{L}\p{M}\p{N} &.]+$/u.test(rawName)) {
-    return createRsvpResult_(
+    return result(
       "error",
-      "Name must be up to 50 characters, with no special characters except & and a period (.).",
+      "Name must be up to 50 characters; only & and . are permitted as special characters.",
     );
   }
-
   if (rawMessage.length > 320) {
-    return createRsvpResult_(
+    return result(
       "error",
       "Message must be 320 characters or fewer, including spaces.",
     );
   }
-
-  var name = safeSheetValue_(rawName, 50);
-  var message = safeSheetValue_(rawMessage, 320);
-
-  // Validate attendance.
   if (
     attendance !== "Yes, I'll be there" &&
     attendance !== "Sorry, I can't make it"
   ) {
-    return createRsvpResult_("error", "Invalid attendance selection.");
+    return result("error", "Invalid attendance selection.");
   }
 
-  // Validate guest count.
   var guests = Number(guestsRaw);
-
   if (
     !isFinite(guests) ||
     Math.floor(guests) !== guests ||
     guests < 1 ||
     guests > 10
   ) {
-    return createRsvpResult_("error", "Guest count must be between 1 and 10.");
+    return result("error", "Guest count must be between 1 and 10.");
   }
 
-  // Lock prevents simultaneous duplicate submissions.
   var lock = LockService.getScriptLock();
-
   if (!lock.tryLock(30000)) {
-    return createRsvpResult_("error", "The system is busy. Please try again.");
+    // Lock contention is not proof of a failed or successful write.
+    return result("pending", "Your submission is still being processed.");
   }
 
   try {
     var sheet = getSheet_();
+    ensureRsvpRequestIdHeader_(sheet);
     var lastRow = sheet.getLastRow();
     var normalizedName = normalizeRsvpName_(rawName);
 
-    // Check all previously submitted names.
     if (lastRow > 1) {
-      var existingNames = sheet
-        .getRange(2, 2, lastRow - 1, 1)
-        .getDisplayValues();
-
-      var duplicate = existingNames.some(function (row) {
-        return normalizeRsvpName_(row[0]) === normalizedName;
-      });
-
-      // Reject an existing guest name.
-      if (duplicate) {
-        return createRsvpResult_(
-          "duplicate",
-          "An RSVP has already been submitted under this name. You cannot submit another response.",
-        );
+      // Read both name and ID in one range while holding the script lock.
+      var existing = sheet.getRange(2, 2, lastRow - 1, 5).getDisplayValues();
+      for (var i = 0; i < existing.length; i++) {
+        // Repeated POST with the same request ID must be idempotent.
+        if (sanitize_(existing[i][4]) === requestId) {
+          return result(
+            "success",
+            "Your RSVP has already been saved successfully.",
+          );
+        }
+      }
+      for (var j = 0; j < existing.length; j++) {
+        if (normalizeRsvpName_(existing[j][0]) === normalizedName) {
+          return result(
+            "duplicate",
+            "An RSVP has already been submitted under this name. You cannot submit another response.",
+          );
+        }
       }
     }
 
-    // Only first-time names are inserted.
-    sheet.appendRow([new Date(), name, attendance, guests, message]);
-
-    // Ensure data is committed before releasing the lock.
+    sheet.appendRow([
+      new Date(),
+      safeSheetValue_(rawName, 50),
+      attendance,
+      guests,
+      safeSheetValue_(rawMessage, 320),
+      requestId,
+    ]);
     SpreadsheetApp.flush();
-
-    return createRsvpResult_(
-      "success",
-      "Your RSVP has been saved successfully.",
-    );
+    return result("success", "Your RSVP has been saved successfully.");
   } catch (error) {
     console.error("RSVP submission error: " + error);
-
-    return createRsvpResult_(
-      "error",
-      "Unable to save your RSVP. Please try again.",
-    );
+    // The append may have succeeded before another step failed. Never
+    // tell the user to blindly retry an uncertain submission.
+    return result("pending", "Checking whether your RSVP was saved.");
   } finally {
     lock.releaseLock();
   }
