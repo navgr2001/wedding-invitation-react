@@ -364,6 +364,18 @@ export function useWeddingInteractions() {
         if (!form || !iframe || !success) return;
 
         const submitButton = form.querySelector('button[type="submit"]');
+        // Visible on mobile and desktop without a blocking native alert.
+        let statusElement = qs("#rsvpSubmitStatus");
+        if (!statusElement) {
+          statusElement = document.createElement("p");
+          statusElement.id = "rsvpSubmitStatus";
+          statusElement.setAttribute("role", "status");
+          statusElement.setAttribute("aria-live", "polite");
+          statusElement.style.cssText =
+            "margin:12px 0 0;font-size:14px;line-height:1.5;overflow-wrap:anywhere";
+          form.appendChild(statusElement);
+        }
+
         let submitted = false;
         let requestId = "";
         let timer = null;
@@ -381,19 +393,20 @@ export function useWeddingInteractions() {
           form.action = buildAppsScriptUrl({ action: "submit" });
         }
 
-        function setSubmitting(value) {
+        const showStatus = (message, color = "#834c3c") => {
+          statusElement.textContent = message;
+          statusElement.style.color = color;
+        };
+        const setSubmitting = (value) => {
           if (!submitButton) return;
           submitButton.disabled = value;
-          submitButton.textContent = value
-            ? "Sending..."
-            : "Send RSVP with Love";
+          submitButton.textContent = value ? "Sending..." : "Send RSVP with Love";
           submitButton.style.opacity = value ? "0.7" : "1";
-        }
-
-        function clearTimer() {
+        };
+        const clearTimer = () => {
           if (timer !== null) window.clearTimeout(timer);
           timer = null;
-        }
+        };
 
         function finish(result) {
           if (!submitted || !result) return;
@@ -401,35 +414,34 @@ export function useWeddingInteractions() {
           submitted = false;
           checking = false;
           setSubmitting(false);
+          const status = result.status;
 
-          if (result.status === "success") {
+          if (status === "success") {
             success.hidden = false;
             form.reset();
+            showStatus("Your RSVP has been saved successfully!", "#23653b");
             window.dispatchEvent(new Event("wedding:rsvp-success"));
             if (typeof window.__refreshWordsCarousel === "function") {
               window.__refreshWordsCarousel({ poll: true });
             }
-          } else if (result.status === "duplicate") {
+          } else if (status === "duplicate") {
             success.hidden = true;
-            window.alert(
-              result.message || "An RSVP already exists for this name.",
-            );
-          } else if (result.status === "error") {
+            showStatus(result.message || "An RSVP already exists for this name.");
+          } else if (status === "error") {
             success.hidden = true;
-            window.alert(result.message || "Your RSVP was not accepted.");
+            showStatus(result.message || "Your RSVP was not accepted.");
           } else {
-            // Confirmation unknown: the POST may have been committed.
-            // Don't label it a failure, and don't silently retry it.
             success.hidden = true;
-            window.alert(
-              "Your RSVP may already have been saved, but we couldn't confirm it. " +
-                "Please check with the couple before submitting again.",
+            // Never claim failure when Google Sheets may already have committed.
+            showStatus(
+              "Your RSVP may have been saved, but confirmation is unavailable. " +
+              "Please check with the couple before trying again."
             );
           }
           requestId = "";
         }
 
-        function scheduleCheck(delayMs = 1500) {
+        function scheduleCheck(delayMs = 1300) {
           if (!submitted) return;
           clearTimer();
           if (Date.now() >= deadline) {
@@ -439,7 +451,24 @@ export function useWeddingInteractions() {
           timer = window.setTimeout(checkStatus, delayMs);
         }
 
-        function checkStatus() {
+        // Backup confirmation directly from the published RSVP worksheet.
+        // Only an exact request ID confirms THIS submission. An old row
+        // with the same guest name must never count as proof of success.
+        async function checkSheet(currentId) {
+          if (!hasConfiguredSheet()) return false;
+          const callbackName =
+            "__rsvpSheetCheck_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+          const payload = await loadScriptJsonp(buildSheetJsonpUrl(callbackName), callbackName, 6500);
+          if (payload?.status === "error" || payload?.table?.rows == null) return false;
+          return payload.table.rows.some((row) => {
+            const cells = row.c || [];
+            const valueAt = (i) => String(cells[i]?.v ?? cells[i]?.f ?? "").trim();
+            const storedId = valueAt(5);
+            return storedId === currentId;
+          });
+        }
+
+        async function checkStatus() {
           if (!submitted || !requestId || checking) return;
           if (Date.now() >= deadline) {
             finish({ status: "unconfirmed" });
@@ -447,55 +476,59 @@ export function useWeddingInteractions() {
           }
           checking = true;
           const currentId = requestId;
-          const callbackName =
-            "__rsvpStatus_" +
-            Date.now() +
-            "_" +
-            Math.floor(Math.random() * 100000);
-          const url = buildAppsScriptUrl({
-            action: "rsvpStatus",
-            requestId: currentId,
-            callback: callbackName,
-          });
-          loadScriptJsonp(url, callbackName, 6000)
-            .then((response) => {
-              checking = false;
-              if (!submitted || requestId !== currentId) return;
-              if (
-                response?.requestId === currentId &&
-                response.status === "success"
-              ) {
-                finish(response);
-              } else if (
-                response?.requestId === currentId &&
-                (response.status === "duplicate" || response.status === "error")
-              ) {
-                finish(response);
-              } else {
-                scheduleCheck();
-              }
-            })
-            .catch(() => {
-              checking = false;
-              if (submitted && requestId === currentId) scheduleCheck();
+          try {
+            // The status endpoint is authoritative if the updated Apps Script is deployed.
+            const callbackName =
+              "__rsvpStatus_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+            const statusUrl = buildAppsScriptUrl({
+              action: "rsvpStatus", requestId: currentId, callback: callbackName,
             });
+            let response = null;
+            try {
+              response = await loadScriptJsonp(statusUrl, callbackName, 5000);
+            } catch {
+              // Older Apps Script deployments have no status endpoint.
+            }
+            if (!submitted || requestId !== currentId) return;
+            if (response?.requestId === currentId) {
+              if (["success", "duplicate", "error"].includes(response.status)) {
+                finish(response);
+                return;
+              }
+            }
+            // The sheet check works even if postMessage is blocked by browsers
+            // or the previous Apps Script version has not yet been redeployed.
+            try {
+              if (await checkSheet(currentId)) {
+                if (submitted && requestId === currentId) {
+                  finish({ status: "success" });
+                }
+                return;
+              }
+            } catch {
+              // Private/unpublished sheets can block this fallback.
+            }
+          } finally {
+            checking = false;
+            if (submitted && requestId === currentId) scheduleCheck(1200);
+          }
         }
 
-        // The HtmlService response is the primary confirmation. The message
-        // must originate from OUR submit iframe and match OUR request ID.
+        // Apps Script HtmlService may nest the response in a Google iframe.
+        // Validate a high-entropy request ID AND Google's HTTPS origin instead
+        // of relying on event.source === iframe.contentWindow alone.
         on(window, "message", (event) => {
-          if (!submitted || event.source !== iframe.contentWindow) return;
+          if (!submitted || !requestId) return;
           const data = event.data;
           if (!data || data.type !== "wedding-rsvp-result") return;
           if (data.requestId !== requestId) return;
-          if (
-            data.status === "success" ||
-            data.status === "duplicate" ||
-            data.status === "error"
-          ) {
+          const allowedOrigin = event.origin === "https://script.google.com" ||
+            /^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/i.test(event.origin);
+          if (!allowedOrigin) return;
+          if (["success", "duplicate", "error"].includes(data.status)) {
             finish(data);
           } else if (data.status === "pending") {
-            scheduleCheck(500);
+            scheduleCheck(300);
           }
         });
 
@@ -509,50 +542,38 @@ export function useWeddingInteractions() {
           const message = form.elements.namedItem("message")?.value ?? "";
           if (!isValidGuestName(name)) {
             event.preventDefault();
-            window.alert(
-              "Name must be 1–50 characters; only & and . are allowed as special characters.",
-            );
+            showStatus("Name must be 1–50 characters; only & and . are allowed as special characters.");
             return;
           }
-          if (
-            !Number.isInteger(guestCount) ||
-            guestCount < 1 ||
-            guestCount > RSVP_MAX_GUESTS
-          ) {
+          if (!Number.isInteger(guestCount) || guestCount < 1 || guestCount > RSVP_MAX_GUESTS) {
             event.preventDefault();
-            window.alert("Number of guests must be between 1 and 10.");
+            showStatus("Number of guests must be between 1 and 10.");
             return;
           }
           if (message.length > RSVP_MESSAGE_MAX_LENGTH) {
             event.preventDefault();
-            window.alert(
-              "Message must be 320 characters or fewer, including spaces.",
-            );
+            showStatus("Message must be 320 characters or fewer, including spaces.");
             return;
           }
           if (!hasConfiguredAppsScript()) {
             event.preventDefault();
-            window.alert("Apps Script submit URL is not configured correctly.");
+            showStatus("Apps Script submit URL is not configured correctly.");
             return;
           }
-
-          requestId =
-            "rsvp_" +
-            Date.now() +
-            "_" +
-            Math.random().toString(36).slice(2, 12);
+          requestId = "rsvp_" + Date.now() + "_" + Math.random().toString(36).slice(2, 12);
           requestInput.value = requestId;
           submitted = true;
           checking = false;
-          deadline = Date.now() + 30000;
+          deadline = Date.now() + 25000;
           success.hidden = true;
           setSubmitting(true);
-          scheduleCheck(2500);
-          // Do not preventDefault: HTML form POSTs into the hidden iframe.
+          showStatus("Saving your RSVP securely...", "#555555");
+          scheduleCheck(1200);
+          // Native POST to Google Apps Script: no CORS preflight required.
         });
 
         on(iframe, "load", () => {
-          if (submitted && !checking) scheduleCheck(500);
+          if (submitted && !checking) scheduleCheck(300);
         });
       }
 

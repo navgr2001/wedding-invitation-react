@@ -90,9 +90,8 @@ function createRsvpResult_(status, message, requestId) {
 
   return HtmlService.createHtmlOutput(
     "<!doctype html><html><body><script>" +
-      "window.parent.postMessage(" +
-      payload +
-      ", '*');" +
+      "try { window.top.postMessage(" + payload + ", '*'); } catch(e) {}" +
+      "try { window.parent.postMessage(" + payload + ", '*'); } catch(e) {}" +
       "</script></body></html>",
   );
 }
@@ -112,11 +111,7 @@ function isValidRsvpRequestId_(value) {
 function getRsvpStatus_(params) {
   var requestId = sanitize_(params.requestId);
   if (!isValidRsvpRequestId_(requestId)) {
-    return {
-      status: "error",
-      requestId: requestId,
-      message: "Invalid request ID.",
-    };
+    return {status: "error", requestId: requestId, message: "Invalid request ID."};
   }
 
   var sheet = getSheet_();
@@ -134,7 +129,7 @@ function getRsvpStatus_(params) {
     }
   }
   // Not found does not mean failure: POST may still be running.
-  return { status: "pending", requestId: requestId };
+  return {status: "pending", requestId: requestId};
 }
 
 // Fetch wedding wishes for display.
@@ -184,19 +179,18 @@ function doGet(e) {
         : createJsonOutput_(status);
     }
 
-    var payload = { ok: true, items: listWords_() };
+    var payload = {ok: true, items: listWords_()};
     return params.callback
       ? createJsonpOutput_(params.callback, payload)
       : createJsonOutput_(payload);
   } catch (error) {
-    var response =
-      params.action === "rsvpStatus"
-        ? {
-            status: "unavailable",
-            requestId: sanitize_(params.requestId),
-            message: "Confirmation service temporarily unavailable.",
-          }
-        : { ok: false, error: sanitize_(error && error.message), items: [] };
+    var response = params.action === "rsvpStatus"
+      ? {
+          status: "unavailable",
+          requestId: sanitize_(params.requestId),
+          message: "Confirmation service temporarily unavailable.",
+        }
+      : {ok: false, error: sanitize_(error && error.message), items: []};
     return params.callback
       ? createJsonpOutput_(params.callback, response)
       : createJsonOutput_(response);
@@ -265,31 +259,17 @@ function handleRsvpSubmission_(e) {
     return result("error", "Missing required RSVP fields.");
   }
   if (enteredName.length > 50 || !/^[\p{L}\p{M}\p{N} &.]+$/u.test(rawName)) {
-    return result(
-      "error",
-      "Name must be up to 50 characters; only & and . are permitted as special characters.",
-    );
+    return result("error", "Name must be up to 50 characters; only & and . are permitted as special characters.");
   }
   if (rawMessage.length > 320) {
-    return result(
-      "error",
-      "Message must be 320 characters or fewer, including spaces.",
-    );
+    return result("error", "Message must be 320 characters or fewer, including spaces.");
   }
-  if (
-    attendance !== "Yes, I'll be there" &&
-    attendance !== "Sorry, I can't make it"
-  ) {
+  if (attendance !== "Yes, I'll be there" && attendance !== "Sorry, I can't make it") {
     return result("error", "Invalid attendance selection.");
   }
 
   var guests = Number(guestsRaw);
-  if (
-    !isFinite(guests) ||
-    Math.floor(guests) !== guests ||
-    guests < 1 ||
-    guests > 10
-  ) {
+  if (!isFinite(guests) || Math.floor(guests) !== guests || guests < 1 || guests > 10) {
     return result("error", "Guest count must be between 1 and 10.");
   }
 
@@ -311,18 +291,12 @@ function handleRsvpSubmission_(e) {
       for (var i = 0; i < existing.length; i++) {
         // Repeated POST with the same request ID must be idempotent.
         if (sanitize_(existing[i][4]) === requestId) {
-          return result(
-            "success",
-            "Your RSVP has already been saved successfully.",
-          );
+          return result("success", "Your RSVP has already been saved successfully.");
         }
       }
       for (var j = 0; j < existing.length; j++) {
         if (normalizeRsvpName_(existing[j][0]) === normalizedName) {
-          return result(
-            "duplicate",
-            "An RSVP has already been submitted under this name. You cannot submit another response.",
-          );
+          return result("duplicate", "An RSVP has already been submitted under this name. You cannot submit another response.");
         }
       }
     }
