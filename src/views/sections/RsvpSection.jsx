@@ -326,6 +326,8 @@ function RsvpSection({ rsvp }) {
                   name="message"
                   rows="5"
                   placeholder="Leave the couple a beautiful note!"
+                  autoComplete="off"
+                  spellCheck={true}
                 ></textarea>
               </label>
 
