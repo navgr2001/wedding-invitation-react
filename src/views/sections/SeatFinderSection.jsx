@@ -1,4 +1,8 @@
 import { useState } from "react";
+import {
+  cleanGuestName,
+  NAME_MAX_LENGTH,
+} from "../../utils/guestFormValidation";
 
 function SeatFinderSection({ seatFinder }) {
   const [hasName, setHasName] = useState(false);
@@ -46,9 +50,13 @@ function SeatFinderSection({ seatFinder }) {
               type="text"
               placeholder="Enter your name..."
               autoComplete="name"
-              onInput={(event) =>
-                setHasName(Boolean(event.currentTarget.value))
-              }
+              maxLength={NAME_MAX_LENGTH}
+              onInput={(event) => {
+                const input = event.currentTarget;
+                const cleaned = cleanGuestName(input.value);
+                if (input.value !== cleaned) input.value = cleaned;
+                setHasName(Boolean(cleaned));
+              }}
             />
 
             {/* Clear name button */}

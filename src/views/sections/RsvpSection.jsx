@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { HeartIcon } from "../components/IconSvgs";
 import { weddingContent } from "../../models/weddingContent";
+import {
+  cleanGuestName,
+  isValidGuestName,
+  NAME_MAX_LENGTH,
+  RSVP_MAX_GUESTS,
+  RSVP_MESSAGE_MAX_LENGTH,
+} from "../../utils/guestFormValidation";
 
 const normalizeName = (value) =>
   String(value || "")
@@ -13,14 +20,30 @@ function RsvpSection({ rsvp }) {
   const [names, setNames] = useState([]);
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [messageLength, setMessageLength] = useState(0);
 
   const inputRef = useRef(null);
   const wrapperRef = useRef(null);
   const requestRef = useRef(null);
 
+  useEffect(() => {
+    const reset = () => {
+      setName("");
+      setOpen(false);
+      setActiveIndex(-1);
+      setMessageLength(0);
+    };
+    window.addEventListener("wedding:rsvp-success", reset);
+    return () => window.removeEventListener("wedding:rsvp-success", reset);
+  }, []);
+
   const matches = name.trim()
     ? names
-        .filter((guest) => normalizeName(guest).includes(normalizeName(name)))
+        .filter(
+          (guest) =>
+            isValidGuestName(guest) &&
+            normalizeName(guest).includes(normalizeName(name)),
+        )
         .sort(
           (a, b) =>
             Number(normalizeName(b).startsWith(normalizeName(name))) -
@@ -135,7 +158,7 @@ function RsvpSection({ rsvp }) {
   };
 
   const selectName = (guest) => {
-    setName(guest);
+    setName(cleanGuestName(guest));
     setOpen(false);
     setActiveIndex(-1);
     inputRef.current?.focus();
@@ -202,6 +225,9 @@ function RsvpSection({ rsvp }) {
                     aria-expanded={open && matches.length > 0}
                     aria-controls="rsvpNameSuggestions"
                     value={name}
+                    maxLength={NAME_MAX_LENGTH}
+                    pattern="[\p{L}\p{M}\p{N} &]+"
+                    title="Only letters, numbers, spaces and & are allowed (maximum 50 characters)."
                     onFocus={() => {
                       loadNames();
 
@@ -210,9 +236,10 @@ function RsvpSection({ rsvp }) {
                       }
                     }}
                     onChange={(event) => {
-                      setName(event.target.value);
+                      const cleaned = cleanGuestName(event.target.value);
+                      setName(cleaned);
                       setActiveIndex(-1);
-                      setOpen(Boolean(event.target.value.trim()));
+                      setOpen(Boolean(cleaned.trim()));
                       loadNames();
                     }}
                     onKeyDown={(event) => {
@@ -312,7 +339,9 @@ function RsvpSection({ rsvp }) {
                     type="number"
                     name="guests"
                     min="1"
-                    max="20"
+                    max={RSVP_MAX_GUESTS}
+                    step="1"
+                    inputMode="numeric"
                     placeholder=""
                     required
                   />
@@ -328,7 +357,15 @@ function RsvpSection({ rsvp }) {
                   placeholder="Leave the couple a beautiful note!"
                   autoComplete="off"
                   spellCheck={true}
+                  maxLength={RSVP_MESSAGE_MAX_LENGTH}
+                  onChange={(event) =>
+                    setMessageLength(event.target.value.length)
+                  }
                 ></textarea>
+                <small aria-live="polite">
+                  {messageLength}/{RSVP_MESSAGE_MAX_LENGTH} characters
+                  (including spaces)
+                </small>
               </label>
 
               <button className="rsvpSubmitBtn" type="submit">

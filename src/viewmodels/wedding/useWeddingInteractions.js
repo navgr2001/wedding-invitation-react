@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { weddingContent } from "../../models/weddingContent";
 import { initCleanSectionNavigation } from "../../utils/cleanSectionNavigation";
+import {
+  cleanGuestName,
+  isValidGuestName,
+  RSVP_MAX_GUESTS,
+  RSVP_MESSAGE_MAX_LENGTH,
+} from "../../utils/guestFormValidation";
 
 export function useWeddingInteractions() {
   useEffect(() => {
@@ -409,6 +415,7 @@ export function useWeddingInteractions() {
           if (result.status === "success") {
             success.hidden = false;
             form.reset();
+            window.dispatchEvent(new Event("wedding:rsvp-success"));
 
             // Clear controlled React name field if present.
             const nameInput = form.querySelector('input[name="name"]');
@@ -499,6 +506,32 @@ export function useWeddingInteractions() {
         }
 
         on(form, "submit", (event) => {
+          const rawName = form.elements.namedItem("name")?.value ?? "";
+          const guestCount = Number(form.elements.namedItem("guests")?.value);
+          const message = form.elements.namedItem("message")?.value ?? "";
+          if (!isValidGuestName(rawName)) {
+            event.preventDefault();
+            window.alert(
+              "Name must be 1–50 characters, using only letters, numbers, spaces and &.",
+            );
+            return;
+          }
+          if (
+            !Number.isInteger(guestCount) ||
+            guestCount < 1 ||
+            guestCount > RSVP_MAX_GUESTS
+          ) {
+            event.preventDefault();
+            window.alert("Number of guests must be between 1 and 10.");
+            return;
+          }
+          if (message.length > RSVP_MESSAGE_MAX_LENGTH) {
+            event.preventDefault();
+            window.alert(
+              "Message must be 320 characters or fewer, including spaces.",
+            );
+            return;
+          }
           if (!hasConfiguredAppsScript()) {
             event.preventDefault();
             window.alert("Apps Script submit URL is not configured correctly.");
@@ -1428,7 +1461,9 @@ export function useWeddingInteractions() {
                 message,
               };
             })
-            .filter((item) => item.name !== "" && item.tableNo !== "");
+            .filter(
+              (item) => isValidGuestName(item.name) && item.tableNo !== "",
+            );
         }
 
         async function loadSeatingList() {
@@ -1535,8 +1570,9 @@ export function useWeddingInteractions() {
         function selectGuest(item) {
           if (!item) return;
 
+          if (!isValidGuestName(item.name)) return;
           selectedGuest = item;
-          input.value = item.name;
+          input.value = cleanGuestName(item.name);
           hideSuggestions();
           hideResult();
           input.focus();
@@ -1571,7 +1607,7 @@ export function useWeddingInteractions() {
           }
 
           selectedGuest = item;
-          input.value = item.name;
+          input.value = cleanGuestName(item.name);
           hideSuggestions();
 
           result.hidden = false;
@@ -1667,6 +1703,13 @@ export function useWeddingInteractions() {
 
         form.addEventListener("submit", async (event) => {
           event.preventDefault();
+
+          if (!isValidGuestName(input.value)) {
+            showMessage(
+              "Enter a name of up to 50 characters using only letters, numbers, spaces and &.",
+            );
+            return;
+          }
 
           try {
             await loadSeatingList();

@@ -207,20 +207,33 @@ function isGuestMediaUploadRequest_(e) {
 function handleRsvpSubmission_(e) {
   var params = (e && e.parameter) || {};
 
-  var rawName = sanitize_(params.name);
-  var name = safeSheetValue_(rawName, 120);
+  var enteredName = String(params.name == null ? "" : params.name);
+  var rawName = sanitize_(enteredName);
   var attendance = sanitize_(params.attendance);
   var guestsRaw = sanitize_(params.guests);
-  var message = safeSheetValue_(params.message, 1000);
+  var rawMessage = String(params.message == null ? "" : params.message);
 
   // Validate required fields.
   if (!rawName || !attendance || !guestsRaw) {
     return createRsvpResult_("error", "Missing required RSVP fields.");
   }
 
-  if (rawName.length > 120) {
-    return createRsvpResult_("error", "Name is too long.");
+  if (enteredName.length > 50 || !/^[\p{L}\p{M}\p{N} &.]+$/u.test(rawName)) {
+    return createRsvpResult_(
+      "error",
+      "Name must be up to 50 characters, with no special characters except & and a period (.).",
+    );
   }
+
+  if (rawMessage.length > 320) {
+    return createRsvpResult_(
+      "error",
+      "Message must be 320 characters or fewer, including spaces.",
+    );
+  }
+
+  var name = safeSheetValue_(rawName, 50);
+  var message = safeSheetValue_(rawMessage, 320);
 
   // Validate attendance.
   if (
@@ -237,9 +250,9 @@ function handleRsvpSubmission_(e) {
     !isFinite(guests) ||
     Math.floor(guests) !== guests ||
     guests < 1 ||
-    guests > 20
+    guests > 10
   ) {
-    return createRsvpResult_("error", "Guest count must be between 1 and 20.");
+    return createRsvpResult_("error", "Guest count must be between 1 and 10.");
   }
 
   // Lock prevents simultaneous duplicate submissions.
