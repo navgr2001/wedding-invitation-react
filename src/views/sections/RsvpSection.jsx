@@ -226,8 +226,8 @@ function RsvpSection({ rsvp }) {
                     aria-controls="rsvpNameSuggestions"
                     value={name}
                     maxLength={NAME_MAX_LENGTH}
-                    pattern="[\p{L}\p{M}\p{N} &.]+"
-                    title="Only letters, numbers, spaces, & and . are allowed (maximum 50 characters)."
+                    pattern="[\p{L}\p{M} &.]+"
+                    title="Only letters, spaces, & and . are allowed (maximum 50 characters)."
                     onFocus={() => {
                       loadNames();
 

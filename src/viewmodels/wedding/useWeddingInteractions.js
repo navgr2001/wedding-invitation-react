@@ -359,12 +359,10 @@ export function useWeddingInteractions() {
 
       function initRsvpSubmission() {
         const form = qs("#rsvpForm");
-        const iframe = qs("#rsvp_hidden_iframe");
         const success = qs("#rsvpSuccess");
-        if (!form || !iframe || !success) return;
+        if (!form || !success) return;
 
-        const submitButton = form.querySelector('button[type="submit"]');
-        // Visible on mobile and desktop without a blocking native alert.
+        const button = form.querySelector('button[type="submit"]');
         let statusElement = qs("#rsvpSubmitStatus");
         if (!statusElement) {
           statusElement = document.createElement("p");
@@ -376,253 +374,142 @@ export function useWeddingInteractions() {
           form.appendChild(statusElement);
         }
 
-        let submitted = false;
-        let requestId = "";
-        let timer = null;
-        let checking = false;
-        let deadline = 0;
-
-        let requestInput = form.querySelector('input[name="requestId"]');
-        if (!requestInput) {
-          requestInput = document.createElement("input");
-          requestInput.type = "hidden";
-          requestInput.name = "requestId";
-          form.appendChild(requestInput);
-        }
-        if (hasConfiguredAppsScript()) {
-          form.action = buildAppsScriptUrl({ action: "submit" });
-        }
-
-        const showStatus = (message, color = "#834c3c") => {
+        // Keep the same ID when a result is uncertain. Clicking the button again
+        // checks its status, not another POST (which could otherwise duplicate it).
+        let pendingId = "";
+        let busy = false;
+        const endpoint = "/.netlify/functions/rsvp";
+        const setStatus = (message, color = "#834c3c") => {
           statusElement.textContent = message;
           statusElement.style.color = color;
         };
-        const setSubmitting = (value) => {
-          if (!submitButton) return;
-          submitButton.disabled = value;
-          submitButton.textContent = value ? "Sending..." : "Send RSVP with Love";
-          submitButton.style.opacity = value ? "0.7" : "1";
+        const setBusy = (value) => {
+          busy = value;
+          if (!button) return;
+          button.disabled = value;
+          button.textContent = value
+            ? "Sending..."
+            : pendingId ? "Check RSVP Status" : "Send RSVP with Love";
+          button.style.opacity = value ? "0.7" : "1";
         };
-        const clearTimer = () => {
-          if (timer !== null) window.clearTimeout(timer);
-          timer = null;
+        const requestJSON = async (url, init = {}, timeoutMs = 13000) => {
+          const controller = new AbortController();
+          const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+          try {
+            const response = await fetch(url, {
+              ...init,
+              signal: controller.signal,
+              cache: "no-store",
+            });
+            const type = response.headers.get("content-type") || "";
+            if (!type.includes("application/json")) {
+              throw new Error("The Netlify RSVP function is not deployed. Deploy the complete Netlify project, not only dist.");
+            }
+            const data = await response.json();
+            if (data.status === "error" && response.status === 404) {
+              throw new Error("The RSVP function was not found on this website.");
+            }
+            return data;
+          } finally {
+            window.clearTimeout(timeout);
+          }
         };
-
-        function finish(result) {
-          if (!submitted || !result) return;
-          clearTimer();
-          submitted = false;
-          checking = false;
-          setSubmitting(false);
-          const status = result.status;
-
-          if (status === "success") {
+        const complete = (result) => {
+          if (!result || result.requestId !== pendingId) return false;
+          if (result.status === "success") {
+            pendingId = "";
             success.hidden = false;
             form.reset();
-            showStatus("Your RSVP has been saved successfully!", "#23653b");
+            setStatus("Your RSVP has been saved successfully!", "#23653b");
             window.dispatchEvent(new Event("wedding:rsvp-success"));
             if (typeof window.__refreshWordsCarousel === "function") {
               window.__refreshWordsCarousel({ poll: true });
             }
-          } else if (status === "duplicate") {
-            success.hidden = true;
-            showStatus(result.message || "An RSVP already exists for this name.");
-          } else if (status === "error") {
-            success.hidden = true;
-            showStatus(result.message || "Your RSVP was not accepted.");
-          } else {
-            success.hidden = true;
-            // Never claim failure when Google Sheets may already have committed.
-            showStatus(
-              "Your RSVP may have been saved, but confirmation is unavailable. " +
-              "Please check with the couple before trying again."
-            );
+            return true;
           }
-          requestId = "";
-        }
-
-        function scheduleCheck(delayMs = 1300) {
-          if (!submitted) return;
-          clearTimer();
-          if (Date.now() >= deadline) {
-            finish({ status: "unconfirmed" });
-            return;
+          if (result.status === "duplicate" || result.status === "error") {
+            pendingId = "";
+            success.hidden = true;
+            setStatus(result.message || "This RSVP was not accepted.");
+            return true;
           }
-          timer = window.setTimeout(checkStatus, delayMs);
-        }
-
-        // Backup confirmation directly from the published RSVP worksheet.
-        // Only an exact request ID confirms THIS submission. An old row
-        // with the same guest name must never count as proof of success.
-        async function checkSheet(currentId) {
-          if (!hasConfiguredSheet()) return false;
-          const callbackName =
-            "__rsvpSheetCheck_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
-          const payload = await loadScriptJsonp(buildSheetJsonpUrl(callbackName), callbackName, 6500);
-          if (payload?.status === "error" || payload?.table?.rows == null) return false;
-          return payload.table.rows.some((row) => {
-            const cells = row.c || [];
-            const valueAt = (i) => String(cells[i]?.v ?? cells[i]?.f ?? "").trim();
-            const storedId = valueAt(5);
-            return storedId === currentId;
-          });
-        }
-
-        async function checkStatus() {
-          if (!submitted || !requestId || checking) return;
-          if (Date.now() >= deadline) {
-            finish({ status: "unconfirmed" });
-            return;
-          }
-          checking = true;
-          const currentId = requestId;
-          try {
-            // The status endpoint is authoritative if the updated Apps Script is deployed.
-            const callbackName =
-              "__rsvpStatus_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
-            const statusUrl = buildAppsScriptUrl({
-              action: "rsvpStatus", requestId: currentId, callback: callbackName,
-            });
-            let response = null;
+          return false;
+        };
+        const verify = async (id) => {
+          for (const delay of [0, 450, 1000, 1800]) {
+            if (delay) await new Promise((resolve) => window.setTimeout(resolve, delay));
+            if (pendingId !== id) return true;
             try {
-              if (useNetlifyTransport) {
-                const res = await fetch(
-                  `/.netlify/functions/rsvp?requestId=${encodeURIComponent(currentId)}`,
-                  { cache: "no-store" },
-                );
-                response = await res.json();
-              } else {
-                response = await loadScriptJsonp(statusUrl, callbackName, 5000);
-              }
-            } catch {
-              // Older Apps Script deployments have no status endpoint.
+              const result = await requestJSON(
+                endpoint + "?requestId=" + encodeURIComponent(id),
+                {}, 7000,
+              );
+              if (complete(result)) return true;
+            } catch (error) {
+              console.warn("RSVP status verification:", error);
             }
-            if (!submitted || requestId !== currentId) return;
-            if (response?.requestId === currentId) {
-              if (["success", "duplicate", "error"].includes(response.status)) {
-                finish(response);
-                return;
-              }
-            }
-            // The sheet check works even if postMessage is blocked by browsers
-            // or the previous Apps Script version has not yet been redeployed.
-            try {
-              if (!useNetlifyTransport && await checkSheet(currentId)) {
-                if (submitted && requestId === currentId) {
-                  finish({ status: "success" });
-                }
-                return;
-              }
-            } catch {
-              // Private/unpublished sheets can block this fallback.
-            }
-          } finally {
-            checking = false;
-            if (submitted && requestId === currentId) scheduleCheck(1200);
           }
-        }
-
-        // Apps Script HtmlService may nest the response in a Google iframe.
-        // Validate a high-entropy request ID AND Google's HTTPS origin instead
-        // of relying on event.source === iframe.contentWindow alone.
-        on(window, "message", (event) => {
-          if (!submitted || !requestId) return;
-          const data = event.data;
-          if (!data || data.type !== "wedding-rsvp-result") return;
-          if (data.requestId !== requestId) return;
-          const allowedOrigin = event.origin === "https://script.google.com" ||
-            /^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/i.test(event.origin);
-          if (!allowedOrigin) return;
-          if (["success", "duplicate", "error"].includes(data.status)) {
-            finish(data);
-          } else if (data.status === "pending") {
-            scheduleCheck(300);
-          }
-        });
-
-        // Netlify provides a same-origin JSON endpoint in production. Unlike
-        // cross-origin iframe messages, the actual POST result can be read.
-        // Vite's default local server does not run Netlify Functions; retain
-        // the original iframe/status fallback there.
-        const useNetlifyTransport =
-          !["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
-
-        async function submitViaNetlify(currentId) {
-          const controller = new AbortController();
-          const timeout = window.setTimeout(() => controller.abort(), 14500);
-          try {
-            const body = Object.fromEntries(new FormData(form).entries());
-            const response = await fetch("/.netlify/functions/rsvp", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(body),
-              signal: controller.signal,
-            });
-            const payload = await response.json();
-            if (!submitted || requestId !== currentId) return;
-            if (payload.requestId === currentId &&
-                ["success", "duplicate", "error"].includes(payload.status)) {
-              finish(payload);
+          return false;
+        };
+        on(form, "submit", async (event) => {
+          event.preventDefault();
+          if (busy) return;
+          if (!pendingId) {
+            const name = form.elements.namedItem("name")?.value ?? "";
+            const attendance = form.elements.namedItem("attendance")?.value ?? "";
+            const guests = Number(form.elements.namedItem("guests")?.value);
+            const message = form.elements.namedItem("message")?.value ?? "";
+            if (!isValidGuestName(name)) {
+              setStatus("Name must be 1–50 characters; only & and . are allowed as special characters.");
               return;
             }
-            // A pending outcome is not a failure; the backend may still
-            // be writing. The status poll uses the same request ID.
-            scheduleCheck(300);
-          } catch {
-            // A fetch failure cannot tell us whether the Google Sheet wrote.
-            if (submitted && requestId === currentId) scheduleCheck(300);
-          } finally {
-            window.clearTimeout(timeout);
+            if (!["Yes, I'll be there", "Sorry, I can't make it"].includes(attendance)) {
+              setStatus("Please select your attendance.");
+              return;
+            }
+            if (!Number.isInteger(guests) || guests < 1 || guests > RSVP_MAX_GUESTS) {
+              setStatus("Number of guests must be between 1 and 10.");
+              return;
+            }
+            if (message.length > RSVP_MESSAGE_MAX_LENGTH) {
+              setStatus("Message must be 320 characters or fewer, including spaces.");
+              return;
+            }
+            pendingId = "rsvp_" + Date.now() + "_" + Math.random().toString(36).slice(2, 12);
           }
-        }
-
-        on(form, "submit", (event) => {
-          if (submitted) {
-            event.preventDefault();
-            return;
-          }
-          const name = form.elements.namedItem("name")?.value ?? "";
-          const guestCount = Number(form.elements.namedItem("guests")?.value);
-          const message = form.elements.namedItem("message")?.value ?? "";
-          if (!isValidGuestName(name)) {
-            event.preventDefault();
-            showStatus("Name must be 1–50 characters; only & and . are allowed as special characters.");
-            return;
-          }
-          if (!Number.isInteger(guestCount) || guestCount < 1 || guestCount > RSVP_MAX_GUESTS) {
-            event.preventDefault();
-            showStatus("Number of guests must be between 1 and 10.");
-            return;
-          }
-          if (message.length > RSVP_MESSAGE_MAX_LENGTH) {
-            event.preventDefault();
-            showStatus("Message must be 320 characters or fewer, including spaces.");
-            return;
-          }
-          if (!hasConfiguredAppsScript()) {
-            event.preventDefault();
-            showStatus("Apps Script submit URL is not configured correctly.");
-            return;
-          }
-          requestId = "rsvp_" + Date.now() + "_" + Math.random().toString(36).slice(2, 12);
-          requestInput.value = requestId;
-          submitted = true;
-          checking = false;
-          deadline = Date.now() + 25000;
+          const id = pendingId;
           success.hidden = true;
-          setSubmitting(true);
-          showStatus("Saving your RSVP securely...", "#555555");
-          if (useNetlifyTransport) {
-            event.preventDefault();
-            submitViaNetlify(requestId);
-          } else {
-            scheduleCheck(1200);
-            // Local Vite: native POST to Google Apps Script through an iframe.
+          setBusy(true);
+          setStatus("Saving your RSVP...", "#555555");
+          try {
+            // First click: send once. Later clicks after uncertainty: CHECK only.
+            if (button?.dataset.rsvpVerifyOnly !== "true") {
+              const payload = Object.fromEntries(new FormData(form).entries());
+              payload.requestId = id;
+              button.dataset.rsvpVerifyOnly = "true";
+              const result = await requestJSON(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              }, 17000);
+              if (complete(result)) {
+                button.dataset.rsvpVerifyOnly = "false";
+                return;
+              }
+            }
+            setStatus("Checking your saved RSVP...", "#555555");
+            if (await verify(id)) {
+              button.dataset.rsvpVerifyOnly = "false";
+              return;
+            }
+            setStatus("Google has not returned confirmation yet. Select Check RSVP Status to check again. Please do not submit another RSVP.");
+          } catch (error) {
+            console.error("RSVP request:", error);
+            setStatus(error.message || "The connection was interrupted. Use Check RSVP Status before trying again.");
+            // Status can be unknown even when a network request raises an error.
+          } finally {
+            setBusy(false);
           }
-        });
-
-        on(iframe, "load", () => {
-          if (submitted && !checking) scheduleCheck(300);
         });
       }
 

@@ -2,10 +2,10 @@ export const NAME_MAX_LENGTH = 50;
 export const RSVP_MAX_GUESTS = 10;
 export const RSVP_MESSAGE_MAX_LENGTH = 320;
 
-// Allow letters, numbers, spaces, & and .
-const INVALID_NAME_CHARACTERS = /[^\p{L}\p{M}\p{N} &.]/gu;
+// Allow letters, spaces, & and .
+const INVALID_NAME_CHARACTERS = /[^\p{L}\p{M} &.]/gu;
 
-const VALID_NAME = /^[\p{L}\p{M}\p{N} &.]+$/u;
+const VALID_NAME = /^[\p{L}\p{M} &.]+$/u;
 
 export const cleanGuestName = (value) =>
   String(value ?? "")

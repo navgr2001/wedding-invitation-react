@@ -216,7 +216,7 @@ function doPost(e) {
       });
     }
 
-    return createRsvpResult_("error", "Submission failed. Please try again.", (e && e.parameter && e.parameter.transport) === "json");
+    return createRsvpResult_("error", "The RSVP could not be confirmed. Please check before retrying.", sanitize_(e && e.parameter && e.parameter.requestId), (e && e.parameter && e.parameter.transport) === "json");
   }
 }
 
@@ -580,3 +580,4 @@ function testWeddingUploadFolder_() {
   var folder = getWeddingUploadFolder_();
   Logger.log(folder.getName());
 }
+now  what i need is
