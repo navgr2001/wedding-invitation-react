@@ -16,18 +16,6 @@ export function useWeddingInteractions() {
     if (window.__WEDDING_INVITATION_INTERACTIONS_READY__) return;
     window.__WEDDING_INVITATION_INTERACTIONS_READY__ = true;
 
-    /* ================================
-       Interactions (client-side):
-       - Envelope open (wax seal)
-       - Background music (starts on wax click)
-       - Countdown timer
-       - Scroll reveal animations
-       - Timeline scroll progress
-       - RSVP submit success (hidden iframe)
-       - Words of Love: fetch from public Google Sheet + infinite carousel
-       - Gallery lightbox
-       ================================ */
-
     (() => {
       "use strict";
 
@@ -389,12 +377,17 @@ export function useWeddingInteractions() {
           button.disabled = value;
           button.textContent = value
             ? "Sending..."
-            : pendingId ? "Check RSVP Status" : "Send RSVP with Love";
+            : pendingId
+              ? "Check RSVP Status"
+              : "Send RSVP with Love";
           button.style.opacity = value ? "0.7" : "1";
         };
         const requestJSON = async (url, init = {}, timeoutMs = 13000) => {
           const controller = new AbortController();
-          const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+          const timeout = window.setTimeout(
+            () => controller.abort(),
+            timeoutMs,
+          );
           try {
             const response = await fetch(url, {
               ...init,
@@ -403,11 +396,15 @@ export function useWeddingInteractions() {
             });
             const type = response.headers.get("content-type") || "";
             if (!type.includes("application/json")) {
-              throw new Error("The Netlify RSVP function is not deployed. Deploy the complete Netlify project, not only dist.");
+              throw new Error(
+                "The Netlify RSVP function is not deployed. Deploy the complete Netlify project, not only dist.",
+              );
             }
             const data = await response.json();
             if (data.status === "error" && response.status === 404) {
-              throw new Error("The RSVP function was not found on this website.");
+              throw new Error(
+                "The RSVP function was not found on this website.",
+              );
             }
             return data;
           } finally {
@@ -437,12 +434,14 @@ export function useWeddingInteractions() {
         };
         const verify = async (id) => {
           for (const delay of [0, 450, 1000, 1800]) {
-            if (delay) await new Promise((resolve) => window.setTimeout(resolve, delay));
+            if (delay)
+              await new Promise((resolve) => window.setTimeout(resolve, delay));
             if (pendingId !== id) return true;
             try {
               const result = await requestJSON(
                 endpoint + "?requestId=" + encodeURIComponent(id),
-                {}, 7000,
+                {},
+                7000,
               );
               if (complete(result)) return true;
             } catch (error) {
@@ -456,26 +455,43 @@ export function useWeddingInteractions() {
           if (busy) return;
           if (!pendingId) {
             const name = form.elements.namedItem("name")?.value ?? "";
-            const attendance = form.elements.namedItem("attendance")?.value ?? "";
+            const attendance =
+              form.elements.namedItem("attendance")?.value ?? "";
             const guests = Number(form.elements.namedItem("guests")?.value);
             const message = form.elements.namedItem("message")?.value ?? "";
             if (!isValidGuestName(name)) {
-              setStatus("Name must be 1–50 characters; only & and . are allowed as special characters.");
+              setStatus(
+                "Name must be 1–50 characters; only & and . are allowed as special characters.",
+              );
               return;
             }
-            if (!["Yes, I'll be there", "Sorry, I can't make it"].includes(attendance)) {
+            if (
+              !["Yes, I'll be there", "Sorry, I can't make it"].includes(
+                attendance,
+              )
+            ) {
               setStatus("Please select your attendance.");
               return;
             }
-            if (!Number.isInteger(guests) || guests < 1 || guests > RSVP_MAX_GUESTS) {
+            if (
+              !Number.isInteger(guests) ||
+              guests < 1 ||
+              guests > RSVP_MAX_GUESTS
+            ) {
               setStatus("Number of guests must be between 1 and 10.");
               return;
             }
             if (message.length > RSVP_MESSAGE_MAX_LENGTH) {
-              setStatus("Message must be 320 characters or fewer, including spaces.");
+              setStatus(
+                "Message must be 320 characters or fewer, including spaces.",
+              );
               return;
             }
-            pendingId = "rsvp_" + Date.now() + "_" + Math.random().toString(36).slice(2, 12);
+            pendingId =
+              "rsvp_" +
+              Date.now() +
+              "_" +
+              Math.random().toString(36).slice(2, 12);
           }
           const id = pendingId;
           success.hidden = true;
@@ -487,11 +503,15 @@ export function useWeddingInteractions() {
               const payload = Object.fromEntries(new FormData(form).entries());
               payload.requestId = id;
               button.dataset.rsvpVerifyOnly = "true";
-              const result = await requestJSON(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-              }, 17000);
+              const result = await requestJSON(
+                endpoint,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(payload),
+                },
+                17000,
+              );
               if (complete(result)) {
                 button.dataset.rsvpVerifyOnly = "false";
                 return;
@@ -502,10 +522,15 @@ export function useWeddingInteractions() {
               button.dataset.rsvpVerifyOnly = "false";
               return;
             }
-            setStatus("Google has not returned confirmation yet. Select Check RSVP Status to check again. Please do not submit another RSVP.");
+            setStatus(
+              "Google has not returned confirmation yet. Select Check RSVP Status to check again. Please do not submit another RSVP.",
+            );
           } catch (error) {
             console.error("RSVP request:", error);
-            setStatus(error.message || "The connection was interrupted. Use Check RSVP Status before trying again.");
+            setStatus(
+              error.message ||
+                "The connection was interrupted. Use Check RSVP Status before trying again.",
+            );
             // Status can be unknown even when a network request raises an error.
           } finally {
             setBusy(false);
@@ -915,8 +940,6 @@ export function useWeddingInteractions() {
             })
             .filter((item) => item.name !== "" && item.message !== "")
             .filter((item) => item.attendance !== "Sorry, I can't make it")
-            .reverse()
-            .slice(0, 30)
             .map((item) => ({
               name: item.name,
               message: item.message,
@@ -940,8 +963,6 @@ export function useWeddingInteractions() {
         }
 
         async function refreshWords(options = {}) {
-          stop();
-
           try {
             let items = await fetchWordsOnce();
 
@@ -965,7 +986,13 @@ export function useWeddingInteractions() {
               lastFingerprint = nextFingerprint;
 
               renderSlides(items);
-            } else if (slides.length > 1 && !timer) {
+            } else if (
+              slides.length > 1 &&
+              !timer &&
+              !document.hidden &&
+              !carousel.matches(":hover") &&
+              !carousel.contains(document.activeElement)
+            ) {
               start();
             } else if (!slides.length && !items.length) {
               renderEmptyState("No wishes have been submitted yet.");
