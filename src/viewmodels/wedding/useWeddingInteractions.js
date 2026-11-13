@@ -904,46 +904,41 @@ export function useWeddingInteractions() {
 
           const rows = (table && table.rows) || [];
 
-          return rows
-            .map((row) => {
-              const cells = row.c || [];
+          return (
+            rows
+              .map((row) => {
+                const cells = row.c || [];
 
-              const nameCell = cells[1];
+                const nameCell = cells[1];
+                const messageCell = cells[4];
 
-              const attendanceCell = cells[2];
+                const name = String(
+                  nameCell && (nameCell.v ?? nameCell.f)
+                    ? (nameCell.v ?? nameCell.f)
+                    : "",
+                ).trim();
 
-              const messageCell = cells[4];
+                const message = String(
+                  messageCell && (messageCell.v ?? messageCell.f)
+                    ? (messageCell.v ?? messageCell.f)
+                    : "",
+                ).trim();
 
-              const name = String(
-                nameCell && (nameCell.v ?? nameCell.f)
-                  ? (nameCell.v ?? nameCell.f)
-                  : "",
-              ).trim();
-
-              const attendance = String(
-                attendanceCell && (attendanceCell.v ?? attendanceCell.f)
-                  ? (attendanceCell.v ?? attendanceCell.f)
-                  : "",
-              ).trim();
-
-              const message = String(
-                messageCell && (messageCell.v ?? messageCell.f)
-                  ? (messageCell.v ?? messageCell.f)
-                  : "",
-              ).trim();
-
-              return {
-                name,
-                attendance,
-                message,
-              };
-            })
-            .filter((item) => item.name !== "" && item.message !== "")
-            .filter((item) => item.attendance !== "Sorry, I can't make it")
-            .map((item) => ({
-              name: item.name,
-              message: item.message,
-            }));
+                return {
+                  name,
+                  message,
+                };
+              })
+              // Display messages only when both name
+              // and message are provided.
+              .filter((item) => item.name !== "" && item.message !== "")
+              // Preserve original Google Sheets row order:
+              // oldest response first, latest response last.
+              .map((item) => ({
+                name: item.name,
+                message: item.message,
+              }))
+          );
         }
 
         async function fetchWordsOnce() {
